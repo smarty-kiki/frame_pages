@@ -1,5 +1,6 @@
 - 入门指南
 
+  - [介绍](README.md)
   - [安装](quickstart.md)
   - [配置信息](more-pages.md)
   - [文件夹结构](custom-navbar.md)
@@ -38,3 +39,7 @@
 
   - [快速入门](deploy.md)
   - [模型关联](helpers.md)
+
+- 更多
+
+  - [对比其他框架](diff_other.md)
