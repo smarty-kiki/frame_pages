@@ -1,6 +1,40 @@
 # 缓存
 
-提供缓存的操作能力
+提供缓存的操作能力，框架中 cache 目录下的文件为基于具体组件的实现，如 memcache.php、redis.php，使用时按需要载入，示例：
+```php
+include FRAME_DIR.'/cache/redis.php';
+```
+组件使用时会按照配置机制加载对应的组件配置，示例:
+```php
+// config/redis.php
+return [
+    'default' => [
+        //
+        // Create connection with:
+        // 'sock' => '/var/run/redis.sock',
+        // Or
+        //  'host' => '127.0.0.1',
+        //  'port' => 6379,
+        //
+
+        'host' => '127.0.0.1',
+        'port' => 6379,
+
+        'timeout' => 1,
+
+        // Authenticate the connection using a password:
+        // 'database' => 0,
+
+        //
+        // Authenticate the connection using a password:
+        // 'auth' => 'foobared',
+
+        'options' => [
+            Redis::OPT_SERIALIZER => Redis::SERIALIZER_PHP,
+        ],
+    ],
+];
+```
 
 ### 获取缓存
 ----
