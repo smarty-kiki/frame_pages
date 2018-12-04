@@ -10,9 +10,9 @@ include FRAME_DIR.'/cache/redis.php';
 return [
     'default' => [
         //
-        // Create connection with:
-        // 'sock' => '/var/run/redis.sock',
-        // Or
+        // 配置连接如 sock
+        //  'sock' => '/var/run/redis.sock',
+        // 或
         //  'host' => '127.0.0.1',
         //  'port' => 6379,
         //
@@ -22,11 +22,11 @@ return [
 
         'timeout' => 1,
 
-        // Authenticate the connection using a password:
+        // 指定 database
         // 'database' => 0,
 
         //
-        // Authenticate the connection using a password:
+        // redis auth
         // 'auth' => 'foobared',
 
         'options' => [
