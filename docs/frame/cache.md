@@ -292,7 +292,7 @@ array cache_keys($pattern = '*', $config_key = 'default')
 
 
 
-### 缓存服务的 socket 连接关闭
+### 关闭当前保持的所有缓存服务的连接
 ----
 ```php
 void cache_close()

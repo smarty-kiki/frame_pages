@@ -65,7 +65,7 @@ boolean db_force_type_write($bool = null)
 
 
 
-
+## 标准能力
 
 ### 查询
 ----
@@ -345,10 +345,11 @@ db_write('insert into customer (name, age) values (:name, :age)', [
 
 
 
+
 ### 改数据结构
 ----
 ```php
-function db_structure($sql, $config_key = 'default')
+int db_structure($sql, $config_key = 'default')
 ```
 ##### 参数
 - sql:  
@@ -372,13 +373,102 @@ db_structure('drop table customer');
 
 
 
+
+### 事务闭包
+----
 ```php
-function db_transaction(closure $action, $config_key = 'default')
+mix db_transaction(closure $action, $config_key = 'default')
+```
+##### 参数
+- action:  
+    要在闭包中执行的逻辑段闭包
+
+- config_key:  
+    数据库对应的配置 key  
+
+##### 返回值
+闭包中返回的值
+
+##### 示例
+```php
+db_transaction(function () {
+    return db_write('insert into customer (name, age) values (:name, :age)', [
+        ':name' => 'kiki',
+        ':age'  => 20,
+    ]);
+});
 ```
 
+
+
+
+
+
+
+
+### 关闭所有当前保持的数据库连接
+----
 ```php
-function db_close()
+void db_close()
 ```
+##### 参数
+无
+
+##### 返回值
+无
+
+##### 示例
+```php
+db_close();
+```
+
+
+
+
+
+
+
+
+## 简单函数
+
+简单函数主要是针对 SQL 的 where 条件书写的简化和插入、更新语句的数据拼装，**表达能力有限**，建议只在小型项目中使用，简化的 where 写法有以下几种:  
+- 等于
+```php
+$wheres = [
+    'name' => 'kiki',
+    'age'  => 20,
+];
+```
+- in 数组
+```php
+$wheres = [
+    'name'    => ['kiki', 'other'],
+    'age not' => [20, 21],
+];
+```
+
+- null
+```php
+$wheres = [
+    'name'    => null,
+    'age not' => null,
+];
+```
+
+- 大小判断
+```php
+$wheres = [
+    'age >' => 18,
+];
+```
+
+
+
+
+
+
+
+
 
 ```php
 function db_simple_where_sql(array $wheres)
