@@ -312,15 +312,65 @@ db_insert('insert into customer (name, age) values (:name, :age)', [
 
 
 
-
-
+### 写数据
+----
 ```php
-function db_write($sql_template, array $binds = [], $config_key = 'default')
+int db_write($sql_template, array $binds = [], $config_key = 'default')
+```
+##### 参数
+- sql_template:  
+    sql 模版
+
+- binds:  
+    数据绑定
+
+- config_key:  
+    数据库对应的配置 key  
+
+##### 返回值
+返回写操作影响的数据行数
+
+##### 示例
+```php
+db_write('insert into customer (name, age) values (:name, :age)', [
+    ':name' => 'kiki',
+    ':age'  => 20,
+]);
 ```
 
+
+
+
+
+
+
+
+### 改数据结构
+----
 ```php
 function db_structure($sql, $config_key = 'default')
 ```
+##### 参数
+- sql:  
+    sql 语句
+
+- config_key:  
+    数据库对应的配置 key  
+
+##### 返回值
+返回操作影响的数据行数
+
+##### 示例
+```php
+db_structure('drop table customer');
+```
+
+
+
+
+
+
+
 
 ```php
 function db_transaction(closure $action, $config_key = 'default')
