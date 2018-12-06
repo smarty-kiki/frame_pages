@@ -65,7 +65,47 @@ boolean db_force_type_write($bool = null)
 
 
 
-## 标准能力
+## 标准函数
+
+标准函数是基础的数据库操作能力。为了让 sql 更清爽，让系统监控及防止数据库注入攻击，sql 需要拆分为 sql_template 和 binds，如：  
+```php
+$sql_template = 'select * from customer where name = :name and age = :age';
+$binds = [
+    ':name' => 'kiki',
+    ':age'  => 20,
+];
+```
+sql_template 中的变量需用 bind key 来替换，如 :name，bind key 通常可以直接使用列名命名，若同列有多个条件，需要区分 bind key，如：  
+```php
+$sql_template = 'select * from customer where age >= :age_min and age <= :age_max';
+$binds = [
+    ':age_min' => 18,
+    ':age_max' => 25,
+];
+```
+sql_template 中也会需要用到数组，不必写数据数量的 bind key，只需要这样既可：  
+```php
+$sql_template = 'select * from customer where age in :ages';
+$binds = [
+    ':ages' => [18, 19, 20, 21, 22],
+];
+```
+如果条件中有 null 相关逻辑，直接写在 sql_template 即可，如：  
+```php
+$sql_template = 'select * from customer where delete_time is null';
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### 查询
 ----
@@ -87,8 +127,8 @@ array db_query($sql_template, array $binds = [], $config_key = 'default')
 
 ##### 示例
 ```php
-$order_infos = db_query('select * from order where status = :status', [
-    ':status' => 'VALID',
+$customer_infos = db_query('select * from customer where age = :age', [
+    ':age' => 20,
 ]);
 ```
 
@@ -431,7 +471,7 @@ db_close();
 
 ## 简单函数
 
-简单函数主要是针对 SQL 的 where 条件书写的简化和插入、更新语句的数据拼装，**表达能力有限**，建议只在小型项目中使用，简化的 where 写法有以下几种:  
+简单函数主要是针对 SQL 的 where 条件书写的简化和插入、更新语句的数据拼装，如果追求完全实现 SQL 所有的能力，会让使用变的复杂、学习成本更高，不如直接使用原生 SQL，所以简单函数只聚焦在提供高频使用的场景，**表达能力有限**，建议只在小型项目中使用，简化的 where 写法有以下几种:  
 - 等于
 ```php
 $wheres = [
@@ -470,38 +510,312 @@ $wheres = [
 
 
 
+
+
+
+### 简单插入数据
+----
 ```php
-function db_simple_where_sql(array $wheres)
+mix db_simple_insert($table, array $data, $config_key = 'default')
+```
+##### 参数
+- table:  
+    目标表名
+
+- data:  
+    要插入的数据
+
+- config_key:  
+    数据库对应的配置 key  
+
+##### 返回值
+返回插入的数据主键
+
+##### 示例
+```php
+db_simple_insert('customer', [
+    'name' => 'kiki',
+    'age'  => 20,
+]);
 ```
 
+
+
+
+
+
+
+
+
+
+
+### 简单批量插入数据
+----
 ```php
-function db_simple_insert($table, array $data, $config_key = 'default')
+int db_simple_multi_insert($table, array $datas, $config_key = 'default')
+```
+##### 参数
+- table:  
+    目标表名
+
+- datas:  
+    要插入的多条数据
+
+- config_key:  
+    数据库对应的配置 key  
+
+##### 返回值
+返回插入的首条数据的主键
+
+##### 示例
+```php
+db_simple_multi_insert('customer', [
+    ['name' => 'kiki', 'age'  => 20,],
+    ['name' => 'kiki', 'age'  => 20,],
+]);
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+
+### 简单更新数据
+----
 ```php
-function db_simple_multi_insert($table, array $datas, $config_key = 'default')
+int db_simple_update($table, array $wheres, array $data, $config_key = 'default')
+```
+##### 参数
+- table:  
+    目标表名
+
+- wheres:  
+    目标条目的查询条件
+
+- datas:  
+    要更新的数据
+
+- config_key:  
+    数据库对应的配置 key  
+
+##### 返回值
+返回更新涉及到的数据行数
+
+##### 示例
+```php
+db_simple_update('customer', 
+    ['name' => 'kiki'],
+    ['age'  => 20]
+);
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+
+### 简单删除数据
+----
 ```php
-function db_simple_update($table, array $wheres, array $data, $config_key = 'default')
+int db_simple_delete($table, array $wheres, $config_key = 'default')
+```
+##### 参数
+- table:  
+    目标表名
+
+- wheres:  
+    目标条目的查询条件
+
+- config_key:  
+    数据库对应的配置 key  
+
+##### 返回值
+返回删除了的数据行数
+
+##### 示例
+```php
+db_simple_delete('customer', 
+    ['name' => 'kiki']
+);
 ```
 
+
+
+
+
+
+
+
+
+
+### 简单查询数据
+----
 ```php
-function db_simple_delete($table, array $wheres, $config_key = 'default')
+array db_simple_query($table, array $wheres, $option_sql = 'order by id', $config_key = 'default')
+```
+##### 参数
+- table:  
+    目标表名
+
+- wheres:  
+    目标条目的查询条件
+
+- option_sql:  
+    目标条目的额外条件，如 order by、limit
+
+- config_key:  
+    数据库对应的配置 key  
+
+##### 返回值
+返回查询到的数据
+
+##### 示例
+```php
+db_simple_query('customer', 
+    ['age' => 20],
+    'order by name'
+);
 ```
 
+
+
+
+
+
+
+
+
+
+
+### 简单查询首条数据
+----
 ```php
-function db_simple_query($table, array $wheres, $option_sql = 'order by id', $config_key = 'default')
+array db_simple_query_first($table, array $wheres, $option_sql = '', $config_key = 'default')
+```
+##### 参数
+- table:  
+    目标表名
+
+- wheres:  
+    目标条目的查询条件
+
+- option_sql:  
+    目标条目的额外条件，如 order by
+
+- config_key:  
+    数据库对应的配置 key  
+
+##### 返回值
+返回查询到的数据
+
+##### 示例
+```php
+db_simple_query_first('customer', 
+    ['age' => 20],
+    'order by name'
+);
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+### 简单查询按索引组织结果
+----
 ```php
-function db_simple_query_first($table, array $wheres, $option_sql = '', $config_key = 'default')
+array db_simple_query_indexed($table, $indexed, array $wheres, $option_sql = 'order by id', $config_key = 'default')
+```
+##### 参数
+- table:  
+    目标表名
+
+- indexed:  
+    依据哪个字段索引
+
+- wheres:  
+    目标条目的查询条件
+
+- option_sql:  
+    目标条目的额外条件，如 order by、limit
+
+- config_key:  
+    数据库对应的配置 key  
+
+##### 返回值
+返回查询到的数据，结果按照指定的字段索引
+
+##### 示例
+```php
+db_simple_query_indexed('customer', 
+    'id',
+    ['age' => 20],
+    'order by name'
+);
 ```
 
-```php
-function db_simple_query_indexed($table, $indexed, array $wheres, $option_sql = 'order by id', $config_key = 'default')
-```
 
+
+
+
+
+
+
+
+
+
+
+
+### 简单查询具体单个结果
+----
 ```php
-function db_simple_query_value($value, $table, array $wheres, $config_key = 'default')
+mix db_simple_query_value($table, $value, array $wheres, $option_sql, $config_key = 'default')
+```
+##### 参数
+- table:  
+    目标表名
+
+- value:  
+    需要获取的值
+
+- wheres:  
+    目标条目的查询条件
+
+- option_sql:  
+    目标条目的额外条件，如 order by、group by
+
+- config_key:  
+    数据库对应的配置 key  
+
+##### 返回值
+返回查询到的数据
+
+##### 示例
+```php
+db_simple_query_indexed('customer', 
+    'id',
+    'count(*)',
+    ['age' => 20],
+    'order by name'
+);
 ```
