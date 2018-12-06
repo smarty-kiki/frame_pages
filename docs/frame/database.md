@@ -767,8 +767,7 @@ array db_simple_query_indexed($table, $indexed, array $wheres, $option_sql = 'or
 
 ##### 示例
 ```php
-db_simple_query_indexed('customer', 
-    'id',
+db_simple_query_indexed('customer', 'id',
     ['age' => 20],
     'order by name'
 );
@@ -812,9 +811,7 @@ mix db_simple_query_value($table, $value, array $wheres, $option_sql, $config_ke
 
 ##### 示例
 ```php
-db_simple_query_indexed('customer', 
-    'id',
-    'count(*)',
+db_simple_query_indexed('customer', 'id', 'count(*)',
     ['age' => 20],
     'order by name'
 );
