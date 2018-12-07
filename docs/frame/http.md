@@ -2,13 +2,13 @@
 
 提供 http 请求的响应能力
 
-## 标准的 HTTP 请求的响应
+## 标准的 http 请求的响应
 
-标准的 HTTP 请求的响应使用 application.php，示例：  
+标准的 http 请求的响应使用 application.php，示例：  
 ```php
 include FRAME_DIR.'/http/application.php';
 ```
-响应 HTTP 请求时需要配置路由来区分响应，如：  
+响应 http 请求时需要配置路由来区分响应，如：  
 ```php
 if_get('/ping', function ()
 {
@@ -654,6 +654,6 @@ function http_ex_action($ex)
 function http_fatel_err_action()
 
 
-## 分布式通讯的 HTTP 请求和响应
+## 分布式通讯的 http 请求和响应
 
 TODO
