@@ -164,7 +164,7 @@ void if_get($rule, closure $action)
     响应逻辑闭包
 
 ##### 返回值
-    无
+无
 
 ##### 示例
 ```php
@@ -303,7 +303,6 @@ closure if_verify(closure $action = null)
 ##### 返回值
 当前生效的校验逻辑闭包
 
-
 ##### 示例
 ```php
 if_verify(function ($action, $args) {
@@ -338,7 +337,6 @@ closure if_not_found(closure $action = null)
 
 ##### 返回值
 当前生效的闭包
-
 
 ##### 示例
 ```php
@@ -377,7 +375,6 @@ void not_found($action = null);
 
 ##### 返回值
 当前生效的闭包
-
 
 ##### 示例
 ```php
