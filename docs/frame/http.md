@@ -89,14 +89,14 @@ $uri = uri();
 ### 获取具体的 URI 信息
 ----
 ```php
-function uri_info($name = null)
+mix uri_info($name = null)
 ```
 ##### 参数
 - name:  
     所需要的具体 URI 信息，不传时返回所有 URI 信息，可选内容有 scheme、host、port、user、pass、path、query、fragment
 
 ##### 返回值
-本次请求的 URI
+本次请求的 URI 信息
 
 ##### 示例
 ```php
@@ -291,7 +291,7 @@ if_delete('/', function ()
 
 
 
-### 设置校验逻辑
+### 注册校验逻辑
 ----
 ```php
 closure if_verify(closure $action = null)
@@ -470,7 +470,7 @@ $content = input_safe('content');
 ### 获取输入
 ----
 ```php
-function input($name, $default = null)
+mix input($name, $default = null)
 ```
 ##### 参数
 - input:  
@@ -514,17 +514,17 @@ array input_list(...$names)
 ##### 示例
 ```php
 // 变量
-list($name, $age) = input('name', 'age');
+list($name, $age) = input_list('name', 'age');
 // 数组
 list(
     $arr['name'],
     $arr['age']
-) = input('name', 'age');
+) = input_list('name', 'age');
 // 对象
 list(
     $o->name,
     $o->age
-) = input('name', 'age');
+) = input_list('name', 'age');
 ```
 
 
@@ -588,7 +588,7 @@ array input_json_list(...$names)
 ##### 示例
 ```php
 // 变量
-list($name, $age) = input('data.name', 'data.age');
+list($name, $age) = input_json_list('data.name', 'data.age');
 ```
 
 
@@ -612,7 +612,7 @@ list($name, $age) = input('data.name', 'data.age');
 mix input_post_raw()
 ```
 ##### 参数
-    无
+无
 
 ##### 返回值
 http 请求的 body 内容
@@ -636,19 +636,498 @@ $content = input_post_raw();
 
 
 
-function cookie_safe($name, $default = null)
-function cookie($name, $default = null)
-function cookie_list(...$names)
-function view_path($path = null)
-function view_compiler(closure $closure = null)
-function render($view, $args = [])
-function include_view($view, $args = [])
-function cache_with_etag($etag)
-function ip()
-function if_has_exception(closure $action = null)
-function http_err_action($error_type, $error_message, $error_file, $error_line, $error_context = null)
-function http_ex_action($ex)
-function http_fatel_err_action()
+
+
+### 获取安全的 cookie
+----
+```php
+mix cookie_safe($name, $default = null)
+```
+##### 参数
+- name:  
+    获取的 cookie 名
+
+- default:  
+    当这个 cookie 没有传时，默认返回的结果
+
+##### 返回值
+经过安全转义的 cookie 结果
+
+##### 示例
+```php
+$content = cookie_safe('customer_key');
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 获取 cookie
+----
+```php
+mix cookie($name, $default = null)
+```
+##### 参数
+- name:  
+    获取的 cookie 名
+
+- default:  
+    当这个 cookie 没有传时，默认返回的结果
+
+##### 返回值
+cookie 结果
+
+##### 示例
+```php
+$content = cookie('customer_key');
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 一次获取多个 cookie
+----
+```php
+array cookie_list(...$names)
+```
+##### 参数
+- ...names:  
+    获取的 cookie 名，可输入多个
+
+##### 返回值
+按 name 顺序排序的 cookie 结果，默认值为 null
+
+##### 示例
+```php
+// 变量
+list($name, $age) = cookie_list('name', 'age');
+// 数组
+list(
+    $arr['name'],
+    $arr['age']
+) = cookie_list('name', 'age');
+// 对象
+list(
+    $o->name,
+    $o->age
+) = cookie_list('name', 'age');
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 注册模版路径
+----
+```php
+string view_path($path = null)
+```
+##### 参数
+- path:  
+    模版所在的目录
+
+##### 返回值
+当前生效的模版所在的目录
+
+##### 示例
+```php
+view_path('/var/www/xxx/view');
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 注册模版编译逻辑
+----
+```php
+closure view_compiler(closure $action = null)
+```
+##### 参数
+- action:  
+    在模版 render 时，会调用的编译逻辑闭包，调用闭包时会传入要编译的模版路径，要求返回编译后的模版路径
+
+##### 返回值
+当前生效的模版编译逻辑闭包
+
+##### 示例
+```php
+view_compiler(view_compiler_generate());
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 模版渲染
+----
+```php
+string render($view, $args = [])
+```
+##### 参数
+- view:  
+    所要渲染的模版路径，相对与设置的 view_path 的路径，且不需 php 文件后缀，如 index/index
+
+- args:  
+    需要传入模版的参数，在模版中直接用数组的 key 作为变量名来使用变量
+
+##### 返回值
+渲染结果
+
+##### 示例
+```php
+render('customer/detail', [
+    'name' => 'kiki',
+    'age'  => 20,
+]);
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 在模版中加载模版 (仅适用于没有使用模版引擎时)
+----
+```php
+void include_view($view, $args = [])
+```
+##### 参数
+- view:  
+    所要渲染的模版路径，相对与设置的 view_path 的路径，且不需 php 文件后缀，如 index/index
+
+- args:  
+    需要传入模版的参数，在模版中直接用数组的 key 作为变量名来使用变量
+
+##### 返回值
+无返回结果，会直接渲染在调用处
+
+##### 示例
+```php
+<?php include_view('customer/list_cell', [
+    'name' => 'kiki',
+    'age'  => 20,
+]); ?>
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 使用 http 的 etag 缓存
+----
+```php
+void cache_with_etag($etag)
+```
+##### 参数
+- etag:  
+    作为 etag 的字符串，建议是某个用以区分数据是否变化的 md5
+
+##### 返回值
+无
+
+##### 示例
+```php
+cache_with_etag(serialize($customer));
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 获取请求来源 ip
+----
+```php
+string ip()
+```
+##### 参数
+无
+
+##### 返回值
+请求来源 ip
+
+##### 示例
+```php
+$ip = ip();
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 注册全局异常处理逻辑
+----
+```php
+closure if_has_exception(closure $action = null)
+```
+##### 参数
+- action:  
+    全局异常处理闭包，在遇到未被捕获的异常时生效，闭包会被传入异常对象。可不传。
+
+##### 返回值
+当前生效的全局异常处理闭包
+
+##### 示例
+```php
+if_has_exception(function ($ex) {
+
+    log_exception($ex);
+
+    return json([
+        'succ' => false,
+        'msg' => $ex->getMessage(),
+    ]);
+});
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 框架提供的 error_handler，将程序 error 转入到全局异常响应逻辑中
+----
+```php
+void http_err_action($error_type, $error_message, $error_file, $error_line, $error_context = null)
+```
+##### 参数
+- error_type:  
+    错误类型
+
+- error_message:  
+    错误消息
+
+- error_file:  
+    错误发生的代码文件
+
+- error_line:  
+    错误发生在代码文件的所在行
+
+- error_context:  
+    错误发生的上下文
+
+##### 返回值
+无
+
+##### 示例
+```php
+set_error_handler('http_err_action', E_ALL);
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 框架提供的 exception_handler，将程序 exception 转入到全局异常响应逻辑中
+----
+```php
+void http_ex_action($ex);
+```
+##### 参数
+- ex:  
+    异常
+
+##### 返回值
+无
+
+##### 示例
+```php
+set_exception_handler('http_ex_action');
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 框架提供的 shutdown_handler，将程序 shutdown 转入到全局异常响应逻辑中
+----
+```php
+void http_fatel_err_action()
+```
+##### 参数
+无
+
+##### 返回值
+无
+
+##### 示例
+```php
+register_shutdown_function('http_fatel_err_action');
+```
+
+
+
+
+
+
+
+
 
 
 ## 分布式通讯的 http 请求和响应
