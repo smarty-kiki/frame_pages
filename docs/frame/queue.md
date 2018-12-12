@@ -17,9 +17,6 @@
 TODO queue_finish_action(closure $action = null)
 ```
 ##### 参数
-- closure:  
-    TODO
-
 - action:  
     TODO
 

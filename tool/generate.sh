@@ -26,7 +26,7 @@ echo TODO $line
 echo \`\`\`
 echo \#\#\#\#\# 参数
 
-echo $line | cut -d '(' -f 2 | cut -d ')' -f 1 | tr \$ "\n" | sed -e 's/,/ /g' | cut -d ' ' -f 1 | grep -v ^$ | while read p; do
+echo $line | cut -d '(' -f 2 | cut -d ')' -f 1 | tr \  "\n" | grep '^\$' | sed -e 's/,//g' | cut -d '$' -f 2 | while read p; do
 echo "- $p:  "
 echo "    TODO"
 echo

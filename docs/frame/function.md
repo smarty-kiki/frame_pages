@@ -50,9 +50,6 @@ TODO array_get($array, $key, $default = null)
 TODO array_set(&$array, $key, $value)
 ```
 ##### 参数
-- &:  
-    TODO
-
 - array:  
     TODO
 
@@ -146,9 +143,6 @@ TODO array_fetch($array, $key)
 TODO array_forget(&$array, $keys)
 ```
 ##### 参数
-- &:  
-    TODO
-
 - array:  
     TODO
 
@@ -266,9 +260,6 @@ TODO array_list(array $array, array $names)
 - array:  
     TODO
 
-- array:  
-    TODO
-
 - names:  
     TODO
 
@@ -299,9 +290,6 @@ TODO array_transfer(array $array, array $rules)
 - array:  
     TODO
 
-- array:  
-    TODO
-
 - rules:  
     TODO
 
@@ -329,9 +317,6 @@ TODO array_transfer(array $array, array $rules)
 TODO aksort(&$array, $valrev = false, $keyrev = false)
 ```
 ##### 参数
-- &:  
-    TODO
-
 - array:  
     TODO
 
@@ -398,9 +383,6 @@ TODO str_cut($string, $len, $suffix = '...')
 TODO dd(...$args)
 ```
 ##### 参数
-- ...:  
-    TODO
-
 - args:  
     TODO
 
@@ -758,9 +740,6 @@ TODO not_null($mixed)
 TODO all_empty(...$args)
 ```
 ##### 参数
-- ...:  
-    TODO
-
 - args:  
     TODO
 
@@ -788,9 +767,6 @@ TODO all_empty(...$args)
 TODO all_not_empty(...$args)
 ```
 ##### 参数
-- ...:  
-    TODO
-
 - args:  
     TODO
 
@@ -818,9 +794,6 @@ TODO all_not_empty(...$args)
 TODO has_empty(...$args)
 ```
 ##### 参数
-- ...:  
-    TODO
-
 - args:  
     TODO
 

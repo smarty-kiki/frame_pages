@@ -17,9 +17,6 @@
 TODO log_exception(throwable $ex)
 ```
 ##### 参数
-- throwable:  
-    TODO
-
 - ex:  
     TODO
 

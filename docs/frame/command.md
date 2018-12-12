@@ -80,9 +80,6 @@ TODO command($rule, $description, closure $action)
 TODO if_command_not_found(closure $action = null)
 ```
 ##### 参数
-- closure:  
-    TODO
-
 - action:  
     TODO
 

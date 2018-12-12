@@ -47,9 +47,6 @@ TODO spider_cron_string_parse($cron_string, $after_timestamp = null)
 TODO spider_finish_action(closure $action = null)
 ```
 ##### 参数
-- closure:  
-    TODO
-
 - action:  
     TODO
 
@@ -131,9 +128,6 @@ TODO spider_job_push($job_name, $url = null)
 TODO spider_job_get(string $job_name, string $cron_string, string $url, array $spider_rule, $priority = 10, $retry = [], $config_key = 'default')
 ```
 ##### 参数
-- string:  
-    TODO
-
 - job_name:  
     TODO
 
@@ -179,9 +173,6 @@ TODO spider_job_get(string $job_name, string $cron_string, string $url, array $s
 TODO spider_job_post(string $job_name, string $cron_string, string $url, array $data, array $spider_rule, $priority = 10, $retry = [], $config_key = 'default')
 ```
 ##### 参数
-- string:  
-    TODO
-
 - job_name:  
     TODO
 
