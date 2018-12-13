@@ -20,7 +20,7 @@
   - [ORM?](frame/orm.md)
   - [断言?](frame/otherwise.md)
   - [工作单元?](frame/unitofwork.md)
-  - [辅助函数?](frame/function.md)
+  - [辅助函数](frame/function.md)
 
 - 组合框架
 

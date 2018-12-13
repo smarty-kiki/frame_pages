@@ -1,4 +1,9 @@
-# ../../frame/function.php
+# 辅助函数
+
+辅助函数提供了一些通用的工具函数，框架中很多组件依赖于此文件，加载示例：
+```php
+include FRAME_DIR.'/function.php';
+```
 
 
 
@@ -9,29 +14,27 @@
 
 
 
-
-
-### TODO
+### 从数组中获取某个值
 ----
 ```php
-TODO array_get($array, $key, $default = null)
+mix array_get($array, $key, $default = null)
 ```
 ##### 参数
 - array:  
-    TODO
+    目标数组
 
 - key:  
-    TODO
+    要获取的 array key，因 array 是多层、多维的，key 可以用点符号来表达多层、多维逻辑、如 data.name
 
 - default:  
-    TODO
+    如果没有对应的值返回的默认值
 
 ##### 返回值
-TODO
+目标值
 
 ##### 示例
 ```php
-TODO array_get($array, $key, $default = null)
+$name = array_get($data, 'base_info.name', '无名');
 ```
 
 
@@ -44,27 +47,27 @@ TODO array_get($array, $key, $default = null)
 
 
 
-### TODO
+### 在数组指定位置设置值
 ----
 ```php
-TODO array_set(&$array, $key, $value)
+void array_set(&$array, $key, $value)
 ```
 ##### 参数
 - array:  
-    TODO
+    被设置的数组
 
 - key:  
-    TODO
+    要设置的 array key，因 array 是多层、多维的，key 可以用点符号来表达多层、多维逻辑、如 data.name
 
 - value:  
-    TODO
+    要设置的值
 
 ##### 返回值
-TODO
+无
 
 ##### 示例
 ```php
-TODO array_set(&$array, $key, $value)
+array_set($data, 'data.name', 'kiki');
 ```
 
 
@@ -77,24 +80,24 @@ TODO array_set(&$array, $key, $value)
 
 
 
-### TODO
+### 检查数组中某个 key 是否存在
 ----
 ```php
-TODO array_exists($array, $key)
+boolean array_exists($array, $key)
 ```
 ##### 参数
 - array:  
-    TODO
+    要检查的数组
 
 - key:  
-    TODO
+    要检查的 array key，因 array 是多层、多维的，key 可以用点符号来表达多层、多维逻辑、如 data.name
 
 ##### 返回值
-TODO
+boolean
 
 ##### 示例
 ```php
-TODO array_exists($array, $key)
+$has_name = array_exists($array, 'data.name');
 ```
 
 
@@ -107,24 +110,32 @@ TODO array_exists($array, $key)
 
 
 
-### TODO
+### 从数组中遍历获取某个值
 ----
 ```php
-TODO array_fetch($array, $key)
+array array_fetch($array, $key)
 ```
 ##### 参数
 - array:  
-    TODO
+    目标数组
 
 - key:  
-    TODO
+    要获取的 array key，因 array 是多层、多维的，key 可以用点符号来表达多层、多维逻辑、如 data.name
 
 ##### 返回值
-TODO
+要获取的值的数组
 
 ##### 示例
 ```php
-TODO array_fetch($array, $key)
+$array = [
+    [
+        'data' => ['name' => 'kiki'],
+    ],
+    [
+        'data' => ['name' => 'kiki'],
+    ],
+];
+$names = array_fetch($array, 'data.name');
 ```
 
 
@@ -137,24 +148,26 @@ TODO array_fetch($array, $key)
 
 
 
-### TODO
+### 去掉数组中的某个值
 ----
 ```php
-TODO array_forget(&$array, $keys)
+void array_forget(&$array, $keys)
 ```
 ##### 参数
 - array:  
-    TODO
+    目标数组
 
 - keys:  
-    TODO
+    要去掉的 array key，因 array 是多层、多维的，key 可以用点符号来表达多层、多维逻辑、如 data.name，key 可以是多个
 
 ##### 返回值
-TODO
+无
 
 ##### 示例
 ```php
-TODO array_forget(&$array, $keys)
+array_forget($array, 'data.name');
+// 或
+array_forget($array, ['data.name', 'data.age']);
 ```
 
 
@@ -167,21 +180,21 @@ TODO array_forget(&$array, $keys)
 
 
 
-### TODO
+### 获取数组的 keys 和 values
 ----
 ```php
-TODO array_divide($array)
+array array_divide($array)
 ```
 ##### 参数
 - array:  
-    TODO
+    目标数组
 
 ##### 返回值
-TODO
+keys 和 values 的数组
 
 ##### 示例
 ```php
-TODO array_divide($array)
+list($keys, $values) =  array_divide($array);
 ```
 
 
@@ -194,24 +207,26 @@ TODO array_divide($array)
 
 
 
-### TODO
+### 基于数组构建数组
 ----
 ```php
-TODO array_build($array, Closure $callback)
+array array_build($array, Closure $callback)
 ```
 ##### 参数
 - array:  
-    TODO
+    来源数组
 
 - callback:  
-    TODO
+    构建逻辑的闭包，执行时会给闭包传入数组中的 key、value，闭包需要返回结果数组的 key、value
 
 ##### 返回值
-TODO
+数组
 
 ##### 示例
 ```php
-TODO array_build($array, Closure $callback)
+$res_array =  array_build($array, function ($key, $value) {
+    return [$key, $value];
+});
 ```
 
 
@@ -224,21 +239,21 @@ TODO array_build($array, Closure $callback)
 
 
 
-### TODO
+### 递归 ksort
 ----
 ```php
-TODO array_key_sort($array)
+array array_key_sort($array)
 ```
 ##### 参数
 - array:  
-    TODO
+    待排序的数组
 
 ##### 返回值
-TODO
+排好序的数组
 
 ##### 示例
 ```php
-TODO array_key_sort($array)
+$res_array =  array_key_sort($array);
 ```
 
 
@@ -251,24 +266,24 @@ TODO array_key_sort($array)
 
 
 
-### TODO
+### 从数组中获取多个值，array_get 的批量版，通常配合 list 使用
 ----
 ```php
-TODO array_list(array $array, array $names)
+array array_list(array $array, array $keys)
 ```
 ##### 参数
 - array:  
-    TODO
+    来源数组
 
-- names:  
-    TODO
+- keys:  
+    要获取的 array key 数组，因 array 是多层、多维的，key 可以用点符号来表达多层、多维逻辑、如 data.name
 
 ##### 返回值
-TODO
+获取到的值数组
 
 ##### 示例
 ```php
-TODO array_list(array $array, array $names)
+list($name, $age) = array_list($array, ['data.name', 'data.age',]);
 ```
 
 
@@ -281,24 +296,34 @@ TODO array_list(array $array, array $names)
 
 
 
-### TODO
+### 数组转换
 ----
 ```php
-TODO array_transfer(array $array, array $rules)
+array array_transfer(array $array, array $rules)
 ```
 ##### 参数
 - array:  
-    TODO
+    来源数组
 
 - rules:  
-    TODO
+    rules 学问大，rules 是一个转换关系的描述数组，如：
+    ```php
+    $rules = [
+        'data.name' => 'info.name',
+        'data.age'  => 'info.age',
+    ];
+    ```
+    rules 的 key 为从来源数组哪里取值，对应的 value 为存在结果数组的哪个位置
 
 ##### 返回值
-TODO
+转换后的数组
 
 ##### 示例
 ```php
-TODO array_transfer(array $array, array $rules)
+$res_array = array_transfer($array, [
+    'data.name' => 'info.name',
+    'data.age'  => 'info.age',
+]);
 ```
 
 

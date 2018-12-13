@@ -551,7 +551,7 @@ mix input_json($name, $default = null)
     如果没有对应的值返回的默认值
 
 ##### 返回值
-按 name 顺序排序的输入结果，默认值为 null
+目标值
 
 ##### 示例
 ```php
