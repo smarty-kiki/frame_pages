@@ -66,7 +66,7 @@ mix singly_run($key, $expire_second, closure $closure, $fail_closure = null)
 $success = singly_run('deduct_account_'.$account->id, 2, function () use ($account, $price) {
     $account->deduct($price);
     return true;
-})
+});
 ```
 
 
@@ -108,5 +108,5 @@ mix serially_run($key, $expire_second, $wait_second, closure $closure, $fail_clo
 $success = serially_run('goods_inventory_reduce_'.$goods->id, 2, 3, function () use ($goods, $reduce_inventory) {
     $goods->inventory_reduce($reduce_inventory);
     return true;
-})
+});
 ```
