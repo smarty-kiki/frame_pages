@@ -1,4 +1,9 @@
-# ../../frame/storage/mongodb.php
+# 非 SQL 存储
+
+提供非 SQL 类的存储能力，框架中 storage 目录下的文件为基于具体组件的存储实现，如 mongodb.php，使用时按需要载入，示例：
+```php
+include FRAME_DIR.'/storage/mongodb.php';
+```
 
 
 
@@ -10,28 +15,30 @@
 
 
 
-
-### TODO
+### 插入数据
 ----
 ```php
-TODO storage_insert($table, array $data, $config_key = 'default')
+int storage_insert($table, array $data, $config_key = 'default')
 ```
 ##### 参数
 - table:  
-    TODO
+    写入的表名
 
 - data:  
-    TODO
+    单条数据
 
 - config_key:  
-    TODO
+    具体组件的配置
 
 ##### 返回值
-TODO
+插入数据的条数，通常是 1
 
 ##### 示例
 ```php
-TODO storage_insert($table, array $data, $config_key = 'default')
+$res = storage_insert('customer', [
+    'name' => 'kiki',
+    'age'  => 20,
+]);
 ```
 
 
@@ -44,27 +51,34 @@ TODO storage_insert($table, array $data, $config_key = 'default')
 
 
 
-### TODO
+### 批量插入数据
 ----
 ```php
-TODO storage_multi_insert($table, array $datas, $config_key = 'default')
+int storage_multi_insert($table, array $datas, $config_key = 'default')
 ```
 ##### 参数
 - table:  
-    TODO
+    写入的表名
 
 - datas:  
-    TODO
+    数据数组
 
 - config_key:  
-    TODO
+    存储对应的配置 key  
 
 ##### 返回值
-TODO
+插入数据的数量
 
 ##### 示例
 ```php
-TODO storage_multi_insert($table, array $datas, $config_key = 'default')
+$res = storage_multi_insert('customer', [
+    ['name' => 'kiki', 'age' => 20],
+    ['name' => 'kiki', 'age' => 20],
+    ['name' => 'kiki', 'age' => 20],
+    ['name' => 'kiki', 'age' => 20],
+    ['name' => 'kiki', 'age' => 20],
+    ['name' => 'kiki', 'age' => 20],
+]);
 ```
 
 
@@ -77,39 +91,39 @@ TODO storage_multi_insert($table, array $datas, $config_key = 'default')
 
 
 
-### TODO
+### 查询数据
 ----
 ```php
-TODO storage_query($table, array $selections = [], array $queries = [], array $sorts = [], $offset = 0, $limit = 1000, $config_key = 'default')
+array storage_query($table, array $selections = [], array $queries = [], array $sorts = [], $offset = 0, $limit = 1000, $config_key = 'default')
 ```
 ##### 参数
 - table:  
-    TODO
+    查询的表名
 
 - selections:  
-    TODO
+    查询的字段，要查询的字段是多维数组中的值，可以用点符号来表达，如，data.name
 
 - queries:  
-    TODO
+    筛选的条件，[参考这里](https://docs.mongodb.com/manual/tutorial/query-documents/)
 
 - sorts:  
-    TODO
+    排序的条件
 
 - offset:  
-    TODO
+    查询偏移量
 
 - limit:  
-    TODO
+    取多少数据
 
 - config_key:  
-    TODO
+    具体组件的配置
 
 ##### 返回值
-TODO
+返回查询出来的结果
 
 ##### 示例
 ```php
-TODO storage_query($table, array $selections = [], array $queries = [], array $sorts = [], $offset = 0, $limit = 1000, $config_key = 'default')
+$customers = storage_query('customer', ['_id', 'data.name'], ['data.name' => 'kiki']);
 ```
 
 
@@ -122,27 +136,27 @@ TODO storage_query($table, array $selections = [], array $queries = [], array $s
 
 
 
-### TODO
+### 通过 id 查询单条数据
 ----
 ```php
-TODO storage_find($table, $id, $config_key = 'default')
+$data = storage_find($table, $id, $config_key = 'default')
 ```
 ##### 参数
 - table:  
-    TODO
+    写入的表名
 
 - id:  
-    TODO
+    数据的 id
 
 - config_key:  
-    TODO
+    具体组件的配置
 
 ##### 返回值
-TODO
+数据
 
 ##### 示例
 ```php
-TODO storage_find($table, $id, $config_key = 'default')
+$customer = storage_find('customer', $id);
 ```
 
 
@@ -155,7 +169,7 @@ TODO storage_find($table, $id, $config_key = 'default')
 
 
 
-### TODO
+### 更新数据
 ----
 ```php
 TODO storage_update($table, array $queries = [], array $new_data, $config_key = 'default')
