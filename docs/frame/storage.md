@@ -172,27 +172,27 @@ $customer = storage_find('customer', $id);
 ### 更新数据
 ----
 ```php
-TODO storage_update($table, array $queries = [], array $new_data, $config_key = 'default')
+int storage_update($table, array $queries = [], array $new_data, $config_key = 'default')
 ```
 ##### 参数
 - table:  
-    TODO
+    更新的表名
 
 - queries:  
-    TODO
+    目标数据的查询条件
 
 - new_data:  
-    TODO
+    新数据
 
 - config_key:  
-    TODO
+    具体组件的配置
 
 ##### 返回值
-TODO
+更新的数据数量
 
 ##### 示例
 ```php
-TODO storage_update($table, array $queries = [], array $new_data, $config_key = 'default')
+storage_update('customer', ['data.name' => 'kiki'], ['data.name' => 'other']);
 ```
 
 
@@ -205,25 +205,25 @@ TODO storage_update($table, array $queries = [], array $new_data, $config_key = 
 
 
 
-### TODO
+### 删除数据
 ----
 ```php
-TODO storage_delete($table, array $queries = [], $config_key = 'default')
+int storage_delete($table, array $queries = [], $config_key = 'default')
 ```
 ##### 参数
 - table:  
-    TODO
+    删除的表名
 
 - queries:  
-    TODO
+    目标数据的查询条件
 
 - config_key:  
-    TODO
+    具体组件的配置
 
 ##### 返回值
-TODO
+删除的数据数量
 
 ##### 示例
 ```php
-TODO storage_delete($table, array $queries = [], $config_key = 'default')
+storage_delete('customer', ['data.name' => 'kiki']);
 ```
