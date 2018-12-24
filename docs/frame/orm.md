@@ -1,6 +1,6 @@
 # ORM
 
-ORM 是提供了一个可在编程语言里使用的 “虚拟对象数据库”，[这里](https://zh.wikipedia.org/wiki/对象关系映射)有更多的说明，此处不展开讲解，使用时直接加载 `command.php`，示例：
+ORM 是提供了一个可在编程语言里使用的 “虚拟对象数据库”，[这里](https://zh.wikipedia.org/wiki/对象关系映射)有更多的说明，此处不展开讲解，使用时直接加载 `entity.php`，示例：
 ```php
 include FRAME_DIR.'/entity.php';
 ```
