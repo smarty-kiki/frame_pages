@@ -17,7 +17,7 @@
   - [非 SQL 存储](frame/storage.md)
   - [模版引擎?](frame/view_compiler.md)
   - [命令行](frame/command.md)
-  - [ORM?](frame/orm.md)
+  - [ORM](frame/orm.md)
   - [断言](frame/otherwise.md)
   - [工作单元](frame/unitofwork.md)
   - [辅助函数](frame/function.md)
