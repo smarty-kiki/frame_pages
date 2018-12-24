@@ -84,7 +84,7 @@ CREATE TABLE `customer` (
 $customer = customer::create($name, $age);
 
 // read
-$customer = dao('customer')->find($id);
+$customer = dao('customer')->find($id); // 在后续着重讲解
 
 // update
 $customer->name = 'kiki';
