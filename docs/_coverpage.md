@@ -8,4 +8,4 @@
 - 规范性好
 
 [GitHub](https://github.com/smarty-kiki/frame/)
-[开始上手](#介绍)
+[开始上手](#定位)
