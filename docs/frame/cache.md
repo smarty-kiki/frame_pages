@@ -1,6 +1,6 @@
 # 缓存
 
-提供缓存的操作能力，框架中 cache 目录下的文件为基于具体组件的实现，如 memcache.php、redis.php，使用时按需要载入，示例：
+提供缓存的操作能力，框架中 `cache` 目录下的文件为基于具体组件的实现，如 `memcache.php`、`redis.php`，使用时按需要载入，示例：
 ```php
 include FRAME_DIR.'/cache/redis.php';
 ```
