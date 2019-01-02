@@ -27,14 +27,14 @@ return [
 ### 注册每个任务执行完之后会执行的逻辑，通常用于连接资源回收
 ----
 ```php
-void queue_finish_action(closure $action = null)
+closure queue_finish_action(closure $action = null)
 ```
 ##### 参数
 - action:  
     在 job 执行完之后被执行的逻辑闭包
 
 ##### 返回值
-无
+当前生效的逻辑闭包
 
 ##### 示例
 ```php

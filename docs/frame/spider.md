@@ -1,4 +1,9 @@
-# ../../frame/spider/beanstalk.php
+# 蜘蛛
+
+蜘蛛经过配置可以定时的从指定的网络位置获取内容并保存，框架目录 `spider` 中的文件是基于不同组件的实现，如 `beanstalk.php`，使用时按需加载：
+```php
+include FRAME_DIR.'/spider/beanstalk.php';
+```
 
 
 
@@ -8,27 +13,24 @@
 
 
 
-
-
-
-### TODO
+### 按照 cron_string 获取下一个符合时间规则的时间
 ----
 ```php
-TODO spider_cron_string_parse($cron_string, $after_timestamp = null)
+int spider_cron_string_parse($cron_string, $after_timestamp = null)
 ```
 ##### 参数
 - cron_string:  
-    TODO
+    crontab 时间规则字符串，如 `* * * * *`
 
 - after_timestamp:  
-    TODO
+    指定从某个时间戳之后开始寻找，不传默认从当前时间开始找
 
 ##### 返回值
-TODO
+下一个符合时间规则的时间戳
 
 ##### 示例
 ```php
-TODO spider_cron_string_parse($cron_string, $after_timestamp = null)
+$timestamp = spider_cron_string_parse('0 1 * * *');
 ```
 
 
@@ -41,21 +43,24 @@ TODO spider_cron_string_parse($cron_string, $after_timestamp = null)
 
 
 
-### TODO
+### 注册在蜘蛛任务执行完之后会执行的逻辑，通常用于连接资源回收
 ----
 ```php
-TODO spider_finish_action(closure $action = null)
+closure spider_finish_action(closure $action = null)
 ```
 ##### 参数
 - action:  
-    TODO
+    在 job 执行完之后被执行的逻辑闭包
 
 ##### 返回值
-TODO
+当前生效的逻辑闭包
 
 ##### 示例
 ```php
-TODO spider_finish_action(closure $action = null)
+spider_finish_action(function () {
+    cache_close();
+    db_close();
+});
 ```
 
 
@@ -68,18 +73,18 @@ TODO spider_finish_action(closure $action = null)
 
 
 
-### TODO
+### 按当前声明的蜘蛛任务的时间规则来触发任务
 ----
 ```php
-TODO spider_trigger()
+void spider_trigger()
 ```
 ##### 参数
 ##### 返回值
-TODO
+无
 
 ##### 示例
 ```php
-TODO spider_trigger()
+spider_trigger();
 ```
 
 
@@ -92,117 +97,27 @@ TODO spider_trigger()
 
 
 
-### TODO
+### 蜘蛛任务推入执行队列
 ----
 ```php
-TODO spider_job_push($job_name, $url = null)
-```
-##### 参数
-- job_name:  
-    TODO
-
-- url:  
-    TODO
-
-##### 返回值
-TODO
-
-##### 示例
-```php
-TODO spider_job_push($job_name, $url = null)
-```
-
-
-
-
-
-
-
-
-
-
-
-### TODO
-----
-```php
-TODO spider_job_get(string $job_name, string $cron_string, string $url, array $spider_rule, $priority = 10, $retry = [], $config_key = 'default')
+string spider_job_push($job_name, $url = null, $data = [])
 ```
 ##### 参数
 - job_name:  
-    TODO
-
-- cron_string:  
-    TODO
+    蜘蛛任务名
 
 - url:  
-    TODO
-
-- spider_rule:  
-    TODO
-
-- priority:  
-    TODO
-
-- retry:  
-    TODO
-
-- config_key:  
-    TODO
-
-##### 返回值
-TODO
-
-##### 示例
-```php
-TODO spider_job_get(string $job_name, string $cron_string, string $url, array $spider_rule, $priority = 10, $retry = [], $config_key = 'default')
-```
-
-
-
-
-
-
-
-
-
-
-
-### TODO
-----
-```php
-TODO spider_job_post(string $job_name, string $cron_string, string $url, array $data, array $spider_rule, $priority = 10, $retry = [], $config_key = 'default')
-```
-##### 参数
-- job_name:  
-    TODO
-
-- cron_string:  
-    TODO
-
-- url:  
-    TODO
+    指定的抓取 URL，如果没有传，默认使用声明在蜘蛛任务中的 URL
 
 - data:  
-    TODO
-
-- spider_rule:  
-    TODO
-
-- priority:  
-    TODO
-
-- retry:  
-    TODO
-
-- config_key:  
-    TODO
+    指定的 POST 数据，如果没有传，默认使用声明在蜘蛛任务中的 data
 
 ##### 返回值
-TODO
+队列任务 id
 
 ##### 示例
 ```php
-TODO spider_job_post(string $job_name, string $cron_string, string $url, array $data, array $spider_rule, $priority = 10, $retry = [], $config_key = 'default')
+spider_job_push('hello-world');
 ```
 
 
@@ -215,48 +130,45 @@ TODO spider_job_post(string $job_name, string $cron_string, string $url, array $
 
 
 
-### TODO
+### 注册 get 请求的蜘蛛任务
 ----
 ```php
-TODO spider_jobs($jobs = null)
-```
-##### 参数
-- jobs:  
-    TODO
-
-##### 返回值
-TODO
-
-##### 示例
-```php
-TODO spider_jobs($jobs = null)
-```
-
-
-
-
-
-
-
-
-
-
-
-### TODO
-----
-```php
-TODO spider_job_pickup($job_name)
+void spider_job_get(string $job_name, string $cron_string, string $url, string $format, array $spider_rule, $priority = 10, $retry = [], $config_key = 'default')
 ```
 ##### 参数
 - job_name:  
-    TODO
+    任务名
+
+- cron_string:  
+    任务的时间规则
+
+- url:  
+    要获取的 URL
+
+- format:  
+    要获取的目标格式，如 json、xml、html
+
+- spider_rule:  
+    目标格式到要获取的格式的转换关系
+
+- priority:  
+    优先级，如果任务堆积，会按照优先级来执行获取任务
+
+- retry:  
+    如果当次获取任务失败，
+
+- config_key:  
+    依赖组件的配置
 
 ##### 返回值
-TODO
+无
 
 ##### 示例
 ```php
-TODO spider_job_pickup($job_name)
+spider_job_get('test', '* * * * *', 'http://127.0.0.1/test', 'json', [
+    'test' => 'a',
+    'test3.a' => 'b',
+]);
 ```
 
 
@@ -269,24 +181,48 @@ TODO spider_job_pickup($job_name)
 
 
 
-### TODO
+### 注册 post 请求的蜘蛛任务
 ----
 ```php
-TODO spider_watch($config_key = 'default', $memory_limit = 1048576)
+void spider_job_post(string $job_name, string $cron_string, string $url, $data, string $format, array $spider_rule, $priority = 10, $retry = [], $config_key = 'default')
 ```
 ##### 参数
-- config_key:  
-    TODO
+- job_name:  
+    任务名
 
-- memory_limit:  
-    TODO
+- cron_string:  
+    任务的时间规则
+
+- url:  
+    要获取的 URL
+
+- data:  
+    POST 数据
+
+- format:  
+    要获取的目标格式，如 json、xml、html
+
+- spider_rule:  
+    目标格式到要获取的格式的转换关系
+
+- priority:  
+    优先级，如果任务堆积，会按照优先级来执行获取任务
+
+- retry:  
+    如果当次获取任务失败，
+
+- config_key:  
+    依赖组件的配置
 
 ##### 返回值
-TODO
+无
 
 ##### 示例
 ```php
-TODO spider_watch($config_key = 'default', $memory_limit = 1048576)
+spider_job_post('test', '* * * * *', 'http://127.0.0.1/test', ['name' => 'kiki'], 'json', [
+    'test' => 'a',
+    'test3.a' => 'b',
+]);
 ```
 
 
@@ -299,30 +235,30 @@ TODO spider_watch($config_key = 'default', $memory_limit = 1048576)
 
 
 
-### TODO
+### 立刻获取，但不存储，get 方法
 ----
 ```php
-TODO spider_run($url, $method, $data, array $spider_rule)
+array spider_run_get($url, string $format, array $spider_rule)
 ```
 ##### 参数
 - url:  
-    TODO
+    要获取的 URL
 
-- method:  
-    TODO
-
-- data:  
-    TODO
+- format:  
+    要获取的目标格式，如 json、xml、html
 
 - spider_rule:  
-    TODO
+	目标格式到要获取的格式的转换关系
 
 ##### 返回值
-TODO
+获取的数据
 
 ##### 示例
 ```php
-TODO spider_run($url, $method, $data, array $spider_rule)
+$data = spider_run_get('http://127.0.0.1/test', 'json', [
+    'test' => 'a',
+    'test3.a' => 'b',
+]);
 ```
 
 
@@ -335,36 +271,75 @@ TODO spider_run($url, $method, $data, array $spider_rule)
 
 
 
-### TODO
+### 立刻获取，但不存储，post 方法
 ----
 ```php
-TODO spider_data_query($job_name, array $selections = [], array $queries = [], array $sorts = [], $offset = 0, $limit = 1000)
+array spider_run_post($url, $data, string $format, array $spider_rule)
+```
+##### 参数
+- url:  
+    要获取的 URL
+
+- data:  
+    POST 数据
+
+- format:  
+    要获取的目标格式，如 json、xml、html
+
+- spider_rule:  
+    目标格式到要获取的格式的转换关系
+
+##### 返回值
+获取的数据
+
+##### 示例
+```php
+$data = spider_run_post('http://127.0.0.1/test', ['name' => 'kiki'], 'json', [
+    'test' => 'a',
+    'test3.a' => 'b',
+]);
+```
+
+
+
+
+
+
+
+
+
+
+
+### 查询获取到的数据
+----
+```php
+array spider_data_query($job_name, array $selections = [], array $queries = [], array $sorts = [], $offset = 0, $limit = 1000)
 ```
 ##### 参数
 - job_name:  
-    TODO
+    蜘蛛任务名
 
 - selections:  
-    TODO
+    查询的字段，要查询的字段是多维数组中的值，可以用点符号来表达，如，data.name
 
 - queries:  
-    TODO
+	筛选的条件，[参考这里](https://docs.mongodb.com/manual/tutorial/query-documents/)
 
 - sorts:  
-    TODO
+    排序的条件
 
 - offset:  
-    TODO
+    查询偏移量
 
 - limit:  
-    TODO
+    取多少数据
 
 ##### 返回值
-TODO
+查询出来的数据
 
 ##### 示例
 ```php
-TODO spider_data_query($job_name, array $selections = [], array $queries = [], array $sorts = [], $offset = 0, $limit = 1000)
+$datas = spider_data_query('test');
 ```
 
 
@@ -377,19 +352,19 @@ TODO spider_data_query($job_name, array $selections = [], array $queries = [], a
 
 
 
-### TODO
+### 查询最后一次获取到的数据
 ----
 ```php
-TODO spider_last_data_query($job_name)
+array spider_last_data_query($job_name)
 ```
 ##### 参数
 - job_name:  
-    TODO
+    蜘蛛任务名
 
 ##### 返回值
-TODO
+查询出来的数据
 
 ##### 示例
 ```php
-TODO spider_last_data_query($job_name)
+$last_data = spider_last_data_query('test');
 ```

@@ -13,7 +13,7 @@
   - [锁](frame/lock.md)
   - [日志](frame/log.md)
   - [队列](frame/queue.md)
-  - [爬虫?](frame/spider.md)
+  - [蜘蛛](frame/spider.md)
   - [非 SQL 存储](frame/storage.md)
   - [模版引擎?](frame/view_compiler.md)
   - [命令行](frame/command.md)
