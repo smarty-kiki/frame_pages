@@ -27,7 +27,7 @@ mix array_get($array, $key, $default = null)
     要获取的 array key，因 array 是多层、多维的，key 可以用点符号来表达多层、多维逻辑、如 data.name
 
 - default:  
-    如果没有对应的值返回的默认值
+    如果没有对应的值返回的默认值，可以是闭包，会以闭包的返回值作为默认值，在没有对应的值时才会被执行
 
 ##### 返回值
 目标值
