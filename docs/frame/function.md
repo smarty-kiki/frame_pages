@@ -50,7 +50,7 @@ $name = array_get($data, 'base_info.name', '无名');
 ### 在数组指定位置设置值
 ----
 ```php
-void array_set(&$array, $key, $value)
+array array_set($array, $key, $value)
 ```
 ##### 参数
 - array:  
@@ -63,11 +63,11 @@ void array_set(&$array, $key, $value)
     要设置的值
 
 ##### 返回值
-无
+设置值后的新数组
 
 ##### 示例
 ```php
-array_set($data, 'data.name', 'kiki');
+$new_data = array_set($data, 'data.name', 'kiki');
 ```
 
 
