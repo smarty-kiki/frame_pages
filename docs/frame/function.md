@@ -298,60 +298,93 @@ $res_array = array_transfer($array, [
 
 
 
-### TODO
+### 字符串尾部省略
 ----
 ```php
-TODO aksort(&$array, $valrev = false, $keyrev = false)
-```
-##### 参数
-- array:  
-    TODO
-
-- valrev:  
-    TODO
-
-- keyrev:  
-    TODO
-
-##### 返回值
-TODO
-
-##### 示例
-```php
-TODO aksort(&$array, $valrev = false, $keyrev = false)
-```
-
-
-
-
-
-
-
-
-
-
-
-### TODO
-----
-```php
-TODO str_cut($string, $len, $suffix = '...')
+string str_tail_cut($string, $len, $suffix = '...')
 ```
 ##### 参数
 - string:  
-    TODO
+    目标字符串
 
 - len:  
-    TODO
+    最终限制到的长度
 
 - suffix:  
-    TODO
+    省略符号
 
 ##### 返回值
-TODO
+满足限制长度的字符串
 
 ##### 示例
 ```php
-TODO str_cut($string, $len, $suffix = '...')
+$subtitle = str_tail_cut($subtitle, 20);
+```
+
+
+
+
+
+
+
+
+
+
+
+### 字符串头部省略
+----
+```php
+string str_head_cut($string, $len, $prefix = '...')
+```
+##### 参数
+- string:  
+目标字符串
+
+- len:  
+最终限制到的长度
+
+- prefix:  
+省略符号
+
+##### 返回值
+满足限制长度的字符串
+
+##### 示例
+```php
+$subtitle = str_head_cut($subtitle, 20);
+```
+
+
+
+
+
+
+
+
+
+
+
+### 字符串中部省略
+----
+```php
+string str_middle_cut($string, $len, $middle = '...')
+```
+##### 参数
+- string:  
+目标字符串
+
+- len:  
+最终限制到的长度
+
+- middle:  
+省略符号
+
+##### 返回值
+满足限制长度的字符串
+
+##### 示例
+```php
+$subtitle = str_middle_cut($subtitle, 20);
 ```
 
 
