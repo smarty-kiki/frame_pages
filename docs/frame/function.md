@@ -110,44 +110,6 @@ $has_name = array_exists($array, 'data.name');
 
 
 
-### 从数组中遍历获取某个值
-----
-```php
-array array_fetch($array, $key)
-```
-##### 参数
-- array:  
-    目标数组
-
-- key:  
-    要获取的 array key，因 array 是多层、多维的，key 可以用点符号来表达多层、多维逻辑、如 data.name
-
-##### 返回值
-要获取的值的数组
-
-##### 示例
-```php
-$array = [
-    [
-        'data' => ['name' => 'kiki'],
-    ],
-    [
-        'data' => ['name' => 'kiki'],
-    ],
-];
-$names = array_fetch($array, 'data.name');
-```
-
-
-
-
-
-
-
-
-
-
-
 ### 去掉数组中的某个值
 ----
 ```php
