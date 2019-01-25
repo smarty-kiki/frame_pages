@@ -181,7 +181,7 @@ array db_query_column($column, $sql_template, array $binds = [], $config_key = '
 ```
 ##### 参数
 - column:  
-    查询的列名
+    查询的列名或 alias 名
 
 - sql_template:  
     sql 模版
@@ -197,7 +197,7 @@ array db_query_column($column, $sql_template, array $binds = [], $config_key = '
 
 ##### 示例
 ```php
-$customer_names = db_query_column('name', 'select * from customer where status = :status', [
+$customer_names = db_query_column('name', 'select name from customer where status = :status', [
     ':status' => 'VALID',
 ]);
 ```
