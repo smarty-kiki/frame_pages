@@ -22,10 +22,10 @@ list(
 ```
 框架实现了一些常用场景的快捷方法：
 
-* [获取本次请求是否是 https](frame/http?id=获取本次请求是否是-https)
-* [获取当前 uri](frame/http?id=获取当前-uri)
-* [获取具体的 uri 信息](frame/http?id=获取具体的-uri-信息)
-* [获取请求来源 ip](frame/http?id=获取请求来源-ip)
+* [获取本次请求是否是 https](frame/0.1/http?id=获取本次请求是否是-https)
+* [获取当前 uri](frame/0.1/http?id=获取当前-uri)
+* [获取具体的 uri 信息](frame/0.1/http?id=获取具体的-uri-信息)
+* [获取请求来源 ip](frame/0.1/http?id=获取请求来源-ip)
 
 ### cookie 中数据的获取
 通过 `cookie_safe`、`cookie`、`cookie_list` 方法来获取客户端传来的 cookie 数据，如:

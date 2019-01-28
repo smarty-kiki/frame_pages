@@ -13,6 +13,6 @@
 
 框架实现了一些常用场景的快捷方法：
 
-* [声明未命中所有路由](frame/http?id=声明未命中所有路由)
-* [页面重定向](frame/http?id=页面重定向)
-* [使用 http 的 etag 缓存](frame/http?id=使用-http-的-etag-缓存)
+* [声明未命中所有路由](0.1/frame/http?id=声明未命中所有路由)
+* [页面重定向](0.1/frame/http?id=页面重定向)
+* [使用 http 的 etag 缓存](0.1/frame/http?id=使用-http-的-etag-缓存)

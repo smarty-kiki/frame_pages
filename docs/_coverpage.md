@@ -1,4 +1,4 @@
-# frame <small>0.0.1</small>
+# frame <small>0.1</small>
 
 > 易用、组合灵活、高效的 PHP 组合式框架
 
