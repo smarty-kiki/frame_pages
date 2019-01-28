@@ -397,21 +397,21 @@ $subtitle = str_middle_cut($subtitle, 20);
 
 
 
-### TODO
+### var_dump 并且 die
 ----
 ```php
-TODO dd(...$args)
+void dd(...$args)
 ```
 ##### 参数
-- args:  
-    TODO
+- ...args:  
+    可传多个参数，类型不限，会按照参数顺序 var_dump 出来
 
 ##### 返回值
-TODO
+无，但是会直接输出出来
 
 ##### 示例
 ```php
-TODO dd(...$args)
+dd($params, $this);
 ```
 
 
@@ -424,21 +424,21 @@ TODO dd(...$args)
 
 
 
-### TODO
+### 获取变量的值，如果变量是一个闭包，会执行它并返回闭包中的返回值
 ----
 ```php
-TODO value($value)
+mix value($value)
 ```
 ##### 参数
 - value:  
-    TODO
+    可传某个值，也可以传一个闭包
 
 ##### 返回值
-TODO
+传入的值或者闭包的执行结果
 
 ##### 示例
 ```php
-TODO value($value)
+value($config['display_name']);
 ```
 
 
@@ -451,21 +451,21 @@ TODO value($value)
 
 
 
-### TODO
+### 获取某个闭包的唯一标识，建议不要硬编码判断闭包的标识，因为唯一标识中也含有闭包定义所在的文件及行范围，相关变化也会改变闭包的标识，需注意
 ----
 ```php
-TODO closure_name($closure)
+string closure_id($closure)
 ```
 ##### 参数
 - closure:  
-    TODO
+    闭包
 
 ##### 返回值
-TODO
+闭包的唯一标识
 
 ##### 示例
 ```php
-TODO closure_name($closure)
+$id = closure_id($closure)
 ```
 
 
@@ -478,24 +478,26 @@ TODO closure_name($closure)
 
 
 
-### TODO
+### 判断字符串是否以某个字符串开始
 ----
 ```php
-TODO starts_with($haystack, $needles)
+boolean starts_with($haystack, $needles)
 ```
 ##### 参数
 - haystack:  
-    TODO
+    判断该变量字符串是否以指定字符串开头
 
 - needles:  
-    TODO
+    作为判断依据的开头字符串，也可以传入数组，传入为数组时匹配任意一个返回值即为 true
 
 ##### 返回值
-TODO
+是否以指定字符串开头的 boolean 值
 
 ##### 示例
 ```php
-TODO starts_with($haystack, $needles)
+if (starts_with($post, '亲，')) {
+    echo '淘宝体';
+}
 ```
 
 
@@ -508,24 +510,26 @@ TODO starts_with($haystack, $needles)
 
 
 
-### TODO
+### 判断字符串是否以某个字符串结尾
 ----
 ```php
-TODO ends_with($haystack, $needles)
+boolean ends_with($haystack, $needles)
 ```
 ##### 参数
 - haystack:  
-    TODO
+    判断该变量字符串是否以指定字符串结尾
 
 - needles:  
-    TODO
+    作为判断依据的结尾字符串，也可以传入数组，传入为数组时匹配任意一个返回值即为 true
 
 ##### 返回值
-TODO
+是否以指定字符串结尾的 boolean 值
 
 ##### 示例
 ```php
-TODO ends_with($haystack, $needles)
+if (ends_with($post, '?')) {
+    echo '疑问句';
+}
 ```
 
 
@@ -538,24 +542,25 @@ TODO ends_with($haystack, $needles)
 
 
 
-### TODO
+### 确保字符串以指定字符串结尾，如果已经是以指定字符串结尾则不会被改变
 ----
 ```php
-TODO str_finish($value, $cap)
+string str_finish($value, $cap)
 ```
 ##### 参数
 - value:  
-    TODO
+    被操作的字符串
 
 - cap:  
-    TODO
+    指定的结尾字符串
 
 ##### 返回值
-TODO
+处理后的字符串
 
 ##### 示例
 ```php
-TODO str_finish($value, $cap)
+echo str_finish('真棒', '!');   // 真棒!
+echo str_finish('真棒!', '!');  // 真棒!
 ```
 
 
@@ -568,21 +573,23 @@ TODO str_finish($value, $cap)
 
 
 
-### TODO
+### 判断某个字符串是否是 URL
 ----
 ```php
-TODO is_url($path)
+boolean is_url($path)
 ```
 ##### 参数
 - path:  
-    TODO
+    被判断的字符串
 
 ##### 返回值
-TODO
+判断结果
 
 ##### 示例
 ```php
-TODO is_url($path)
+if (is_url($path)) {
+     echo '是 URL';
+}
 ```
 
 
@@ -595,21 +602,21 @@ TODO is_url($path)
 
 
 
-### TODO
+### 指定配置文件根目录
 ----
 ```php
-TODO config_dir($dir = null)
+string config_dir($dir = null)
 ```
 ##### 参数
 - dir:  
-    TODO
+    配置文件根目录
 
 ##### 返回值
-TODO
+当前生效的配置文件根目录
 
 ##### 示例
 ```php
-TODO config_dir($dir = null)
+config_dir(FRAME_DIR.'/config');
 ```
 
 
@@ -622,21 +629,21 @@ TODO config_dir($dir = null)
 
 
 
-### TODO
+### 获取指定的配置
 ----
 ```php
-TODO config($key)
+array config($key)
 ```
 ##### 参数
 - key:  
-    TODO
+    配置名
 
 ##### 返回值
-TODO
+符合当前环境的配置
 
 ##### 示例
 ```php
-TODO config($key)
+$config = config('mysql');
 ```
 
 
@@ -649,18 +656,18 @@ TODO config($key)
 
 
 
-### TODO
+### 获取当前环境名
 ----
 ```php
-TODO env()
+string env()
 ```
 ##### 参数
 ##### 返回值
-TODO
+当前环境名
 
 ##### 示例
 ```php
-TODO env()
+$env = env();
 ```
 
 
@@ -673,21 +680,23 @@ TODO env()
 
 
 
-### TODO
+### 判断当前环境是否是传入的环境
 ----
 ```php
-TODO is_env($env)
+boolean is_env($env)
 ```
 ##### 参数
 - env:  
-    TODO
+    环境名
 
 ##### 返回值
-TODO
+判断结果
 
 ##### 示例
 ```php
-TODO is_env($env)
+if (is_env('production')) {
+    echo '线上环境';
+}
 ```
 
 
@@ -700,21 +709,23 @@ TODO is_env($env)
 
 
 
-### TODO
+### 不为空
 ----
 ```php
-TODO not_empty($mixed)
+boolean not_empty($mixed)
 ```
 ##### 参数
 - mixed:  
-    TODO
+    被判断的变量
 
 ##### 返回值
-TODO
+判断结果
 
 ##### 示例
 ```php
-TODO not_empty($mixed)
+if (not_empty($mixed)) {
+    echo '不为空';
+}
 ```
 
 
@@ -727,21 +738,23 @@ TODO not_empty($mixed)
 
 
 
-### TODO
+### 不为 null
 ----
 ```php
-TODO not_null($mixed)
+boolean not_null($mixed)
 ```
 ##### 参数
 - mixed:  
-    TODO
+    被判断的变量
 
 ##### 返回值
-TODO
+判断结果
 
 ##### 示例
 ```php
-TODO not_null($mixed)
+if (not_null($mixed)) {
+    echo '不为 null';
+}
 ```
 
 
@@ -754,21 +767,23 @@ TODO not_null($mixed)
 
 
 
-### TODO
+### 传入的所有变量都为空
 ----
 ```php
-TODO all_empty(...$args)
+boolean all_empty(...$args)
 ```
 ##### 参数
-- args:  
-    TODO
+- ...args:  
+    要被判断的变量，可以传多个参数
 
 ##### 返回值
-TODO
+判断结果
 
 ##### 示例
 ```php
-TODO all_empty(...$args)
+if (all_empty($a, $b, $c)) {
+    echo '都为空';
+}
 ```
 
 
@@ -781,21 +796,52 @@ TODO all_empty(...$args)
 
 
 
-### TODO
+### 传入的所有变量都为 null
+----
+    ```php
+boolean all_null(...$args)
+    ```
+##### 参数
+- ...args:  
+    要被判断的变量，可以传多个参数
+
+##### 返回值
+判断结果
+
+##### 示例
+```php
+if (all_null($a, $b, $c)) {
+    echo '都为 null';
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+### 传入的所有变量都不为空
 ----
 ```php
-TODO all_not_empty(...$args)
+boolean all_not_empty(...$args)
 ```
 ##### 参数
-- args:  
-    TODO
+- ...args:  
+    要被判断的变量，可以传多个参数
 
 ##### 返回值
-TODO
+判断结果
 
 ##### 示例
 ```php
-TODO all_not_empty(...$args)
+if (all_not_empty($a, $b, $c)) {
+    echo '都不为空';
+}
 ```
 
 
@@ -808,21 +854,52 @@ TODO all_not_empty(...$args)
 
 
 
-### TODO
+### 传入的所有变量都不为 null
+----
+    ```php
+boolean all_not_null(...$args)
+    ```
+##### 参数
+- ...args:  
+    要被判断的变量，可以传多个参数
+
+##### 返回值
+判断结果
+
+##### 示例
+```php
+if (all_not_null($a, $b, $c)) {
+    echo '都不为 null';
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+### 有为空的值
 ----
 ```php
-TODO has_empty(...$args)
+boolean has_empty(...$args)
 ```
 ##### 参数
-- args:  
-    TODO
+- ...args:  
+    要被判断的变量，可以传多个参数
 
 ##### 返回值
-TODO
+判断结果
 
 ##### 示例
 ```php
-TODO has_empty(...$args)
+if (has_empty($a, $b, $c)) {
+    echo '有空值';
+}
 ```
 
 
@@ -835,24 +912,59 @@ TODO has_empty(...$args)
 
 
 
-### TODO
+### 有为 null 的值
+----
+    ```php
+boolean has_null(...$args)
+    ```
+##### 参数
+- ...args:  
+    要被判断的变量，可以传多个参数
+
+##### 返回值
+判断结果
+
+##### 示例
+```php
+if (has_null($a, $b, $c)) {
+    echo '有空值';
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+### 获取一个时间  
 ----
 ```php
-TODO datetime($expression = null, $format = 'Y-m-d H:i:s')
+string datetime($expression = null, $format = 'Y-m-d H:i:s')
 ```
 ##### 参数
 - expression:  
-    TODO
+    关于所需要时间的描述，可以为 null，也可以是时间戳，也可以是一个相对时间的描述语句
 
 - format:  
-    TODO
+    返回的时间的格式
 
 ##### 返回值
-TODO
+时间字符串
 
 ##### 示例
 ```php
-TODO datetime($expression = null, $format = 'Y-m-d H:i:s')
+$now = datetime();
+$the_time = datetime(1514736000);  // 2015-01-01 00:00:00
+$tomorrow_this_time = datetime('+1 days'); // 明天此刻
+$last_friday = datetime('last friday'); // 不含今天的上一个周五 0 点
+$friday = datetime('friday'); // 含今天的下一个周五，即如果今天为周五返回为今天 0 点
+$next_friday = datetime('next friday'); // 不含今天的下一个周五，即如今天为周五，则为下周五 0 点
+$next_friday_noon = datetime('next friday 12:00:00'); // 不含今天的下一个周五，即如今天为周五，则为下周五 12 点
 ```
 
 
@@ -865,27 +977,28 @@ TODO datetime($expression = null, $format = 'Y-m-d H:i:s')
 
 
 
-### TODO
+### 计算并生成时间差异字符串
 ----
 ```php
-TODO datetime_diff($datetime1, $datetime2, $format = '%ts')
+mix datetime_diff($datetime1, $datetime2, $format = '%ts')
 ```
 ##### 参数
 - datetime1:  
-    TODO
+    时间1
 
 - datetime2:  
-    TODO
+    时间2
 
 - format:  
-    TODO
+格式字符串是对返回值格式的描述，其中的变量[参考这里](http://php.net/manual/en/dateinterval.format.php#refsect1-dateinterval.format-parameters)，在官方基础上又添加了`ts`总差异描述，`tm`总差异分钟数（秒差异舍去），`th`总差异小时数（分、秒差异舍去）`td`总差异天数（时、分、秒差异舍去）
 
 ##### 返回值
-TODO
+按照`format`的格式计算出来的差异字符串
 
 ##### 示例
 ```php
-TODO datetime_diff($datetime1, $datetime2, $format = '%ts')
+$description = datetime_diff($datetime1, $datetime2, '共差 %ts 秒');
+$interval_second = datetime_diff($datetime1, $datetime2);
 ```
 
 
@@ -898,36 +1011,39 @@ TODO datetime_diff($datetime1, $datetime2, $format = '%ts')
 
 
 
-### TODO
+### 远程 POST 请求
 ----
 ```php
-TODO remote_post($url, $data = [], $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
+mix remote_post($url, $data = [], $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
 ```
 ##### 参数
 - url:  
-    TODO
+    请求的目标地址
 
 - data:  
-    TODO
+    要传的值，支持字符串和数组两个类型，为字符串时会直接通过 http body 传过去，为数组时会按照 form 格式传过去
 
 - timeout:  
-    TODO
+    多久放弃等待结果，单次重试的时间
 
 - retry:  
-    TODO
+    [curl 错误码](https://curl.haxx.se/libcurl/c/libcurl-errors.html)不为 0 时的请求重试次数
 
 - headers:  
-    TODO
+    header 数组，如
+    ```php
+    ['Content-type: text/plain', 'Content-length: 100']
+    ```
 
 - cookies:  
-    TODO
+    键值对数组
 
 ##### 返回值
-TODO
+远程请求后的结果，通讯失败为 false
 
 ##### 示例
 ```php
-TODO remote_post($url, $data = [], $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
+$html = remote_post($url);
 ```
 
 
@@ -940,36 +1056,39 @@ TODO remote_post($url, $data = [], $timeout = 3, $retry = 3, array $headers = []
 
 
 
-### TODO
+### 远程 POST 请求，返回结果为 json
 ----
 ```php
-TODO remote_post_json($url, $data = [], $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
+mix remote_post_json($url, $data = [], $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
 ```
 ##### 参数
 - url:  
-    TODO
+    请求的目标地址
 
 - data:  
-    TODO
+    要传的值，支持字符串和数组两个类型，为字符串时会直接通过 http body 传过去，为数组时会按照 form 格式传过去
 
 - timeout:  
-    TODO
+    多久放弃等待结果，单次重试的时间
 
 - retry:  
-    TODO
+    [curl 错误码](https://curl.haxx.se/libcurl/c/libcurl-errors.html)不为 0 时的请求重试次数
 
 - headers:  
-    TODO
+    header 数组，如
+    ```php
+    ['Content-type: text/plain', 'Content-length: 100']
+    ```
 
 - cookies:  
-    TODO
+    键值对数组
 
 ##### 返回值
-TODO
+远程请求后的结果数组，通讯失败为 false
 
 ##### 示例
 ```php
-TODO remote_post_json($url, $data = [], $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
+$res = remote_post_json($url)
 ```
 
 
@@ -982,33 +1101,36 @@ TODO remote_post_json($url, $data = [], $timeout = 3, $retry = 3, array $headers
 
 
 
-### TODO
+### 远程 GET 请求
 ----
 ```php
-TODO remote_get($url, $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
+mix remote_get($url, $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
 ```
 ##### 参数
 - url:  
-    TODO
+    请求的目标地址
 
 - timeout:  
-    TODO
+    多久放弃等待结果，单次重试的时间
 
 - retry:  
-    TODO
+    [curl 错误码](https://curl.haxx.se/libcurl/c/libcurl-errors.html)不为 0 时的请求重试次数
 
 - headers:  
-    TODO
+    header 数组，如
+    ```php
+    ['Content-type: text/plain', 'Content-length: 100']
+    ```
 
 - cookies:  
-    TODO
+    键值对数组
 
 ##### 返回值
-TODO
+远程请求后的结果数组，通讯失败为 false
 
 ##### 示例
 ```php
-TODO remote_get($url, $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
+$html = remote_get($url);
 ```
 
 
@@ -1021,33 +1143,36 @@ TODO remote_get($url, $timeout = 3, $retry = 3, array $headers = [], array $cook
 
 
 
-### TODO
+### 远程 GET 请求，返回结果为 json
 ----
 ```php
-TODO remote_get_json($url, $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
+mix remote_get_json($url, $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
 ```
 ##### 参数
 - url:  
-    TODO
+    请求的目标地址
 
 - timeout:  
-    TODO
+    多久放弃等待结果，单次重试的时间
 
 - retry:  
-    TODO
+    [curl 错误码](https://curl.haxx.se/libcurl/c/libcurl-errors.html)不为 0 时的请求重试次数
 
 - headers:  
-    TODO
+    header 数组，如
+    ```php
+    ['Content-type: text/plain', 'Content-length: 100']
+    ```
 
 - cookies:  
-    TODO
+    键值对数组
 
 ##### 返回值
-TODO
+远程请求后的结果数组，通讯失败为 false
 
 ##### 示例
 ```php
-TODO remote_get_json($url, $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
+$res = remote_get_json($url);
 ```
 
 
@@ -1060,21 +1185,21 @@ TODO remote_get_json($url, $timeout = 3, $retry = 3, array $headers = [], array 
 
 
 
-### TODO
+### 获取单例
 ----
 ```php
-TODO instance($class_name)
+object instance($class_name)
 ```
 ##### 参数
 - class_name:  
-    TODO
+    要获取单例的类名
 
 ##### 返回值
-TODO
+单例对象
 
 ##### 示例
 ```php
-TODO instance($class_name)
+$obj = instance('stdClass');
 ```
 
 
@@ -1087,19 +1212,19 @@ TODO instance($class_name)
 
 
 
-### TODO
+### json 构造方法
 ----
 ```php
-TODO json($data = [])
+string json($data = [])
 ```
 ##### 参数
 - data:  
-    TODO
+    要被转换为 json 的数据
 
 ##### 返回值
-TODO
+json 字符串
 
 ##### 示例
 ```php
-TODO json($data = [])
+$res = json($data);
 ```

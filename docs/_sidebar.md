@@ -8,25 +8,26 @@
 
   - [缓存](frame/cache.md)
   - [数据库](frame/database.md)
-  - [对话?](frame/dialogue.md)
   - [http 入口](frame/http.md)
   - [锁](frame/lock.md)
   - [日志](frame/log.md)
   - [队列](frame/queue.md)
   - [蜘蛛](frame/spider.md)
   - [非 SQL 存储](frame/storage.md)
-  - [模版引擎?](frame/view_compiler.md)
   - [命令行](frame/command.md)
   - [ORM](frame/orm.md)
   - [断言](frame/otherwise.md)
   - [工作单元](frame/unitofwork.md)
   - [辅助函数](frame/function.md)
+  - [对话?](frame/dialogue.md)
+  - [模版引擎?](frame/view_compiler.md)
 
 - 组合框架
 
   - api_frame
 
     - [介绍](api_frame/intro.md)
+    - [配置](api_frame/config.md)
     - [路由](api_frame/router.md)
     - [控制器](api_frame/controller.md)
     - [请求](api_frame/request.md)
