@@ -44,3 +44,16 @@ if_get('/', function ()
 
 ### body 中数据的获取
 
+`http body` 的获取，常用的是 `form` 表单提交格式的内容获取，如:
+```php
+$name = input('name');
+```
+如若全部拿出 `body` 收到的值来操作，可以这样:
+```php
+$body_content = input_post_raw();
+```
+如若 `body` 中的内容是特定字面量格式，可以直接用对应方法快捷获取，如:
+```php
+$name = input_json('data.name');
+$name = input_xml('data.name');
+```
