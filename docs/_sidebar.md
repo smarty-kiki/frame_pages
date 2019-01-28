@@ -38,6 +38,7 @@
   - mvc_frame
 
     - [介绍?](mvc_frame/intro.md)
+    - [配置?](mvc_frame/config.md)
     - [路由?](mvc_frame/router.md)
     - [控制器?](mvc_frame/controller.md)
     - [请求?](mvc_frame/request.md)
