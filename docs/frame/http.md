@@ -602,6 +602,70 @@ list($name, $age) = input_json_list('data.name', 'data.age');
 
 
 
+### 从 POST 的 xml 内容中获取指定的值
+----
+```php
+mix input_xml($name, $default = null)
+```
+##### 参数
+- name:  
+    要获取的 xml key，因 xml 是多层、多维的，name 可以用点符号来表达多层、多维逻辑，如 data.name
+
+- default:  
+    如果没有对应的值返回的默认值
+
+##### 返回值
+目标值
+
+##### 示例
+```php
+$name = input_xml('data.name');
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 一次从 xml 内容中获取指定的值
+----
+```php
+array input_xml_list(...$names)
+```
+##### 参数
+- ...names:  ,
+    要获取的 xml key，因 xml 是多层、多维的，name 可以用点符号来表达多层、多维逻辑，如 data.name，可输入多个
+
+##### 返回值
+按 name 顺序排序的输入结果，默认值为 null
+
+##### 示例
+```php
+// 变量
+list($name, $age) = input_xml_list('data.name', 'data.age');
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -736,6 +800,124 @@ list(
     $o->name,
     $o->age
 ) = cookie_list('name', 'age');
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 获取安全的 server
+----
+    ```php
+mix server_safe($name, $default = null)
+    ```
+##### 参数
+- name:  
+    获取的 server 名
+
+- default:  
+    当这个 server 没有传时，默认返回的结果
+
+##### 返回值
+经过安全转义的 server 结果
+
+##### 示例
+```php
+$content = server_safe('CONTENT_LENGTH');
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 获取 server
+----
+```php
+mix server($name, $default = null)
+```
+##### 参数
+- name:  
+    获取的 server 名
+
+- default:  
+    当这个 server 没有传时，默认返回的结果
+
+##### 返回值
+server 结果
+
+##### 示例
+```php
+$content = server('CONTENT_LENGTH');
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 一次获取多个 server
+----
+```php
+array server_list(...$names)
+```
+##### 参数
+- ...names:  
+    获取的 server 名，可输入多个
+
+##### 返回值
+按 name 顺序排序的 server 结果，默认值为 null
+
+##### 示例
+```php
+// 变量
+list($content_length, $content_type) = server_list('CONTENT_LENGTH', 'CONTENT_TYPE');
+
+// 数组
+list(
+    $arr['content_length'],
+    $arr['content_type']
+) = server_list('CONTENT_LENGTH', 'CONTENT_TYPE');
+
+// 对象
+list(
+    $o->content_length,
+    $o->content_type
+) = server_list('CONTENT_LENGTH', 'CONTENT_TYPE');
 ```
 
 

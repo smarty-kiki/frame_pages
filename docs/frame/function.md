@@ -1101,6 +1101,51 @@ $res = remote_post_json($url)
 
 
 
+### 远程 POST 请求，返回结果为 xml
+----
+```php
+mix remote_post_xml($url, $data = [], $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
+```
+##### 参数
+- url:  
+    请求的目标地址
+
+- data:  
+    要传的值，支持字符串和数组两个类型，为字符串时会直接通过 http body 传过去，为数组时会按照 form 格式传过去
+
+- timeout:  
+    多久放弃等待结果，单次重试的时间
+
+- retry:  
+    [curl 错误码](https://curl.haxx.se/libcurl/c/libcurl-errors.html)不为 0 时的请求重试次数
+
+- headers:  
+    header 数组，如
+    ```php
+    ['Content-type: text/plain', 'Content-length: 100']
+    ```
+
+- cookies:  
+    键值对数组
+
+##### 返回值
+远程请求后的结果数组，通讯失败为 false
+
+##### 示例
+```php
+$res = remote_post_xml($url)
+```
+
+
+
+
+
+
+
+
+
+
+
 ### 远程 GET 请求
 ----
 ```php
@@ -1173,6 +1218,48 @@ mix remote_get_json($url, $timeout = 3, $retry = 3, array $headers = [], array $
 ##### 示例
 ```php
 $res = remote_get_json($url);
+```
+
+
+
+
+
+
+
+
+
+
+
+### 远程 GET 请求，返回结果为 xml
+----
+```php
+mix remote_get_xml($url, $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
+```
+##### 参数
+- url:  
+    请求的目标地址
+
+- timeout:  
+    多久放弃等待结果，单次重试的时间
+
+- retry:  
+    [curl 错误码](https://curl.haxx.se/libcurl/c/libcurl-errors.html)不为 0 时的请求重试次数
+
+- headers:  
+    header 数组，如
+    ```php
+    ['Content-type: text/plain', 'Content-length: 100']
+    ```
+
+- cookies:  
+    键值对数组
+
+##### 返回值
+远程请求后的结果数组，通讯失败为 false
+
+##### 示例
+```php
+$res = remote_get_xml($url);
 ```
 
 

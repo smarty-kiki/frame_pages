@@ -1,6 +1,6 @@
 # 请求
 
-在处理用户请求时我们需要处理用户通过 http 的 path、header、query、body、cookie 传入的参数
+在处理用户请求时我们需要处理用户通过 `http` 的 `path`、`header`、`query`、`cookie`、`body` 传入的参数
 
 ### path 中数据的获取
 
@@ -13,7 +13,22 @@ if_get('/posts/*/comments/*', function ($post_id, $comment_id)
 ```
 
 ### header 中数据的获取
-TODO
+在 `PHP` 中，`header` 被放入`server` 数据中，可以通过 `server_safe`、`server`、`server_list` 方法来获取相关数据，如:
+```php
+list(
+    $h->content_length,
+    $h->content_type
+) = server_list('CONTENT_LENGTH', 'CONTENT_TYPE');
+```
+
+### cookie 中数据的获取
+通过 `cookie_safe`、`cookie`、`cookie_list` 方法来获取客户端传来的 cookie 数据，如:
+```php
+list(
+    $o->name,
+    $o->age
+) = cookie_list('name', 'age');
+```
 
 ### query 中数据的获取
 
@@ -28,6 +43,4 @@ if_get('/', function ()
 ```
 
 ### body 中数据的获取
-
-### cookie 中数据的获取
 
