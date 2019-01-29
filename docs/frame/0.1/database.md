@@ -47,24 +47,6 @@ return [
 ];
 ```
 
-### 设置数据库连接强制 write 库
-----
-```php
-boolean db_force_type_write($bool = null)
-```
-##### 参数
-- bool:  
-    是否强制用 write 库的布尔值，如果不传不会改变当前配置，依然会返回当前布尔状态  
-
-##### 返回值
-返回当前的布尔状态
-
-
-
-
-
-
-
 ## 标准函数
 
 标准函数是基础的数据库操作能力。为了让 sql 更清爽，让系统监控及防止数据库注入攻击，sql 需要拆分为 sql_template 和 binds，如：  
@@ -462,6 +444,24 @@ void db_close()
 db_close();
 ```
 
+
+
+
+
+
+
+
+### 设置数据库连接强制 write 库
+----
+    ```php
+boolean db_force_type_write($bool = null)
+    ```
+##### 参数
+    - bool:  
+    是否强制用 write 库的布尔值，如果不传不会改变当前配置，依然会返回当前布尔状态  
+
+##### 返回值
+    返回当前的布尔状态
 
 
 

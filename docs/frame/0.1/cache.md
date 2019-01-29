@@ -1,10 +1,10 @@
 # 缓存
 
-提供缓存的操作能力，框架中 `cache` 目录下的文件为基于具体组件的实现，如 `memcache.php`、`redis.php`，使用时按需要载入，示例：
+提供缓存的操作能力，框架中 `cache` 目录下的文件为基于具体组件的实现，如 `memcache.php`、`redis.php`，使用时按需要载入，示例：  
 ```php
 include FRAME_DIR.'/cache/redis.php';
 ```
-组件使用时会按照配置机制加载对应的组件配置，示例:
+组件使用时会按照配置机制加载对应的组件配置，示例:  
 ```php
 // config/redis.php
 return [
@@ -49,7 +49,7 @@ mix cache_get($key, $config_key = 'default')
     缓存服务对应的配置 key  
 
 ##### 返回值
-返回存在缓存中的数据
+返回存在缓存中的数据  
 
 
 
@@ -71,7 +71,7 @@ array cache_multi_get(array $keys, $config_key = 'default')
     缓存服务对应的配置 key  
 
 ##### 返回值
-返回存在缓存中的数据，返回结果为数组，数组的 key 为对应的缓存 key
+返回存在缓存中的数据，返回结果为数组，数组的 key 为对应的缓存 key  
 
 
 
@@ -99,7 +99,7 @@ boolean cache_set($key, $value, $expires = 0, $config_key = 'default')
     缓存服务对应的配置 key  
 
 ##### 返回值
-写入成功返回 true
+写入成功返回 true  
 
 
 
@@ -126,7 +126,7 @@ boolean cache_add($key, $value, $expires = 0, $config_key = 'default')
     缓存服务对应的配置 key  
 
 ##### 返回值
-若 key 原先在缓存中不存在，并且写入成功返回 true，否则返回 false
+若 key 原先在缓存中不存在，并且写入成功返回 true，否则返回 false  
 
 
 
@@ -153,7 +153,7 @@ boolean cache_replace($key, $value, $expires = 0, $config_key = 'default')
     缓存服务对应的配置 key  
 
 ##### 返回值
-若 key 原先在缓存中存在，并且替换成功返回 true，否则返回 false
+若 key 原先在缓存中存在，并且替换成功返回 true，否则返回 false  
 
 
 
@@ -175,7 +175,7 @@ boolean cache_delete($key, $config_key = 'default')
     缓存服务对应的配置 key  
 
 ##### 返回值
-删除成功返回 true
+删除成功返回 true  
 
 
 
@@ -198,7 +198,7 @@ boolean cache_multi_delete(array $keys, $config_key = 'default')
     缓存服务对应的配置 key  
 
 ##### 返回值
-删除成功返回 true
+删除成功返回 true  
 
 
 
