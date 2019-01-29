@@ -274,6 +274,35 @@ protected function find_all_by_sql($sql_template, array $binds = [])
 ```php
 $order = dao('order')->find($id);
 ```
+### 将实体直接转为 json
+在实现 `api` 项目时，经常需要将一个实体直接转换为 `json` 字符串，`entity` 实现了 `JsonSerializable` 接口，可直接传入 `json_encode` 来转换，如：
+```php
+json_encode($order);
+```
+如果是个数组中的实体也可直接进行转换，如：
+```php
+json_encode($orders);
+```
+如果除了实体的属性外还需要添加一些字段，则可以在实体中通过声明 `json_attributes` 属性来实现，如：
+```php
+class customer extends entity
+{
+    ...
+
+    protected $json_attributes = [
+        'is_rich' => '',
+        'age'      => 18,
+    ];
+
+    ...
+
+    protected function get_is_rich()
+    {
+        return $this->balance >= 10000000;
+    }
+}
+```
+上述例子则会在实体 `customer` 转为的 `json` 中加入 `age` 和 `is_rich` 键值，`age` 为固定的 `18`，`is_rich` 为转换时基于 `get_is_rich` 方法计算出来的结果
 
 ### 常见逻辑模式及封装方法
 
