@@ -15,6 +15,13 @@
   <script>
     window.$docsify = {
         name: 'frame',
+        search: {
+            maxAge: 86400000,
+            paths: 'auto',
+            placeholder: '输入并搜索',
+            noData: '没有相关结果',
+            depth: 4,
+        },
         repo: 'http://github.com/smarty-kiki/frame',
         coverpage: 'coverpage.md',
         loadSidebar: 'sidebar.md',
@@ -26,5 +33,7 @@
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
   <script src="//unpkg.com/prismjs/components/prism-php.min.js"></script>
   <script src="//unpkg.com/prismjs/components/prism-sql.min.js"></script>
+  <script src="//unpkg.com/docsify/lib/plugins/search.min.js"></script>
+
 </body>
 </html>
