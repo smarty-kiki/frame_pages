@@ -4,8 +4,8 @@
 
 ### 面向单体、小型应用的快速开发框架
 
-[api_frame](api_frame/intro.md) 适合做接口项目，具有 http 响应、缓存、存储、ORM、队列、命令行等能力  
-[mvc_frame](mvc_frame/intro.md) 适合做后端渲染页面的项目，具有 http 响应、模版引擎、缓存、存储、ORM、队列、命令行等能力  
+[api_frame](https://github.com/smarty-kiki/api_frame) 适合做接口项目，具有 http 响应、缓存、存储、ORM、队列、命令行等能力  
+[mvc_frame](https://github.com/smarty-kiki/mvc_frame) 适合做后端渲染页面的项目，具有 http 响应、模版引擎、缓存、存储、ORM、队列、命令行等能力  
 
 ### 面向分布式系统的开发框架
 
