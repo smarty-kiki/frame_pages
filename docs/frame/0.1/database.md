@@ -1,6 +1,6 @@
 # 数据库
 
-提供数据库的操作能力，框架中 database 目录下的文件为基于具体组件的实现，如 mysql.php、oracle.php，使用时按需要载入，示例：
+提供数据库的操作能力，框架中 database 目录下的文件为基于具体组件的实现，如 `mysql.php`、`oracle.php`，使用时按需要载入，示例：
 ```php
 include FRAME_DIR.'/database/mysql.php';
 ```

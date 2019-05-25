@@ -1,6 +1,6 @@
 - 入门指南
 
-  - [介绍](README.md)
+  - [介绍](intro.md)
   - [文件夹结构](directory.md)
   - [组合成果](combined_frame.md)
 
@@ -21,7 +21,7 @@
     - [断言](frame/0.1/otherwise.md)
     - [工作单元](frame/0.1/unitofwork.md)
     - [辅助函数](frame/0.1/function.md)
-    - [对话(待续)](frame/0.1/dialogue.md)
+    - [对话](frame/0.1/dialogue.md)
     - [模版引擎(待续)](frame/0.1/view_compiler.md)
 
 - 组合框架

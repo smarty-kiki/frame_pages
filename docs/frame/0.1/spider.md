@@ -248,7 +248,7 @@ array spider_run_get($url, string $format, array $spider_rule)
     要获取的目标格式，如 json、xml、html
 
 - spider_rule:  
-	目标格式到要获取的格式的转换关系
+    目标格式到要获取的格式的转换关系
 
 ##### 返回值
 获取的数据
@@ -323,7 +323,7 @@ array spider_data_query($job_name, array $selections = [], array $queries = [], 
     查询的字段，要查询的字段是多维数组中的值，可以用点符号来表达，如，data.name
 
 - queries:  
-	筛选的条件，[参考这里](https://docs.mongodb.com/manual/tutorial/query-documents/)
+    筛选的条件，[参考这里](https://docs.mongodb.com/manual/tutorial/query-documents/)
 
 - sorts:  
     排序的条件
