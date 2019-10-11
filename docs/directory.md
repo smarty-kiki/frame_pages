@@ -16,9 +16,12 @@ frame 核心框架库的目录结构如下，部分组件目录中有 `demo.php`
 ├── dialogue (对话功能文件目录)
 │   └── beanstalk.php
 ├── http (http 入口类功能文件目录)
-│   ├── application.php
-│   ├── distributed_client.php
-│   └── distributed_service.php
+│   ├── php_fpm
+│   │   ├── application.php
+│   │   ├── distributed_client.php
+│   │   └── distributed_service.php
+│   └── swoole
+│        └── application.php
 ├── lock (锁类功能文件目录)
 │   ├── cache.php
 │   └── demo.php
@@ -33,7 +36,7 @@ frame 核心框架库的目录结构如下，部分组件目录中有 `demo.php`
 │   ├── demo.php
 │   └── mongodb.php
 ├── view_compiler (模版引擎类存储功能文件目录)
-│  └── blade.php
+│   └── blade.php
 ├── command.php (命令行功能)
 ├── entity.php (ORM 能力)
 ├── function.php (辅助函数)
