@@ -16,12 +16,9 @@ frame 核心框架库的目录结构如下，部分组件目录中有 `demo.php`
 ├── dialogue (对话功能文件目录)
 │   └── beanstalk.php
 ├── http (http 入口类功能文件目录)
-│   ├── php_fpm
-│   │   ├── application.php
-│   │   ├── distributed_client.php
-│   │   └── distributed_service.php
-│   └── swoole
-│        └── application.php
+│   ├── application.php
+│   ├── distributed_client.php
+│   └── distributed_service.php
 ├── lock (锁类功能文件目录)
 │   ├── cache.php
 │   └── demo.php

@@ -1,13 +1,13 @@
 - 入门指南
 
   - [介绍](intro.md)
-  - [文件夹结构](directory.md)
   - [组合成果](combined_frame.md)
 
 - 框架能力
 
   - 0.1 版本
 
+    - [目录结构](frame/0.1/directory.md)
     - [缓存](frame/0.1/cache.md)
     - [数据库](frame/0.1/database.md)
     - [http 入口](frame/0.1/http.md)
