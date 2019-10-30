@@ -628,7 +628,7 @@ db_simple_update('customer',
 
 
 
-### 简单更新数据
+### 简单批量更新数据
 ----
 ```php
 int db_simple_multi_update($table, array $datas, $where_column = 'id', $config_key = 'default')
