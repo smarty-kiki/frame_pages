@@ -628,6 +628,48 @@ db_simple_update('customer',
 
 
 
+### 简单更新数据
+----
+```php
+int db_simple_multi_update($table, array $datas, $where_column = 'id', $config_key = 'default')
+```
+##### 参数
+- table:  
+    目标表名
+
+- datas:  
+    要更新的数据
+
+- where_column:  
+    依据哪个字段来寻找被更新的数据，默认是 `id`
+
+- config_key:  
+    数据库对应的配置 key  
+
+##### 返回值
+返回更新涉及到的数据行数
+
+##### 示例
+```php
+db_simple_multi_update('customer', [
+    ['id' => 1, 'name' => 'kiki'],
+    ['id' => 2, 'name' => 'kiki'],
+    ['id' => 3, 'name' => 'kiki'],
+]);
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### 简单删除数据
 ----
 ```php
