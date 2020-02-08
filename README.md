@@ -1,8 +1,25 @@
-# 协作格式
+# frame_pages
+
+此项目是核心库 [frame](https://github.com/smarty-kiki/frame_pages) 的在线文档源码
+
+如果需要本地编程，请确保本地安装了 `node` 和 `npm`，在本地执行如下命令安装 `docsify`
+
+```shell
+npm i docsify-cli -g
+```
+
+安装完成后，在项目根目录下执行以下命令即可在 [本地](http://localhost:3000) 预览和调试本文档
+
+```shell
+docsify serve docs
+```
+
+
+## 维护者原则
 
 为了协作时大家遵循统一的表达形式，特此在这里列举文档中的一些描述格式：
 
-## 标题级别
+### 标题级别
 
 * 每个文档自身的名字及说明为一级标题 #
 * 文档中内容的大分类为二级标题 ##，视情况而定，如果文档中不需要大分类，请直接跳过二级标题使用更低级别的标题以确保与其他文档层次一致
@@ -11,7 +28,7 @@
 
 示例:   
 
-### 查询
+#### 查询
 ----
 ```php
 array db_query($sql_template, array $binds = [], $config_key = 'default')
@@ -36,7 +53,7 @@ $customer_infos = db_query('select * from customer where age = :age', [
 ]);
 ```
 
-## 描述文字中的中英文数字
+### 描述文字中的中英文数字
 
 描述文字中会涉及到中文英文数字等不同内容的混写，按以下协作规范来写:  
 
@@ -52,4 +69,3 @@ class order extends entity
     ...
 }
 ```
-
