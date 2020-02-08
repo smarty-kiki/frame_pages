@@ -8,33 +8,44 @@ include FRAME_DIR.'/cache/redis.php';
 ```php
 // config/redis.php
 return [
-    'default' => [
-        //
-        // 配置连接如 sock
-        //  'sock' => '/var/run/redis.sock',
-        // 或
-        //  'host' => '127.0.0.1',
-        //  'port' => 6379,
-        //
 
-        'host' => '127.0.0.1',
-        'port' => 6379,
-
-        'timeout' => 1,
-
-        // 指定 database
-        // 'database' => 0,
-
-        //
-        // redis auth
-        // 'auth' => 'foobared',
-
-        'options' => [
-            Redis::OPT_SERIALIZER => Redis::SERIALIZER_PHP,
-        ],
+    'midwares' => [ // 配置 `key` 与 `resource` 的映射关系
+        'default' => 'local',
+        'idgenter' => 'local',
+        'lock' => 'local',
     ],
+
+    'resources' => [
+        'local' => [
+            //
+            // Create connection with:
+            // 'sock' => '/var/run/redis.sock',
+            // Or
+            //  'host' => '127.0.0.1',
+            //  'port' => 6379,
+            //
+
+            'host' => '127.0.0.1',
+            'port' => 6379,
+
+            'timeout' => 1,
+
+            // Authenticate the connection using a password:
+            // 'database' => 0,
+
+            //
+            // Authenticate the connection using a password:
+            // 'auth' => 'foobared',
+
+            'options' => [
+                Redis::OPT_SERIALIZER => Redis::SERIALIZER_PHP,
+            ],
+        ],
+    ]
 ];
 ```
+例如，配置 `key` 为 `default` 时，会读取 `midwares` 部分的映射关系，最终加载的是 `resource` 中的 `local` 配置  
+
 
 ### 获取缓存
 ----
