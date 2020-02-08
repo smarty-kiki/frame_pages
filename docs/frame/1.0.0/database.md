@@ -59,7 +59,7 @@ return [
 
 ## 标准函数
 
-标准函数是基础的数据库操作能力。为了让 `SQL` 更清爽，让系统监控及防止数据库注入攻击，`SQL` 需要拆分为 `sql_template` 和 `binds`，如：  
+标准函数是基础的数据库操作能力。为了让 `sql` 更清爽，让系统监控及防止数据库注入攻击，`sql` 需要拆分为 `sql_template` 和 `binds`，如：  
 ```php
 $sql_template = 'select * from customer where name = :name and age = :age';
 $binds = [
@@ -106,7 +106,7 @@ array db_query($sql_template, array $binds = [], $config_key = 'default')
 ```
 ##### 参数
 - sql_template:  
-    `SQL` 模版
+    `sql` 模版
 
 - binds:  
     数据绑定
@@ -140,7 +140,7 @@ array db_query_first($sql_template, array $binds = [], $config_key = 'default')
 ```
 ##### 参数
 - sql_template:  
-    `SQL` 模版
+    `sql` 模版
 
 - binds:  
     数据绑定
@@ -176,7 +176,7 @@ array db_query_column($column, $sql_template, array $binds = [], $config_key = '
     查询的列名或 `alias` 名
 
 - sql_template:  
-    `SQL` 模版
+    `sql` 模版
 
 - binds:  
     数据绑定
@@ -212,7 +212,7 @@ mix db_query_value($value, $sql_template, array $binds = [], $config_key = 'defa
     查询的值
 
 - sql_template:  
-    `SQL` 模版
+    `sql` 模版
 
 - binds:  
     数据绑定
@@ -247,7 +247,7 @@ int db_update($sql_template, array $binds = [], $config_key = 'default')
 ```
 ##### 参数
 - sql_template:  
-    `SQL` 模版
+    `sql` 模版
 
 - binds:  
     数据绑定
@@ -280,7 +280,7 @@ int db_delete($sql_template, array $binds = [], $config_key = 'default')
 ```
 ##### 参数
 - sql_template:  
-    `SQL` 模版
+    `sql` 模版
 
 - binds:  
     数据绑定
@@ -314,7 +314,7 @@ mix db_insert($sql_template, array $binds = [], $config_key = 'default')
 ```
 ##### 参数
 - sql_template:  
-    `SQL` 模版
+    `sql` 模版
 
 - binds:  
     数据绑定
@@ -351,7 +351,7 @@ int db_write($sql_template, array $binds = [], $config_key = 'default')
 ```
 ##### 参数
 - sql_template:  
-    `SQL` 模版
+    `sql` 模版
 
 - binds:  
     数据绑定
@@ -385,7 +385,7 @@ int db_structure($sql, $config_key = 'default')
 ```
 ##### 参数
 - sql:  
-    `SQL` 语句
+    `sql` 语句
 
 - config_key:  
     数据库对应的配置 `key`  
@@ -481,7 +481,7 @@ boolean db_force_type_write($bool = null)
 
 ## 简单函数
 
-简单函数主要是针对 `SQL` 的 `where` 条件书写的简化和插入、更新语句的数据拼装，如果追求完全实现 `SQL` 所有的能力，会让使用变的复杂、学习成本更高，不如直接使用原生 `SQL`，所以简单函数只聚焦在提供高频使用的场景，**表达能力有限**，建议只在小型项目中使用，简化的 `where` 写法有以下几种:  
+简单函数主要是针对 `sql` 的 `where` 条件书写的简化和插入、更新语句的数据拼装，如果追求完全实现 `sql` 所有的能力，会让使用变的复杂、学习成本更高，不如直接使用原生 `sql`，所以简单函数只聚焦在提供高频使用的场景，**表达能力有限**，建议只在小型项目中使用，简化的 `where` 写法有以下几种:  
 - 等于
 ```php
 $wheres = [
