@@ -151,7 +151,7 @@ if_any('/', function ()
 
 
 
-### 注册 GET 方法请求的响应逻辑
+### 注册 get 方法请求的响应逻辑
 ----
 ```php
 void if_get($rule, closure $action)
@@ -185,7 +185,7 @@ if_get('/', function ()
 
 
 
-### 注册 POST 方法请求的响应逻辑
+### 注册 post 方法请求的响应逻辑
 ----
 ```php
 void if_post($rule, closure $action)
@@ -538,7 +538,7 @@ list(
 
 
 
-### 从 POST 的 json 内容中获取指定的值
+### 从 post 的 json 内容中获取指定的值
 ----
 ```php
 mix input_json($name, $default = null)
@@ -602,7 +602,7 @@ list($name, $age) = input_json_list('data.name', 'data.age');
 
 
 
-### 从 POST 的 xml 内容中获取指定的值
+### 从 post 的 xml 内容中获取指定的值
 ----
 ```php
 mix input_xml($name, $default = null)
