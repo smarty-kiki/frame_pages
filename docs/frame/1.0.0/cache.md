@@ -412,6 +412,77 @@ $customer_info = cache_hmget('customer', [
 
 
 
+### 写入缓存列表
+----
+```php
+int cache_lpush($key, $values, $expires = 0, $config_key = 'default')
+```
+##### 参数
+- key:  
+    要写入的列表的 `key`  
+
+- values:  
+    要写入列表的值，可以是一个值，也可以是一个包含值的数组    
+
+- expires:  
+    保存的时间，单位秒，不传或传入 `0` 时为永久不过期  
+
+- config_key:  
+    缓存服务对应的配置 `key`  
+
+##### 返回值
+推入后列表中的内容数量
+
+##### 示例
+```php
+// 写入一个
+cache_lpush('task_list', 'task1');
+// 写入多个
+cache_lpush('task_list', [
+    'task1',
+    'task2',
+    'task3',
+]);
+```
+
+
+
+
+
+
+
+### 获取缓存列表，列表为空时等待，后进先出
+----
+```php
+mix cache_blpop($keys, $wait_time = 0, $config_key = 'default')
+```
+##### 参数
+- keys:  
+    要获取的列表的 `keys`，可直接传值，也可以传一个包含列表 `key` 的数组   
+
+- wait_time:  
+    如若列表为空，等待获取下一个值的等待时间，单位秒，不传或传入 `0` 时为永久等待  
+
+- config_key:  
+    缓存服务对应的配置 `key`  
+
+##### 返回值
+当 `keys` 传入单个 `key` 时，返回值为该列表被写入的最后一个值，当等待超时时，获取到 `null`
+当 `keys` 传入包含多个 `key` 的数组时，返回值为数组，会有一对键值，键为列表的 `key`，值为该列表被写入的最后一个值，当等待超时时，获取到空数组
+
+##### 示例
+```php
+// 获取一个列表
+cache_blpop('task_list');
+// 获取多个列表
+cache_blpop(['task_list', 'task_list2']);
+```
+
+
+
+
+
+
 
 ### 关闭当前保持的所有缓存服务的连接
 ----
