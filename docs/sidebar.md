@@ -10,7 +10,7 @@
     - [目录结构](frame/1.0.0/directory.md)
     - [缓存](frame/1.0.0/cache.md)
     - [数据库](frame/1.0.0/database.md)
-    - [http 入口](frame/1.0.0/http.md)
+    - [http](frame/1.0.0/http.md)
     - [锁](frame/1.0.0/lock.md)
     - [日志](frame/1.0.0/log.md)
     - [队列](frame/1.0.0/queue.md)
