@@ -1,6 +1,6 @@
 # 队列
 
-提供队列能力，框架中 queue 目录下的文件为基于具体组件的队列实现，如 beanstalk.php，使用时按需要载入，示例：
+提供队列能力，框架中 `queue` 目录下的文件为基于具体组件的队列实现，如 `beanstalk.php`，使用时按需要载入，示例：
 ```php
 include FRAME_DIR.'/queue/beanstalk.php';
 ```
@@ -8,10 +8,17 @@ include FRAME_DIR.'/queue/beanstalk.php';
 ```php
 // config/beanstalk.php
 return [
-    'default' => [
-        'host' => '127.0.0.1',
-        'port' => 11300,
-        'timeout' => 1,
+    'midwares' => [
+        'default' => 'local',
+        'queue' => 'local',
+    ],
+
+    'resources' => [
+        'local' => [
+            'host' => '127.0.0.1',
+            'port' => 11300,
+            'timeout' => 1,
+        ],
     ],
 ];
 ```
@@ -31,7 +38,7 @@ closure queue_finish_action(closure $action = null)
 ```
 ##### 参数
 - action:  
-    在 job 执行完之后被执行的逻辑闭包
+    在 `job` 执行完之后被执行的逻辑闭包
 
 ##### 返回值
 当前生效的逻辑闭包
@@ -64,13 +71,13 @@ void queue_job($job_name, closure $closure, $priority = 10, $retry = [], $tube =
     任务名
 
 - closure:  
-    任务逻辑闭包，在调用时，会接收到 job push 时的数据、当前的 retry 次数、当前 job 的 id
+    任务逻辑闭包，在调用时，会接收到 `queue_push` 时的 `data` 参数内容、当前的 `retry` 次数、当前 `job` 的 `id`
 
 - priority:  
     优先级，数字越小优先级越高
 
 - retry:  
-    队列 jobs 未返回 true 则认为是失败，这个参数定义每次重试较上一次延迟多少秒开始，如 ```[]``` 表示不重试，```[10, 20, 30]``` 表示第一次失败后会在 10 秒后执行第二次，第二次失败会在 20 秒后执行第三次，第三次失败会在 30 秒后执行第四次
+    `job` 执行未返回 `true` 则认为是失败，这个参数定义每次重试较上一次延迟多少秒开始，如 ```[]``` 表示不重试，```[10, 20, 30]``` 表示第一次失败后会在 `10` 秒后执行第二次，第二次失败会在 `20` 秒后执行第三次，第三次失败会在 `30` 秒后执行第四次
 
 - tube:  
     任务所在的管道
@@ -83,7 +90,7 @@ void queue_job($job_name, closure $closure, $priority = 10, $retry = [], $tube =
 
 ##### 示例
 ```php
-queue_job('hello-world', function () {
+queue_job('hello-world', function ($data, $retry_times, $job_id) {
 
     // hello-world
 

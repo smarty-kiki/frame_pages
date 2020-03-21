@@ -1,10 +1,10 @@
 # ORM
 
-ORM 是提供了一个可在编程语言里使用的 “虚拟对象数据库”，[这里](https://zh.wikipedia.org/wiki/对象关系映射)有更多的说明，此处不展开讲解，使用时直接加载 `entity.php`，示例：
+`orm` 是提供了一个可在编程语言里使用的 “虚拟对象数据库”，[这里](https://zh.wikipedia.org/wiki/对象关系映射)有更多的说明，此处不展开讲解，使用时直接加载 `entity.php`，示例：
 ```php
 include FRAME_DIR.'/entity.php';
 ```
-任何技术抽象，都会对性能有一定的损失，在现代信息系统开发中，性能的主要瓶颈在于数据结构设计及优化、逻辑实现中的 I/O 复杂度，框架会以 “不引入含糊边界” 为原则来尝试给出每个逻辑模式的 “唯一答案”，以下会针对 ORM 的入门使用及常见的模式进行分享
+任何技术抽象，都会对性能有一定的损失，在现代信息系统开发中，性能的主要瓶颈在于数据结构设计及优化、逻辑实现中的 `I/O` 复杂度，框架会以 “不引入含糊边界” 为原则来尝试给出每个逻辑模式的 “唯一答案”，以下会针对 `orm` 的入门使用及常见的模式进行分享
 
 
 
@@ -14,7 +14,7 @@ include FRAME_DIR.'/entity.php';
 
 
 ### 声明一个实体
-声明一个实体需要声明 2 个类，一个是继承 `dao` 类的负责持久化的对象，另一个是继承 `entity` 的实体类：
+声明一个实体需要同时声明 `2` 个类，一个是继承 `dao` 类的负责持久化的对象，另一个是继承 `entity` 的实体类：
 ```php
 class customer_dao extends dao
 {
@@ -78,7 +78,7 @@ CREATE TABLE `customer` (
 
 
 
-### 基于 ORM 的简单 CRUD 怎么实现
+### 基于 `orm` 的简单 `crud` 怎么实现
 ```php
 // create
 $customer = customer::create($name, $age);
@@ -110,7 +110,7 @@ $customer->force_delete();
  * is_deleted 判断是否被软删除
  * 
  * @access public
- * @return void
+ * @return boolean
  */
 public function is_deleted()
 
@@ -131,7 +131,7 @@ public function delete()
 public function restore()
 
 /**
- * force_delete 删除动作
+ * force_delete 硬删除动作
  * 
  * @access public
  * @return void
@@ -155,9 +155,9 @@ public function is_null()
 public function is_not_null()
 ```
 
-### ORM 的关联关系
+### `orm` 的关联关系
 
-关联关系是将实体-联系数据模型中的 3 种一般性约束（一对一、一对多、多对多约束）加入到对从属关系的描述而形成的结果，含 `belongs_to`、`has_one`、`has_many` 三种，声明关联关系是在实体的构造方法中，如：
+关联关系是将实体-联系数据模型中的 `3` 种一般性约束（一对一、一对多、多对多约束）加入到对从属关系的描述而形成的结果，含 `belongs_to`、`has_one`、`has_many` 三种，声明关联关系是在实体的构造方法中，如：
 ```php
 class order extends entity
 {
@@ -195,10 +195,10 @@ protected function has_many($relationship_name, $entity_name = null, $foreign_ke
     关联关系名
 
 - entity_name:  
-    关联的实体类型，不传则以 relationship_name 作为关联的实体类型
+    关联的实体类型，不传则以 `relationship_name` 作为关联的实体类型
 
 - foreign_key:  
-    外键名，不传则赋予默认值，has_one/has_many 为当前实体的类型外加 id，如 order_id，belongs_to 为关联实体的类型外加 id，
+    外键名，不传则赋予默认值，`has_one/has_many` 默认值为当前实体的类型外加 `id`，如 `order_id`，`belongs_to` 默认值为关联实体的类型外加 `id`，
 
 ### 获取实体
 
@@ -214,7 +214,7 @@ protected function has_many($relationship_name, $entity_name = null, $foreign_ke
 public function find($id_or_ids)
 
 /**
- * find_by_condition 通过查询条件语句查询第一个实体，condition 是抛去 select 和 where 关键词的 sql_template，可以传入 order by，该方法访问控制为 protected，仅提供给 dao 做方法封装时使用，禁止外部直接使用
+ * find_by_condition 通过查询条件语句查询第一个实体，condition 是抛去 select 和 where 关键词的 sql_template，可以传入 order by，该方法访问控制为 protected，仅提供给 dao 做方法封装时使用，禁止外部直接使用。注意使用该方法时需要自行构造软删除条件查询语句，通过  $this->with_deleted 可获取当前实体是否开启了软删除
  * 
  * @param mixed $condition 
  * @param array $binds 
@@ -224,7 +224,7 @@ public function find($id_or_ids)
 protected function find_by_condition($condition, array $binds = [])
 
 /**
- * find_by_sql 通过查询 sql_template 来查询第一个实体，需要注意的是为了确保实体不是贫血实体，一定要确保查询出所有列
+ * find_by_sql 通过查询 sql_template 来查询第一个实体，需要注意的是为了确保实体不是贫血实体，一定要确保查询出所有列。注意使用该方法时需要自行构造软删除条件查询语句，通过  $this->with_deleted 可获取当前实体是否开启了软删除
  * 
  * @param mixed $sql_template 
  * @param array $binds 
@@ -251,7 +251,7 @@ public function find_all()
 public function find_all_by_column(array $columns = [])
 
 /**
- * find_all_by_condition 与 find_by_condition 类似，是提供给 dao 封装方法时使用的多实体获取方法
+ * find_all_by_condition 与 find_by_condition 类似，是提供给 dao 封装方法时使用的多实体获取方法。注意使用该方法时需要自行构造软删除条件查询语句，通过  $this->with_deleted 可获取当前实体是否开启了软删除
  * 
  * @param mixed $condition 
  * @param array $binds 
@@ -261,7 +261,7 @@ public function find_all_by_column(array $columns = [])
 protected function find_all_by_condition($condition, array $binds = [])
 
 /**
- * find_all_by_sql 与 find_by_sql 类似，是提供给 dao 封装方法时使用的多实体获取方法
+ * find_all_by_sql 与 find_by_sql 类似，是提供给 dao 封装方法时使用的多实体获取方法。注意使用该方法时需要自行构造软删除条件查询语句，通过  $this->with_deleted 可获取当前实体是否开启了软删除
  * 
  * @param mixed $sql_template 
  * @param array $binds 
@@ -270,11 +270,11 @@ protected function find_all_by_condition($condition, array $binds = [])
  */
 protected function find_all_by_sql($sql_template, array $binds = [])
 ```
-获取实体需要通过该类的 dao 类来，所以在调用以上方法时先需要拿到 dao 实例，框架提供了单例的方法来获取 dao 实例，使用时如下：
+获取实体需要通过该类的 `dao` 类来，所以在调用以上方法时先需要拿到 `dao` 实例，框架提供了单例的方法来获取 `dao` 实例，使用时如下：
 ```php
 $order = dao('order')->find($id);
 ```
-### 将实体直接转为 json
+### 将实体直接转为 `json`
 在实现 `api` 项目时，经常需要将一个实体直接转换为 `json` 字符串，`entity` 实现了 `JsonSerializable` 接口，可直接传入 `json_encode` 来转换，如：
 ```php
 json_encode($order);
@@ -304,6 +304,6 @@ class customer extends entity
 ```
 上述例子则会在实体 `customer` 转为的 `json` 中加入 `age` 和 `is_rich` 键值，`age` 为固定的 `18`，`is_rich` 为转换时基于 `get_is_rich` 方法计算出来的结果
 
-### 常见逻辑模式及封装方法
+### 常见用法及封装方法
 
 // 未完待续
