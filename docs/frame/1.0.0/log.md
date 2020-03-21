@@ -57,3 +57,41 @@ void log_notice($message)
 ```php
 log_notice($message);
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 为模块记录日志
+----
+```php
+void log_module($module, $message)
+```
+##### 参数
+- module:  
+    模块名  
+
+- message:  
+    需要记录的日志文字  
+
+##### 返回值
+无
+
+##### 示例
+```php
+log_module('order', $message);
+```
