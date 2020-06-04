@@ -863,7 +863,7 @@ mix db_simple_query_value($table, $value, array $wheres, $option_sql, $config_ke
 
 ##### 示例
 ```php
-db_simple_query_value('customer', 'id', 'count(*)',
+db_simple_query_value('customer', 'id',
     ['age' => 20],
     'order by name'
 );
