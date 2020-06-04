@@ -323,7 +323,7 @@ mix db_insert($sql_template, array $binds = [], $config_key = 'default')
     数据库对应的配置 `key`  
 
 ##### 返回值
-返回插入的数据主键
+如表主键定义为自增，返回插入的数据主键，否则返回值为 0
 
 ##### 示例
 ```php
@@ -539,7 +539,7 @@ mix db_simple_insert($table, array $data, $config_key = 'default')
     数据库对应的配置 `key`  
 
 ##### 返回值
-返回插入的数据主键
+如表主键定义为自增，返回插入的数据主键，否则返回值为 0
 
 ##### 示例
 ```php
