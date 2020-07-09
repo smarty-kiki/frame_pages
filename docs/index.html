@@ -21,6 +21,7 @@
             placeholder: '这里搜索',
             noData: '没有相关结果',
             depth: 4,
+            hideOtherSidebarContent: true,
         },
         copyCode: {
             buttonText : '点击复制',
@@ -37,8 +38,7 @@
         plugins: [
             function(hook) {
                 var footer = [
-                    '<hr/>',
-                    '<footer>',
+                    '<footer style="text-align: center;">',
                     '<span><a href="http://www.beian.miit.gov.cn/state/outPortal/loginPortal.action" target="_blank">粤ICP备18019973号</a></span>',
                     '</footer>'
                 ].join('');
