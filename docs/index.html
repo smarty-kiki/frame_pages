@@ -34,6 +34,20 @@
         homepage: 'intro.md?id=定位',
         mergeNavbar: true,
         subMaxLevel: 4,
+        plugins: [
+            function(hook) {
+                var footer = [
+                    '<hr/>',
+                    '<footer>',
+                    '<span><a href="http://www.beian.miit.gov.cn/state/outPortal/loginPortal.action" target="_blank">粤ICP备18019973号</a></span>',
+                    '</footer>'
+                ].join('');
+
+                hook.afterEach(function(html) {
+                    return html + footer;
+                });
+            }
+        ]
     }
   </script>
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
