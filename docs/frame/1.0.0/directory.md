@@ -3,8 +3,6 @@
 frame 核心框架库的目录结构如下，部分组件目录中有 `demo.php` 用以在扩展该框架时仿照
 
 ```
-├── LICENSE
-├── README.md
 ├── cache (缓存类功能文件目录)
 │   ├── memcache.php
 │   └── redis.php
@@ -32,6 +30,8 @@ frame 核心框架库的目录结构如下，部分组件目录中有 `demo.php`
 │   └── mongodb.php
 ├── view_compiler (模版引擎类存储功能文件目录)
 │   └── blade.php
+├── LICENSE
+├── README.md
 ├── command.php (命令行功能)
 ├── entity.php (ORM 能力)
 ├── function.php (辅助函数)
