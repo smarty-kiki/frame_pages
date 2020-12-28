@@ -182,7 +182,7 @@ $sex = command_read('性别', 0, ['男', '女', '其他']);
 closure command_read_completions(closure $closure = null)
 ```
 ##### 参数
-- closure:
+- closure:  
     当用户按 tab 补全时执行的闭包
 
 ##### 返回值
