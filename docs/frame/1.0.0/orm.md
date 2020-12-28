@@ -37,7 +37,7 @@ class customer extends entity
     ];
 
     /**
-     * create 方法是实体的创建方法，因为不同的实体的 create 可能基于不同的参数，所以没有定为父类的 abstract 方法
+     * create 方法是实体的创建方法，由开发者自己实现，因为不同的实体的 create 可能基于不同的参数，所以没有定为父类的 abstract 方法
      * 
      * @param mixed $name 
      * @param mixed $age 

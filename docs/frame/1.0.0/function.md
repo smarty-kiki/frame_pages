@@ -200,6 +200,38 @@ $res_array =  array_build($array, function ($key, $value) {
 
 
 
+### 基于数组构建两层索引结构的数组
+----
+```php
+array array_indexed($array, Closure $callback)
+```
+##### 参数
+- array:  
+    来源数组
+
+- callback:  
+    构建逻辑的闭包，执行时会给闭包传入数组中的 key、value，闭包需要返回结果数组的 index、key、value
+
+##### 返回值
+数组
+
+##### 示例
+```php
+$res_array =  array_indexed($array, function ($key, $value) {
+    return [$value['index_key'], $key, $value];
+});
+```
+
+
+
+
+
+
+
+
+
+
+
 
 ### 递归 ksort
 ----
@@ -424,6 +456,33 @@ dd($params, $this);
 
 
 
+
+
+### 抛出异常并立刻捕获，输出到异常日志中，方便查看逻辑执行的调用链路等
+----
+```php
+void trace($message = 'exception for trace')
+```
+##### 参数
+- message:  
+    打印到异常日志中可方便区分或者检索的关键词
+
+##### 返回值
+无，但是会直接输出至异常日志中
+
+##### 示例
+```php
+trace();
+```
+
+
+
+
+
+
+
+
+
 ### 获取变量的值，如果变量是一个闭包，会执行它并返回闭包中的返回值
 ----
 ```php
@@ -561,6 +620,37 @@ string str_finish($value, $cap)
 ```php
 echo str_finish('真棒', '!');   // 真棒!
 echo str_finish('真棒!', '!');  // 真棒!
+```
+
+
+
+
+
+
+
+
+
+
+
+### 确保字符串以指定字符串开头，如果已经是以指定字符串开头则不会被改变
+----
+```php
+string str_begin($value, $cap)
+```
+##### 参数
+- value:  
+    被操作的字符串
+
+- cap:  
+    指定的开头字符串
+
+##### 返回值
+处理后的字符串
+
+##### 示例
+```php
+echo str_begin('亲，您好', '亲，');   // 亲，您好
+echo str_begin('您好', '亲，');  // 亲，您好
 ```
 
 

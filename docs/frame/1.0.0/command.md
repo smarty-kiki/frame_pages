@@ -176,6 +176,29 @@ $sex = command_read('性别', 0, ['男', '女', '其他']);
 
 
 
+### 注册补全闭包，当在命令逻辑中用 command_read 获取用户输入，用户按 tab 补全时执行
+----
+```php
+closure command_read_completions(closure $closure = null)
+```
+##### 参数
+- closure:
+    当用户按 tab 补全时执行的闭包
+
+##### 返回值
+当前生效的逻辑闭包
+
+##### 示例
+```php
+command_read_completions(function () {
+    return ['hello', 'world'];
+});
+```
+
+
+
+
+
 
 
 
