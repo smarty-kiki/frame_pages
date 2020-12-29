@@ -810,6 +810,7 @@ $config = config('mysql');
 
 
 ### 获取指定中间件的配置
+----
 当使用 config_midware 时，配置文件需要按照以下格式来配置：
 ```php
 return [
@@ -836,7 +837,6 @@ return [
     ],
 ];
 ```
-----
 ```php
 array config_midware($file_name, $midware_name)
 ```
@@ -866,8 +866,8 @@ $config = config_midware('mysql', 'entity');
 
 
 ### 预加载配置
-`config`、`config_midware` 等方法，在第一次使用时会将相关配置文件加载，执行`config_preload`时，会立刻将所有配置加载
 ----
+`config`、`config_midware` 等方法，在第一次使用时会将相关配置文件加载，执行`config_preload`时，会立刻将所有配置加载
 ```php
 void config_preload()
 ```
