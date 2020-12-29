@@ -785,10 +785,10 @@ config_dir(FRAME_DIR.'/config');
 ### 获取指定的配置
 ----
 ```php
-array config($key)
+array config($file_name)
 ```
 ##### 参数
-- key:  
+- file_name:  
     配置名
 
 ##### 返回值
@@ -799,6 +799,84 @@ array config($key)
 $config = config('mysql');
 ```
 
+
+
+
+
+
+
+
+
+
+
+### 获取指定中间件的配置
+当使用 config_midware 时，配置文件需要按照以下格式来配置：
+```php
+return [
+    /**
+    * midwares 是配置中间件与资源的映射关系
+    */
+    'midwares' => [
+        /**
+        * entity 是在获取配置时的 midware_name，local 是对应下面 resources 中定义好的配置的名字
+        */
+        'entity' => 'local',
+    ],
+
+    /**
+     * resources 是配置具体的配置
+     */
+    'resources' => [
+        /**
+        * local 名字无具体含义，可以自己定义
+        */
+        'local' => [
+            // config detail
+        ],
+    ],
+];
+```
+----
+```php
+array config_midware($file_name, $midware_name)
+```
+##### 参数
+- file_name:  
+    配置名
+
+- midware_name:  
+    中间件名
+
+##### 返回值
+符合当前环境的配置
+
+##### 示例
+```php
+$config = config_midware('mysql', 'entity');
+```
+
+
+
+
+
+
+
+
+
+
+
+### 预加载配置
+`config`、`config_midware` 等方法，在第一次使用时会将相关配置文件加载，执行`config_preload`时，会立刻将所有配置加载
+----
+```php
+void config_preload()
+```
+##### 参数
+##### 返回值
+##### 示例
+```php
+config_preload();
+```
 
 
 
@@ -851,6 +929,36 @@ if (is_env('production')) {
     echo '线上环境';
 }
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 定义选项
+----
+```php
+void option_define(...$options)
+```
+##### 参数
+- ...options:  
+    环境名
+
+##### 返回值
+
+##### 示例
+```php
+option_define('OPTION_A', 'OPTION_B');
+```
+
+
 
 
 
