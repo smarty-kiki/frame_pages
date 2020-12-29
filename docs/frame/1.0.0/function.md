@@ -692,6 +692,69 @@ if (is_url($path)) {
 
 
 
+### 将 url 组成部分重新拼合成 url
+----
+```php
+string unparse_url(array $parsed)
+```
+##### 参数
+- parsed:  
+    parse_url 得到的数组格式
+
+##### 返回值
+拼合后的 url
+
+##### 示例
+```php
+$parsed = parse_url('http://php-frame.cn/');
+$parsed['scheme'] = 'https';
+$url = unparse_url($parsed);
+```
+
+
+
+
+
+
+
+
+
+
+
+
+### 修改并返回新的 url
+----
+```php
+string url_transfer($url, closure $transfer_action)
+```
+##### 参数
+- url:  
+    要修改的 url
+
+- transfer_action:  
+    用以修改 url 的闭包，闭包会接收到 parse_url 后的结果，结果中 query 部分也已经进一步被 parse_str 方便直接修改
+
+##### 返回值
+修改后的 url
+
+##### 示例
+```php
+$url = url_transfer('http://php-frame.cn/?whatever=test', function ($parsed) {
+    $parsed['query']['whatever'] = 'test2';
+    return $parsed;
+});
+```
+
+
+
+
+
+
+
+
+
+
+
 ### 指定配置文件根目录
 ----
 ```php
