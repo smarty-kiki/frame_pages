@@ -970,6 +970,46 @@ option_define('OPTION_A', 'OPTION_B');
 
 
 
+
+### 判断选项中是否包含指定选项
+----
+```php
+boolean has_option($options, $define)
+```
+##### 参数
+- options:  
+    指定选项，可以为多个选项，如 `OPTION_A | OPTION_B`
+- define:  
+    被判断的选项
+
+##### 返回值
+是否包含
+
+##### 示例
+```php
+$define = OPTION_A | OPTION_B;
+
+if (has_option(OPTION_A, $define)) {
+    // do something for A
+}
+
+if (has_option(OPTION_B, $define)) {
+    // do something for B
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### 不为空
 ----
 ```php
@@ -1575,4 +1615,274 @@ json 字符串
 ##### 示例
 ```php
 $res = json($data);
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 英文单词复数化
+----
+```php
+string english_word_pluralize($word)
+```
+##### 参数
+- word:  
+    单数词
+
+##### 返回值
+复数词
+
+##### 示例
+```php
+$res = english_word_pluralize('apple'); // apples
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 英文单词单数化
+----
+```php
+string english_word_singularize($word)
+```
+##### 参数
+- word:  
+    复数词
+
+##### 返回值
+单数词
+
+##### 示例
+```php
+$res = english_word_singularize('apples'); // apple
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 英文词组首字母大写
+----
+```php
+string english_word_titleize($word, $only_first = true)
+```
+##### 参数
+- word:  
+    英文词组
+
+- only_first:  
+    是否仅仅是首字母
+
+##### 返回值
+单数词
+
+##### 示例
+```php
+$res = english_word_titleize('hello world'); // Hello world
+$res = english_word_titleize('hello world', false); // Hello World
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 英文词组变驼峰风格
+----
+```php
+string english_word_camelize($word)
+```
+##### 参数
+- word:  
+    英文词组
+
+##### 返回值
+驼峰风格字符
+
+##### 示例
+```php
+$res = english_word_camelize('hello world'); // HelloWorld
+$res = english_word_camelize('hello_world'); // HelloWorld
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 英文词组变下划线风格
+----
+```php
+string english_word_underscore($word)
+```
+##### 参数
+- word:  
+    英文词组
+
+##### 返回值
+下划线风格字符
+
+##### 示例
+```php
+$res = english_word_underscore('hello world'); // hello_world
+$res = english_word_underscore('HelloWorld'); // hello_world
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 英文词组变正常风格
+----
+```php
+string english_word_humanize($word, $only_first = true)
+```
+##### 参数
+- word:  
+    英文词组
+
+- only_first:  
+    是否仅仅是首字母
+
+##### 返回值
+正常风格
+
+##### 示例
+```php
+$res = english_word_humanize('hello world'); // Hello world
+$res = english_word_humanize('HelloWorld'); // Hello world
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 英文词组变小驼峰风格(首字母小写)
+----
+```php
+string english_word_variablize($word)
+```
+##### 参数
+- word:  
+    英文词组
+
+##### 返回值
+正常风格
+
+##### 示例
+```php
+$res = english_word_variablize('hello world'); // helloWorld
+$res = english_word_variablize('HelloWorld'); // helloWorld
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 数字变英文序数词
+----
+```php
+string english_word_ordinalize($number)
+```
+##### 参数
+- number:  
+    数字
+
+##### 返回值
+英文序数词
+
+##### 示例
+```php
+$res = english_word_ordinalize(1); // 1st
+$res = english_word_ordinalize(2); // 2nd
 ```
