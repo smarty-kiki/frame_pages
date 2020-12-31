@@ -9,7 +9,7 @@
 
 ## 3. 在开发机执行框架目录中的环境启动脚本
 ```bash
-sh project/tool/start_dev_server.sh
+sh project/tool/start_development_server.sh
 ```
 这个脚本会自动拉取项目依赖的框架、`pull` 开发环境镜像、启动开发环境容器最终进入到开发环境中的 `tmux` 窗口
 
