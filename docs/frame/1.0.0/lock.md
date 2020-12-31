@@ -8,37 +8,6 @@ include FRAME_DIR.'/lock/cache.php';
 ```php
 include FRAME_DIR.'/cache/redis.php';
 ```
-并且也需要对 cache 能力依赖的组件进行配置：示例：
-```php
-// config/redis.php
-return [
-    'default' => [
-        //
-        // 配置连接如 sock
-        //  'sock' => '/var/run/redis.sock',
-        // 或
-        //  'host' => '127.0.0.1',
-        //  'port' => 6379,
-        //
-
-        'host' => '127.0.0.1',
-        'port' => 6379,
-
-        'timeout' => 1,
-
-        // 指定 database
-        // 'database' => 0,
-
-        //
-        // redis auth
-        // 'auth' => 'foobared',
-
-        'options' => [
-            Redis::OPT_SERIALIZER => Redis::SERIALIZER_PHP,
-        ],
-    ],
-];
-```
 
 ### 独占执行
 ----
