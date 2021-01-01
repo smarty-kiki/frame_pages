@@ -37,7 +37,7 @@ return [
 closure queue_finish_action(closure $action = null)
 ```
 ##### 参数
-- action:  
+- action:
     在 `job` 执行完之后被执行的逻辑闭包
 
 ##### 返回值
@@ -67,22 +67,22 @@ queue_finish_action(function () {
 void queue_job($job_name, closure $closure, $priority = 10, $retry = [], $tube = 'default', $config_key = 'default')
 ```
 ##### 参数
-- job_name:  
+- job_name:
     任务名
 
-- closure:  
+- closure:
     任务逻辑闭包，在调用时，会接收到 `queue_push` 时的 `data` 参数内容、当前的 `retry` 次数、当前 `job` 的 `id`
 
-- priority:  
+- priority:
     优先级，数字越小优先级越高
 
-- retry:  
+- retry:
     `job` 执行未返回 `true` 则认为是失败，这个参数定义每次重试较上一次延迟多少秒开始，如 ```[]``` 表示不重试，```[10, 20, 30]``` 表示第一次失败后会在 `10` 秒后执行第二次，第二次失败会在 `20` 秒后执行第三次，第三次失败会在 `30` 秒后执行第四次
 
-- tube:  
+- tube:
     任务所在的管道
 
-- config_key:  
+- config_key:
     队列对应的配置
 
 ##### 返回值
@@ -106,6 +106,28 @@ queue_job('hello-world', function ($data, $retry_times, $job_id) {
 
 
 
+### 重新刷新队列服务关于任务执行时间的计时
+----
+`job` 执行如果超过任务的 `tty` 时间，会被队列服务认为失控了，而重新将任务状态调整到 `ready` 状态，进而被任务消费者再次获取，这个命令用于在执行任务时通知队列服务任务依然在正常执行
+```php
+void queue_job_touch()
+```
+##### 参数
+##### 返回值
+##### 示例
+```php
+queue_job_touch();
+```
+
+
+
+
+
+
+
+
+
+
 
 
 ### 推入一个队列任务
@@ -114,13 +136,13 @@ queue_job('hello-world', function ($data, $retry_times, $job_id) {
 string queue_push($job_name, array $data = [], $delay = 0)
 ```
 ##### 参数
-- job_name:  
+- job_name:
     任务名
 
-- data:  
+- data:
     数据
 
-- delay:  
+- delay:
     延迟多少秒执行
 
 ##### 返回值
