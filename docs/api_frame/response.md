@@ -2,7 +2,7 @@
 
 响应通常通过 `header`、`cookie`、`body` 来返回给客户端
 
-### header 的设置
+### `header` 的设置
 `header` 的设置 `PHP` 原生提供了以下方法：
 
 * [header](http://php.net/manual/en/function.header.php)

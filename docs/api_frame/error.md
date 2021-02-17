@@ -1,6 +1,6 @@
 # 错误
 
-`api_frame` 中，在 `index.php` 处注册了全局的错误捕获 handle，如：
+`api_frame` 中，在 `index.php` 处注册了全局的错误捕获 `handle`，如：
 ```php
 set_error_handler('http_err_action', E_ALL);
 set_exception_handler('http_ex_action');

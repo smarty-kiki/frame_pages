@@ -1,10 +1,10 @@
 # 开发环境
 框架中内置了一套基于 [debian_php_dev_env](https://github.com/smarty-kiki/debian_php_dev_env) 的 `docker` 的开发环境，对 `linux`、`mac` 用户格外友好，使用有如下两个步骤：
 
-## 1. 安装 Docker 环境
-安装包及过程参考 [Docker 官网](https://hub.docker.com/search/?type=edition&offering=community)
+## 1. 安装 `docker` 环境
+安装包及过程参考 [docker 官网](https://hub.docker.com/search/?type=edition&offering=community)
 
-## 2. 开发机上安装 git
+## 2. 开发机上安装 `git`
 建议网上自行搜索，`mac` 操作系统自带
 
 ## 3. 在开发机执行框架目录中的环境启动脚本

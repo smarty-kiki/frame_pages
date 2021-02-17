@@ -13,16 +13,16 @@ include FRAME_DIR.'/spider/beanstalk.php';
 
 
 
-### 按照 cron_string 获取下一个符合时间规则的时间
+### 按照 `cron_string` 获取下一个符合时间规则的时间
 ----
 ```php
 int spider_cron_string_parse($cron_string, $after_timestamp = null)
 ```
 ##### 参数
-- cron_string:  
+- cron_string:
     crontab 时间规则字符串，如 `* * * * *`
 
-- after_timestamp:  
+- after_timestamp:
     指定从某个时间戳之后开始寻找，不传默认从当前时间开始找
 
 ##### 返回值
@@ -49,7 +49,7 @@ $timestamp = spider_cron_string_parse('0 1 * * *');
 closure spider_finish_action(closure $action = null)
 ```
 ##### 参数
-- action:  
+- action:
     在 job 执行完之后被执行的逻辑闭包
 
 ##### 返回值
@@ -103,13 +103,13 @@ spider_trigger();
 string spider_job_push($job_name, $url = null, $data = [])
 ```
 ##### 参数
-- job_name:  
+- job_name:
     蜘蛛任务名
 
-- url:  
+- url:
     指定的抓取 URL，如果没有传，默认使用声明在蜘蛛任务中的 URL
 
-- data:  
+- data:
     指定的 POST 数据，如果没有传，默认使用声明在蜘蛛任务中的 data
 
 ##### 返回值
@@ -130,34 +130,34 @@ spider_job_push('hello-world');
 
 
 
-### 注册 get 请求的蜘蛛任务
+### 注册 `get` 请求的蜘蛛任务
 ----
 ```php
 void spider_job_get(string $job_name, string $cron_string, string $url, string $format, array $spider_rule, $priority = 10, $retry = [], $config_key = 'default')
 ```
 ##### 参数
-- job_name:  
+- job_name:
     任务名
 
-- cron_string:  
+- cron_string:
     任务的时间规则
 
-- url:  
+- url:
     要获取的 URL
 
-- format:  
+- format:
     要获取的目标格式，如 json、xml、html
 
-- spider_rule:  
+- spider_rule:
     目标格式到要获取的格式的转换关系
 
-- priority:  
+- priority:
     优先级，如果任务堆积，会按照优先级来执行获取任务
 
-- retry:  
+- retry:
     如果当次获取任务失败，
 
-- config_key:  
+- config_key:
     依赖组件的配置
 
 ##### 返回值
@@ -181,37 +181,37 @@ spider_job_get('test', '* * * * *', 'http://127.0.0.1/test', 'json', [
 
 
 
-### 注册 post 请求的蜘蛛任务
+### 注册 `post` 请求的蜘蛛任务
 ----
 ```php
 void spider_job_post(string $job_name, string $cron_string, string $url, $data, string $format, array $spider_rule, $priority = 10, $retry = [], $config_key = 'default')
 ```
 ##### 参数
-- job_name:  
+- job_name:
     任务名
 
-- cron_string:  
+- cron_string:
     任务的时间规则
 
-- url:  
+- url:
     要获取的 URL
 
-- data:  
+- data:
     POST 数据
 
-- format:  
+- format:
     要获取的目标格式，如 json、xml、html
 
-- spider_rule:  
+- spider_rule:
     目标格式到要获取的格式的转换关系
 
-- priority:  
+- priority:
     优先级，如果任务堆积，会按照优先级来执行获取任务
 
-- retry:  
+- retry:
     如果当次获取任务失败，
 
-- config_key:  
+- config_key:
     依赖组件的配置
 
 ##### 返回值
@@ -235,19 +235,19 @@ spider_job_post('test', '* * * * *', 'http://127.0.0.1/test', ['name' => 'kiki']
 
 
 
-### 立刻获取，但不存储，get 方法
+### 立刻获取，但不存储，`GET` 方法
 ----
 ```php
 array spider_run_get($url, string $format, array $spider_rule)
 ```
 ##### 参数
-- url:  
+- url:
     要获取的 URL
 
-- format:  
+- format:
     要获取的目标格式，如 json、xml、html
 
-- spider_rule:  
+- spider_rule:
     目标格式到要获取的格式的转换关系
 
 ##### 返回值
@@ -271,22 +271,22 @@ $data = spider_run_get('http://127.0.0.1/test', 'json', [
 
 
 
-### 立刻获取，但不存储，post 方法
+### 立刻获取，但不存储，`POST` 方法
 ----
 ```php
 array spider_run_post($url, $data, string $format, array $spider_rule)
 ```
 ##### 参数
-- url:  
+- url:
     要获取的 URL
 
-- data:  
+- data:
     POST 数据
 
-- format:  
+- format:
     要获取的目标格式，如 json、xml、html
 
-- spider_rule:  
+- spider_rule:
     目标格式到要获取的格式的转换关系
 
 ##### 返回值
@@ -316,22 +316,22 @@ $data = spider_run_post('http://127.0.0.1/test', ['name' => 'kiki'], 'json', [
 array spider_data_query($job_name, array $selections = [], array $queries = [], array $sorts = [], $offset = 0, $limit = 1000)
 ```
 ##### 参数
-- job_name:  
+- job_name:
     蜘蛛任务名
 
-- selections:  
+- selections:
     查询的字段，要查询的字段是多维数组中的值，可以用点符号来表达，如，data.name
 
-- queries:  
+- queries:
     筛选的条件，[参考这里](https://docs.mongodb.com/manual/tutorial/query-documents/)
 
-- sorts:  
+- sorts:
     排序的条件
 
-- offset:  
+- offset:
     查询偏移量
 
-- limit:  
+- limit:
     取多少数据
 
 ##### 返回值
@@ -358,7 +358,7 @@ $datas = spider_data_query('test');
 array spider_last_data_query($job_name)
 ```
 ##### 参数
-- job_name:  
+- job_name:
     蜘蛛任务名
 
 ##### 返回值

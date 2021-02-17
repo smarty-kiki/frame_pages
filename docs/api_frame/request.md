@@ -2,7 +2,7 @@
 
 在处理用户请求时我们需要处理用户通过 `http` 的 `path`、`header`、`query`、`cookie`、`body` 传入的参数
 
-### path 中数据的获取
+### `path` 中数据的获取
 
 通过在路由中使用通配符来匹配请求，逻辑闭包定义的形参用来接收获取到的参数，形参按通配符顺序来接收。如：
 ```php
@@ -12,7 +12,7 @@ if_get('/posts/*/comments/*', function ($post_id, $comment_id)
 });
 ```
 
-### header 中数据的获取
+### `header` 中数据的获取
 在 `PHP` 中，`header` 被放入`server` 数据中，可以通过 `server_safe`、`server`、`server_list` 方法来获取相关数据，如:
 ```php
 list(
@@ -27,7 +27,7 @@ list(
 * [获取具体的 uri 信息](frame/0.1/http?id=获取具体的-uri-信息)
 * [获取请求来源 ip](frame/0.1/http?id=获取请求来源-ip)
 
-### cookie 中数据的获取
+### `cookie` 中数据的获取
 通过 `cookie_safe`、`cookie`、`cookie_list` 方法来获取客户端传来的 `cookie` 数据，如:
 ```php
 list(
@@ -36,7 +36,7 @@ list(
 ) = cookie_list('name', 'age');
 ```
 
-### query 中数据的获取
+### `query` 中数据的获取
 
 在 `controller` 中使用 `input` 系列函数来获取 `query` 的参数。如：
 ```php
@@ -48,7 +48,7 @@ if_get('/', function ()
 });
 ```
 
-### body 中数据的获取
+### `body` 中数据的获取
 
 `http body` 的获取，常用的是 `form` 表单提交格式的内容获取，如:
 ```php
