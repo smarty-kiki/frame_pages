@@ -17,4 +17,4 @@ if_has_exception(function ($ex) {
 });
 ```
 
-示例中将异常记录日志并返回了统一的响应 `json`，如需要实现一些共性的逻辑，可以在 `if_has_exception` 方法注册闭包中继续实现
+示例中将异常记录日志并返回了统一的响应 `json`

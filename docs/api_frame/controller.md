@@ -10,5 +10,6 @@ if_get('/', function ()
 });
 
 // public/index.php
+
 include CONTROLLER_DIR.'/index.php';
 ```

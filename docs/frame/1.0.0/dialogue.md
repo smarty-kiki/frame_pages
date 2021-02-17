@@ -1,6 +1,6 @@
 # 对话
 
-提供会话的能力，框架中 dialogue 目录下的文件为基于具体组件的实现，如 `beanstalk.php`，使用时按需要载入，示例：
+提供会话的能力，框架中 `dialogue` 目录下的文件为基于具体组件的实现，如 `beanstalk.php`，使用时按需要载入，示例：
 ```php
 include FRAME_DIR.'/dialogue/beanstalk.php';
 ```
@@ -8,10 +8,17 @@ include FRAME_DIR.'/dialogue/beanstalk.php';
 ```php
 // config/beanstalk.php
 return [
-    'default' => [
-        'host' => '127.0.0.1',
-        'port' => 11300,
-        'timeout' => 1,
+    'midwares' => [
+        'default' => 'local',
+        'dialogue' => 'local',
+    ],
+
+    'resources' => [
+        'local' => [
+            'host' => '127.0.0.1',
+            'port' => 11300,
+            'timeout' => 1,
+        ],
     ],
 ];
 ```
@@ -34,7 +41,7 @@ return [
 closure dialogue_send_action(closure $action = null)
 ```
 ##### 参数
-- action:  
+- action:
     发消息时被执行的逻辑闭包，调用时会接受到 user_id、content
 
 ##### 返回值
@@ -63,7 +70,7 @@ dialogue_send_action(function ($user_id, $content) {
 closure dialogue_topic_miss_action(closure $action = null)
 ```
 ##### 参数
-- action:  
+- action:
     发消息时被执行的逻辑闭包，调用时会接受到 user_id、content、time
 
 ##### 返回值
@@ -92,7 +99,7 @@ dialogue_topic_miss_action(function ($user_id, $content, $time) {
 closure dialogue_topic_finish_action(closure $action = null)
 ```
 ##### 参数
-- action:  
+- action:
     话题处理结束后被执行的逻辑闭包，调用时会接受到 user_id、content、time
 
 ##### 返回值
@@ -121,7 +128,7 @@ dialogue_topic_finish_action(function ($user_id, $content, $time) {
 TODO dialogue_topic_match_extension_action(closure $action = null)
 ```
 ##### 参数
-- action:  
+- action:
     TODO
 
 ##### 返回值
@@ -148,7 +155,7 @@ TODO dialogue_topic_match_extension_action(closure $action = null)
 TODO dialogue_topics($topics = null)
 ```
 ##### 参数
-- topics:  
+- topics:
     TODO
 
 ##### 返回值
@@ -175,10 +182,10 @@ TODO dialogue_topics($topics = null)
 TODO dialogue_topic_match($content, $topic)
 ```
 ##### 参数
-- content:  
+- content:
     TODO
 
-- topic:  
+- topic:
     TODO
 
 ##### 返回值
@@ -205,22 +212,22 @@ TODO dialogue_topic_match($content, $topic)
 TODO dialogue_push($user_id, $content, $is_sync = false, $delay = 0, $priority = 10, $config_key = 'default')
 ```
 ##### 参数
-- user_id:  
+- user_id:
     TODO
 
-- content:  
+- content:
     TODO
 
-- is_sync:  
+- is_sync:
     TODO
 
-- delay:  
+- delay:
     TODO
 
-- priority:  
+- priority:
     TODO
 
-- config_key:  
+- config_key:
     TODO
 
 ##### 返回值
@@ -247,16 +254,16 @@ TODO dialogue_push($user_id, $content, $is_sync = false, $delay = 0, $priority =
 TODO dialogue_push_to_other_operator($message, $delay = 0, $priority = 10, $config_key = 'default')
 ```
 ##### 参数
-- message:  
+- message:
     TODO
 
-- delay:  
+- delay:
     TODO
 
-- priority:  
+- priority:
     TODO
 
-- config_key:  
+- config_key:
     TODO
 
 ##### 返回值
@@ -283,10 +290,10 @@ TODO dialogue_push_to_other_operator($message, $delay = 0, $priority = 10, $conf
 TODO dialogue_watch($config_key = 'default', $memory_limit = 1048576)
 ```
 ##### 参数
-- config_key:  
+- config_key:
     TODO
 
-- memory_limit:  
+- memory_limit:
     TODO
 
 ##### 返回值
@@ -313,19 +320,19 @@ TODO dialogue_watch($config_key = 'default', $memory_limit = 1048576)
 TODO dialogue_ask_and_wait($user_id, $ask, $pattern = null, $timeout = 60, $config_key = 'default')
 ```
 ##### 参数
-- user_id:  
+- user_id:
     TODO
 
-- ask:  
+- ask:
     TODO
 
-- pattern:  
+- pattern:
     TODO
 
-- timeout:  
+- timeout:
     TODO
 
-- config_key:  
+- config_key:
     TODO
 
 ##### 返回值
@@ -352,19 +359,19 @@ TODO dialogue_ask_and_wait($user_id, $ask, $pattern = null, $timeout = 60, $conf
 TODO dialogue_choice_and_wait($user_id, $ask, array $choice, $timeout, closure $action)
 ```
 ##### 参数
-- user_id:  
+- user_id:
     TODO
 
-- ask:  
+- ask:
     TODO
 
-- choice:  
+- choice:
     TODO
 
-- timeout:  
+- timeout:
     TODO
 
-- action:  
+- action:
     TODO
 
 ##### 返回值
@@ -391,19 +398,19 @@ TODO dialogue_choice_and_wait($user_id, $ask, array $choice, $timeout, closure $
 TODO dialogue_form_and_wait($user_id, $ask, array $form, $timeout, closure $action)
 ```
 ##### 参数
-- user_id:  
+- user_id:
     TODO
 
-- ask:  
+- ask:
     TODO
 
-- form:  
+- form:
     TODO
 
-- timeout:  
+- timeout:
     TODO
 
-- action:  
+- action:
     TODO
 
 ##### 返回值
@@ -430,10 +437,10 @@ TODO dialogue_form_and_wait($user_id, $ask, array $form, $timeout, closure $acti
 TODO dialogue_topic($topic, closure $closure)
 ```
 ##### 参数
-- topic:  
+- topic:
     TODO
 
-- closure:  
+- closure:
     TODO
 
 ##### 返回值
@@ -460,10 +467,10 @@ TODO dialogue_topic($topic, closure $closure)
 TODO dialogue_say($user_id, $content)
 ```
 ##### 参数
-- user_id:  
+- user_id:
     TODO
 
-- content:  
+- content:
     TODO
 
 ##### 返回值

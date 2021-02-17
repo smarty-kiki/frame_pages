@@ -28,7 +28,7 @@ list(
 * [获取请求来源 ip](frame/0.1/http?id=获取请求来源-ip)
 
 ### cookie 中数据的获取
-通过 `cookie_safe`、`cookie`、`cookie_list` 方法来获取客户端传来的 cookie 数据，如:
+通过 `cookie_safe`、`cookie`、`cookie_list` 方法来获取客户端传来的 `cookie` 数据，如:
 ```php
 list(
     $o->name,
@@ -38,7 +38,7 @@ list(
 
 ### query 中数据的获取
 
-在 controller 中使用 input 系列函数来获取 query 的参数。如：
+在 `controller` 中使用 `input` 系列函数来获取 `query` 的参数。如：
 ```php
 // 用户请求 /?name=kiki&age=20
 if_get('/', function ()

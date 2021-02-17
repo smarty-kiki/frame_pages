@@ -1,6 +1,6 @@
 # 路由
 
-frame 提供了一个与常规框架不同的路由机制，通常一个 url 的路由，需要有 url、controller、action 三个命名起来非常啰嗦的东西，如订单的创建接口，通常会设计为：
+`frame` 提供了一个与常规框架不同的路由机制，通常一个 `url` 的路由，需要有 `url`、`controller`、`action` 三个命名起来非常啰嗦的东西，如订单的创建接口，通常会设计为：
 ```
 URL:        /orders
 Method:     PUT or POST
@@ -24,7 +24,7 @@ class OrderController extends BaseController
 }
 ```
 
-使用 frame 这么实现
+使用 `frame` 这么实现
 ```php
 // controller/order.php
 
@@ -34,7 +34,7 @@ if_post('/orders', function ()
 });
 ```
 
-从 path 中提取参数的时候，某框架示例：
+从 `path` 中提取参数的时候，某框架示例：
 ```php
 // router.php
 
@@ -51,7 +51,7 @@ class PostController extends BaseController
 }
 ```
 
-使用 frame 这么实现
+使用 `frame` 这么实现
 ```php
 // controller/post.php
 

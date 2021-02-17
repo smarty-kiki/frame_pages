@@ -4,7 +4,7 @@
 ```php
 include FRAME_DIR.'/entity.php';
 ```
-任何技术抽象，都会对性能有一定的损失，在现代信息系统开发中，性能的主要瓶颈在于数据结构设计及优化、逻辑实现中的 `I/O` 复杂度，框架会以 “不引入含糊边界” 为原则来尝试给出每个逻辑模式的 “唯一答案”，以下会针对 `orm` 的入门使用及常见的模式进行分享
+任何技术抽象，都会对性能有一定的损失，在信息系统开发中，性能的主要瓶颈在于数据结构设计及优化、逻辑实现中的 `I/O` 复杂度，框架会以 “不引入含糊边界” 为原则来尝试给出每个逻辑模式的 “唯一答案”，以下会针对 `orm` 的入门使用及常见的模式进行分享
 
 
 
@@ -26,8 +26,8 @@ class customer_dao extends dao
 class customer extends entity
 {
     /**
-     * structs 声明这个实体所具有的属性、id、version、create_time、update_time、delete_time 框架已经自动实现，无需业务实体中声明
-     * 
+     * structs 声明这个实体所具有的属性，id、version、create_time、update_time、delete_time 框架已经自动实现，无需业务实体中声明
+     *
      * @var mixed
      * @access public
      */
@@ -38,16 +38,16 @@ class customer extends entity
 
     /**
      * create 方法是实体的创建方法，由开发者自己实现，因为不同的实体的 create 可能基于不同的参数，所以没有定为父类的 abstract 方法
-     * 
-     * @param mixed $name 
-     * @param mixed $age 
+     *
+     * @param mixed $name
+     * @param mixed $age
      * @static
      * @access public
      * @return customer
      */
     public static function create($name, $age)
     {
-        $c = parent::init(); // 父类初始化
+        $c = parent::init(); // 必须调用父类的初始化方法来构造
         $c->name = $name;
         $c->age  = $age;
 
@@ -103,12 +103,12 @@ $customer->force_delete();
 
 
 
-### 实体上的一些方法
+### 实体父类提供的方法
 
 ```php
 /**
  * is_deleted 判断是否被软删除
- * 
+ *
  * @access public
  * @return boolean
  */
@@ -116,7 +116,7 @@ public function is_deleted()
 
 /**
  * delete 软删除动作
- * 
+ *
  * @access public
  * @return void
  */
@@ -124,7 +124,7 @@ public function delete()
 
 /**
  * restore 软删除恢复
- * 
+ *
  * @access public
  * @return void
  */
@@ -132,7 +132,7 @@ public function restore()
 
 /**
  * force_delete 硬删除动作
- * 
+ *
  * @access public
  * @return void
  */
@@ -140,7 +140,7 @@ public function force_delete()
 
 /**
  * is_null 判断实体是否是 null_entity
- * 
+ *
  * @access public
  * @return void
  */
@@ -148,7 +148,7 @@ public function is_null()
 
 /**
  * is_not_null 判断实体是否不是 null_entity
- * 
+ *
  * @access public
  * @return void
  */
@@ -162,7 +162,7 @@ public function is_not_null()
 class order extends entity
 {
     public $structs = [
-        'customer_id' => '',
+        'customer_id' => '', // 这里声明关联关系外键
     ];
 
     public function __construct()
@@ -191,13 +191,13 @@ protected function belongs_to($relationship_name, $entity_name = null, $foreign_
 protected function has_many($relationship_name, $entity_name = null, $foreign_key = null)
 ```
 ##### 参数
-- relationship_name:  
+- relationship_name:
     关联关系名
 
-- entity_name:  
-    关联的实体类型，不传则以 `relationship_name` 作为关联的实体类型
+- entity_name:
+    关联的实体类型，不传则以 `relationship_name` 作为关联的实体类型，例如，一对多关系时，关联关系名为复数，需要声明关联实体类型
 
-- foreign_key:  
+- foreign_key:
     外键名，不传则赋予默认值，`has_one/has_many` 默认值为当前实体的类型外加 `id`，如 `order_id`，`belongs_to` 默认值为关联实体的类型外加 `id`，
 
 ### 获取实体
@@ -206,8 +206,8 @@ protected function has_many($relationship_name, $entity_name = null, $foreign_ke
 ```php
 /**
  * find 通过单个或者多个 id 获取实体，单个 id 时返回单个实体，未查到对应数据时返回 null_entity，多个 id 查询会返回以 id 为 key 的实体数组，未查到的不会在数组中
- * 
- * @param mixed $id_or_ids 
+ *
+ * @param mixed $id_or_ids
  * @access public
  * @return mix
  */
@@ -215,19 +215,19 @@ public function find($id_or_ids)
 
 /**
  * find_by_condition 通过查询条件语句查询第一个实体，condition 是抛去 select 和 where 关键词的 sql_template，可以传入 order by，该方法访问控制为 protected，仅提供给 dao 做方法封装时使用，禁止外部直接使用。注意使用该方法时需要自行构造软删除条件查询语句，通过  $this->with_deleted 可获取当前实体是否开启了软删除
- * 
- * @param mixed $condition 
- * @param array $binds 
+ *
+ * @param string $condition
+ * @param array $binds
  * @access protected
  * @return entity
  */
 protected function find_by_condition($condition, array $binds = [])
 
 /**
- * find_by_sql 通过查询 sql_template 来查询第一个实体，需要注意的是为了确保实体不是贫血实体，一定要确保查询出所有列。注意使用该方法时需要自行构造软删除条件查询语句，通过  $this->with_deleted 可获取当前实体是否开启了软删除
- * 
- * @param mixed $sql_template 
- * @param array $binds 
+ * find_by_sql 通过查询 sql_template 来查询第一个实体，需要注意的是为了确保实体不是贫血实体，一定要确保查询出所有列。注意,使用该方法时需要自行构造软删除条件查询语句，通过  $this->with_deleted 可获取当前 dao 是否需要查询软删除实体
+ *
+ * @param string $sql_template
+ * @param array $binds
  * @access protected
  * @return entity
  */
@@ -235,51 +235,51 @@ protected function find_by_sql($sql_template, array $binds = [])
 
 /**
  * find_all 获取表中的全量实体，排序以 id 正序，返回的数组以 id 为 key
- * 
+ *
  * @access public
  * @return array
  */
 public function find_all()
 
 /**
- * find_all_by_column 通过简单条件来获得多个实体，简单条件的使用方法见 [框架能力/数据库/简单函数]
- * 
- * @param array $columns 
+ * find_all_by_column 通过简单条件来获得多个实体，简单条件的使用方法见 [框架能力/数据库/简单函数]，返回的数组以 id 为 key
+ *
+ * @param array $columns
  * @access public
  * @return array
  */
 public function find_all_by_column(array $columns = [])
 
 /**
- * find_all_by_condition 与 find_by_condition 类似，是提供给 dao 封装方法时使用的多实体获取方法。注意使用该方法时需要自行构造软删除条件查询语句，通过  $this->with_deleted 可获取当前实体是否开启了软删除
- * 
- * @param mixed $condition 
- * @param array $binds 
+ * find_all_by_condition 与 find_by_condition 类似，是提供给 dao 封装方法时使用的多实体获取方法。注意，使用该方法时需要自行构造软删除条件查询语句，通过  $this->with_deleted 可获取当前 dao 是否需要查询软删除实体，返回的数组以 id 为 key
+ *
+ * @param string $condition
+ * @param array $binds
  * @access protected
  * @return array
  */
 protected function find_all_by_condition($condition, array $binds = [])
 
 /**
- * find_all_by_sql 与 find_by_sql 类似，是提供给 dao 封装方法时使用的多实体获取方法。注意使用该方法时需要自行构造软删除条件查询语句，通过  $this->with_deleted 可获取当前实体是否开启了软删除
- * 
- * @param mixed $sql_template 
- * @param array $binds 
+ * find_all_by_sql 与 find_by_sql 类似，是提供给 dao 封装方法时使用的多实体获取方法。注意，使用该方法时需要自行构造软删除条件查询语句，通过  $this->with_deleted 可获取当前 dao 是否需要查询软删除实体
+ *
+ * @param string $sql_template
+ * @param array $binds
  * @access protected
  * @return array
  */
 protected function find_all_by_sql($sql_template, array $binds = [])
 ```
-获取实体需要通过该类的 `dao` 类来，所以在调用以上方法时先需要拿到 `dao` 实例，框架提供了单例的方法来获取 `dao` 实例，使用时如下：
+获取实体需要通过对应的 `dao` 类来，所以在调用以上方法时先需要拿到 `dao` 实例，框架提供了单例的方法来获取 `dao` 实例，使用时如下：
 ```php
 $order = dao('order')->find($id);
 ```
 ### 将实体直接转为 `json`
-在实现 `api` 项目时，经常需要将一个实体直接转换为 `json` 字符串，`entity` 实现了 `JsonSerializable` 接口，可直接传入 `json_encode` 来转换，如：
+在实现 `api` 项目时，经常需要将一个实体直接转换为 `json` 字符串，`entity` 已经实现了 `JsonSerializable` 接口，可直接传入 `json_encode` 来转换，如：
 ```php
 json_encode($order);
 ```
-如果是个数组中的实体也可直接进行转换，如：
+如果是个包含实体的数组也可直接进行转换，如：
 ```php
 json_encode($orders);
 ```
