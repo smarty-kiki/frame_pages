@@ -1,10 +1,10 @@
 # 锁
 
-提供锁能力，框架中 lock 目录下的文件为基于具体组件的实现，如 cache.php，使用时按需要载入，示例：
+提供锁能力，框架中 `lock` 目录下的文件为基于具体组件的实现，如 `cache.php`，使用时按需要载入，示例：
 ```php
 include FRAME_DIR.'/lock/cache.php';
 ```
-组件使用时需要有对应的配置，如 cache.php 需要有 cache 能力的引入，示例：
+组件使用时需要有对应的配置，如 `cache.php` 需要有 `cache` 能力的引入，示例：
 ```php
 include FRAME_DIR.'/cache/redis.php';
 ```

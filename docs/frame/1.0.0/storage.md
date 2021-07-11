@@ -1,6 +1,6 @@
 # 非 SQL 存储
 
-提供非 SQL 类的存储能力，框架中 storage 目录下的文件为基于具体组件的存储实现，如 mongodb.php，使用时按需要载入，示例：
+提供非 SQL 类的存储能力，框架中 `storage` 目录下的文件为基于具体组件的存储实现，如 `mongodb.php`，使用时按需要载入，示例：
 ```php
 include FRAME_DIR.'/storage/mongodb.php';
 ```
@@ -31,7 +31,7 @@ int storage_insert($table, array $data, $config_key = 'default')
     具体组件的配置
 
 ##### 返回值
-插入数据的条数，通常是 1
+插入数据的条数，通常是 `1`
 
 ##### 示例
 ```php
@@ -64,7 +64,7 @@ int storage_multi_insert($table, array $datas, $config_key = 'default')
     数据数组
 
 - config_key:  
-    存储对应的配置 key
+    存储对应的配置 `key`
 
 ##### 返回值
 插入数据的数量
@@ -101,7 +101,7 @@ array storage_query($table, array $selections = [], array $queries = [], array $
     查询的表名
 
 - selections:  
-    查询的字段，要查询的字段是多维数组中的值，可以用点符号来表达，如，data.name
+    查询的字段，要查询的字段是多维数组中的值，可以用点符号来表达，如 `data.name`
 
 - queries:  
     筛选的条件，[参考这里](https://docs.mongodb.com/manual/tutorial/query-documents/)
@@ -146,7 +146,7 @@ $data = storage_find($table, $id, $config_key = 'default')
     写入的表名
 
 - id:  
-    数据的 id
+    数据的 `id`
 
 - config_key:  
     具体组件的配置

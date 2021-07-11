@@ -1,6 +1,6 @@
 # 命令行
 
-命令行能力提供了开发者开发命令行交互功能的简单函数，使用时直接加载 command.php，示例：
+命令行能力提供了开发者开发命令行交互功能的简单函数，使用时直接加载 `command.php`，示例：
 ```php
 include FRAME_DIR.'/command.php';
 ```
@@ -21,7 +21,7 @@ void command($rule, $description, closure $action)
 ```
 ##### 参数
 - rule:  
-    命令行中带什么参数来执行这个命令，建议做一定的分组设计如 test:hello-world
+    命令行中带什么参数来执行这个命令，建议做一定的分组设计如 `test:hello-world`
 
 - description:  
     对于该命令行逻辑的文字说明，可以在这里说明所需要的参数
@@ -57,7 +57,7 @@ mix command_paramater($key, $default = null)
 ```
 ##### 参数
 - key:  
-    在命令行中传的参数名，命令行传参时可以传 boolean 值，如 -echo_disabled 也可以传具体的字符、数字值，如 --name=xxx
+    在命令行中传的参数名，命令行传参时可以传 `boolean` 值，如 -echo_disabled 也可以传具体的字符、数字值，如 `--name=xxx`
 
 - default:  
     如果没获取到的默认值
@@ -157,10 +157,10 @@ $mix = command_read($prompt, $default = true, array $options = [])
     用户直接键入回车时的默认值
 
 - options:  
-    如果传入该值，会约束用户输入的选择范围，用户只能输入 options 数组中的 key
+    如果传入该值，会约束用户输入的选择范围，用户只能输入 `options` 数组中的 `key`
 
 ##### 返回值
-用户的输入，如果传入了 options，返回值为用户选择的值
+用户的输入，如果传入了 `options`，返回值为用户选择的值
 
 ##### 示例
 ```php
@@ -183,7 +183,7 @@ closure command_read_completions(closure $closure = null)
 ```
 ##### 参数
 - closure:  
-    当用户按 tab 补全时执行的闭包
+    当用户按 `tab` 补全时执行的闭包
 
 ##### 返回值
 当前生效的逻辑闭包
@@ -212,10 +212,10 @@ boolean command_read_bool($prompt, $default = 'n')
     与用户交互时显示给用户的文字
 
 - default:  
-    用户直接按回车时的默认值，可传 y 或者 n
+    用户直接按回车时的默认值，可传 `y` 或者 `n`
 
 ##### 返回值
-boolean 值
+`boolean` 值
 
 ##### 示例
 ```php

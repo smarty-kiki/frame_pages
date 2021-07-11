@@ -210,7 +210,7 @@ array array_indexed($array, Closure $callback)
     来源数组
 
 - callback:  
-    构建逻辑的闭包，执行时会给闭包传入数组中的 key、value，闭包需要返回结果数组的 index、key、value
+    构建逻辑的闭包，执行时会给闭包传入数组中的 `key`、value，闭包需要返回结果数组的 `index`、`key`、`value`
 
 ##### 返回值
 数组

@@ -42,7 +42,7 @@ closure dialogue_send_action(closure $action = null)
 ```
 ##### 参数
 - action:  
-    发消息时被执行的逻辑闭包，调用时会接受到 user_id、content
+    发消息时被执行的逻辑闭包，调用时会接受到 `user_id`、`content`
 
 ##### 返回值
 当前生效的逻辑闭包
@@ -71,7 +71,7 @@ closure dialogue_topic_miss_action(closure $action = null)
 ```
 ##### 参数
 - action:  
-    发消息时被执行的逻辑闭包，调用时会接受到 user_id、content、time
+    发消息时被执行的逻辑闭包，调用时会接受到 `user_id`、`content`、`time`
 
 ##### 返回值
 当前生效的逻辑闭包
@@ -100,7 +100,7 @@ closure dialogue_topic_finish_action(closure $action = null)
 ```
 ##### 参数
 - action:  
-    话题处理结束后被执行的逻辑闭包，调用时会接受到 user_id、content、time
+    话题处理结束后被执行的逻辑闭包，调用时会接受到 `user_id`、`content`、`time`
 
 ##### 返回值
 当前生效的逻辑闭包

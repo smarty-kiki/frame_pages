@@ -498,13 +498,13 @@ int cache_setbit($key, $offset, $value, $config_key = 'default')
     要改写的位偏移量值
 
 - value:  
-    要改写的值，只能为 0 或 1
+    要改写的值，只能为 `0` 或 `1`
 
 - config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
-写入前的值，之前未存在时为 0
+写入前的值，之前未存在时为 `0`
 
 ##### 示例
 ```php
@@ -533,7 +533,7 @@ int cache_getbit($key, $offset, $config_key = 'default')
     缓存服务对应的配置 `key`
 
 ##### 返回值
-指定偏移量下的值，没有该偏移量返回为 0
+指定偏移量下的值，没有该偏移量返回为 `0`
 
 ##### 示例
 ```php
@@ -605,7 +605,7 @@ int cache_bitop($destkey, $operation, $keys, $config_key = 'default')
     缓存服务对应的配置 `key`
 
 ##### 返回值
-成功时返回 1
+成功时返回 `1`
 
 ##### 示例
 ```php
