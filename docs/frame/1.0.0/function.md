@@ -53,13 +53,13 @@ $name = array_get($data, 'base_info.name', '无名');
 array array_set($array, $key, $value)
 ```
 ##### 参数
-- array:
+- array:  
     被设置的数组
 
-- key:
+- key:  
     要设置的 array key，因 array 是多层、多维的，key 可以用点符号来表达多层、多维逻辑、如 data.name
 
-- value:
+- value:  
     要设置的值
 
 ##### 返回值
@@ -86,10 +86,10 @@ $new_data = array_set($data, 'data.name', 'kiki');
 boolean array_exists($array, $key)
 ```
 ##### 参数
-- array:
+- array:  
     要检查的数组
 
-- key:
+- key:  
     要检查的 array key，因 array 是多层、多维的，key 可以用点符号来表达多层、多维逻辑、如 data.name
 
 ##### 返回值
@@ -116,10 +116,10 @@ $has_name = array_exists($array, 'data.name');
 void array_forget(&$array, $keys)
 ```
 ##### 参数
-- array:
+- array:  
     目标数组
 
-- keys:
+- keys:  
     要去掉的 array key，因 array 是多层、多维的，key 可以用点符号来表达多层、多维逻辑、如 data.name，key 可以是多个
 
 ##### 返回值
@@ -148,7 +148,7 @@ array_forget($array, ['data.name', 'data.age']);
 array array_divide($array)
 ```
 ##### 参数
-- array:
+- array:  
     目标数组
 
 ##### 返回值
@@ -175,10 +175,10 @@ list($keys, $values) =  array_divide($array);
 array array_build($array, Closure $callback)
 ```
 ##### 参数
-- array:
+- array:  
     来源数组
 
-- callback:
+- callback:  
     构建逻辑的闭包，执行时会给闭包传入数组中的 key、value，闭包需要返回结果数组的 key、value
 
 ##### 返回值
@@ -206,10 +206,10 @@ $res_array =  array_build($array, function ($key, $value) {
 array array_indexed($array, Closure $callback)
 ```
 ##### 参数
-- array:
+- array:  
     来源数组
 
-- callback:
+- callback:  
     构建逻辑的闭包，执行时会给闭包传入数组中的 key、value，闭包需要返回结果数组的 index、key、value
 
 ##### 返回值
@@ -239,7 +239,7 @@ $res_array =  array_indexed($array, function ($key, $value) {
 array array_key_sort($array)
 ```
 ##### 参数
-- array:
+- array:  
     待排序的数组
 
 ##### 返回值
@@ -266,10 +266,10 @@ $res_array =  array_key_sort($array);
 array array_list(array $array, array $keys)
 ```
 ##### 参数
-- array:
+- array:  
     来源数组
 
-- keys:
+- keys:  
     要获取的 array key 数组，因 array 是多层、多维的，key 可以用点符号来表达多层、多维逻辑、如 data.name
 
 ##### 返回值
@@ -296,10 +296,10 @@ list($name, $age) = array_list($array, ['data.name', 'data.age',]);
 array array_transfer(array $array, array $rules)
 ```
 ##### 参数
-- array:
+- array:  
     来源数组
 
-- rules:
+- rules:  
     rules 学问大，rules 是一个转换关系的描述数组，如：
     ```php
     $rules = [
@@ -336,13 +336,13 @@ $res_array = array_transfer($array, [
 string str_tail_cut($string, $len, $suffix = '...')
 ```
 ##### 参数
-- string:
+- string:  
     目标字符串
 
-- len:
+- len:  
     最终限制到的长度
 
-- suffix:
+- suffix:  
     省略符号
 
 ##### 返回值
@@ -369,13 +369,13 @@ $subtitle = str_tail_cut($subtitle, 20);
 string str_head_cut($string, $len, $prefix = '...')
 ```
 ##### 参数
-- string:
+- string:  
 目标字符串
 
-- len:
+- len:  
 最终限制到的长度
 
-- prefix:
+- prefix:  
 省略符号
 
 ##### 返回值
@@ -402,13 +402,13 @@ $subtitle = str_head_cut($subtitle, 20);
 string str_middle_cut($string, $len, $middle = '...')
 ```
 ##### 参数
-- string:
+- string:  
 目标字符串
 
-- len:
+- len:  
 最终限制到的长度
 
-- middle:
+- middle:  
 省略符号
 
 ##### 返回值
@@ -435,7 +435,7 @@ $subtitle = str_middle_cut($subtitle, 20);
 void dd(...$args)
 ```
 ##### 参数
-- ...args:
+- ...args:  
     可传多个参数，类型不限，会按照参数顺序 var_dump 出来
 
 ##### 返回值
@@ -464,7 +464,7 @@ dd($params, $this);
 void trace($message = 'exception for trace')
 ```
 ##### 参数
-- message:
+- message:  
     打印到异常日志中可方便区分或者检索的关键词
 
 ##### 返回值
@@ -489,7 +489,7 @@ trace();
 mix value($value)
 ```
 ##### 参数
-- value:
+- value:  
     可传某个值，也可以传一个闭包
 
 ##### 返回值
@@ -516,7 +516,7 @@ value($config['display_name']);
 string closure_id($closure)
 ```
 ##### 参数
-- closure:
+- closure:  
     闭包
 
 ##### 返回值
@@ -543,10 +543,10 @@ $id = closure_id($closure)
 boolean starts_with($haystack, $needles)
 ```
 ##### 参数
-- haystack:
+- haystack:  
     判断该变量字符串是否以指定字符串开头
 
-- needles:
+- needles:  
     作为判断依据的开头字符串，也可以传入数组，传入为数组时匹配任意一个返回值即为 true
 
 ##### 返回值
@@ -575,10 +575,10 @@ if (starts_with($post, '亲，')) {
 boolean ends_with($haystack, $needles)
 ```
 ##### 参数
-- haystack:
+- haystack:  
     判断该变量字符串是否以指定字符串结尾
 
-- needles:
+- needles:  
     作为判断依据的结尾字符串，也可以传入数组，传入为数组时匹配任意一个返回值即为 true
 
 ##### 返回值
@@ -607,10 +607,10 @@ if (ends_with($post, '?')) {
 string str_finish($value, $cap)
 ```
 ##### 参数
-- value:
+- value:  
     被操作的字符串
 
-- cap:
+- cap:  
     指定的结尾字符串
 
 ##### 返回值
@@ -638,10 +638,10 @@ echo str_finish('真棒!', '!');  // 真棒!
 string str_begin($value, $cap)
 ```
 ##### 参数
-- value:
+- value:  
     被操作的字符串
 
-- cap:
+- cap:  
     指定的开头字符串
 
 ##### 返回值
@@ -669,7 +669,7 @@ echo str_begin('您好', '亲，');  // 亲，您好
 boolean is_url($path)
 ```
 ##### 参数
-- path:
+- path:  
     被判断的字符串
 
 ##### 返回值
@@ -698,7 +698,7 @@ if (is_url($path)) {
 string unparse_url(array $parsed)
 ```
 ##### 参数
-- parsed:
+- parsed:  
     parse_url 得到的数组格式
 
 ##### 返回值
@@ -728,10 +728,10 @@ $url = unparse_url($parsed);
 string url_transfer($url, closure $transfer_action)
 ```
 ##### 参数
-- url:
+- url:  
     要修改的 url
 
-- transfer_action:
+- transfer_action:  
     用以修改 url 的闭包，闭包会接收到 parse_url 后的结果，结果中 query 部分也已经进一步被 parse_str 方便直接修改
 
 ##### 返回值
@@ -761,7 +761,7 @@ $url = url_transfer('http://php-frame.cn/?whatever=test', function ($parsed) {
 string config_dir($dir = null)
 ```
 ##### 参数
-- dir:
+- dir:  
     配置文件根目录
 
 ##### 返回值
@@ -788,7 +788,7 @@ config_dir(FRAME_DIR.'/config');
 array config($file_name)
 ```
 ##### 参数
-- file_name:
+- file_name:  
     配置名
 
 ##### 返回值
@@ -841,10 +841,10 @@ return [
 array config_midware($file_name, $midware_name)
 ```
 ##### 参数
-- file_name:
+- file_name:  
     配置名
 
-- midware_name:
+- midware_name:  
     中间件名
 
 ##### 返回值
@@ -917,7 +917,7 @@ $env = env();
 boolean is_env($env)
 ```
 ##### 参数
-- env:
+- env:  
     环境名
 
 ##### 返回值
@@ -948,7 +948,7 @@ if (is_env('production')) {
 void option_define(...$options)
 ```
 ##### 参数
-- ...options:
+- ...options:  
     环境名
 
 ##### 返回值
@@ -977,9 +977,9 @@ option_define('OPTION_A', 'OPTION_B');
 boolean has_option($options, $define)
 ```
 ##### 参数
-- options:
+- options:  
     指定选项，可以为多个选项，如 `OPTION_A | OPTION_B`
-- define:
+- define:  
     被判断的选项
 
 ##### 返回值
@@ -1016,7 +1016,7 @@ if (has_option(OPTION_B, $define)) {
 boolean not_empty($mixed)
 ```
 ##### 参数
-- mixed:
+- mixed:  
     被判断的变量
 
 ##### 返回值
@@ -1045,7 +1045,7 @@ if (not_empty($mixed)) {
 boolean not_null($mixed)
 ```
 ##### 参数
-- mixed:
+- mixed:  
     被判断的变量
 
 ##### 返回值
@@ -1074,7 +1074,7 @@ if (not_null($mixed)) {
 boolean all_empty(...$args)
 ```
 ##### 参数
-- ...args:
+- ...args:  
     要被判断的变量，可以传多个参数
 
 ##### 返回值
@@ -1103,7 +1103,7 @@ if (all_empty($a, $b, $c)) {
 boolean all_null(...$args)
     ```
 ##### 参数
-- ...args:
+- ...args:  
     要被判断的变量，可以传多个参数
 
 ##### 返回值
@@ -1132,7 +1132,7 @@ if (all_null($a, $b, $c)) {
 boolean all_not_empty(...$args)
 ```
 ##### 参数
-- ...args:
+- ...args:  
     要被判断的变量，可以传多个参数
 
 ##### 返回值
@@ -1161,7 +1161,7 @@ if (all_not_empty($a, $b, $c)) {
 boolean all_not_null(...$args)
     ```
 ##### 参数
-- ...args:
+- ...args:  
     要被判断的变量，可以传多个参数
 
 ##### 返回值
@@ -1190,7 +1190,7 @@ if (all_not_null($a, $b, $c)) {
 boolean has_empty(...$args)
 ```
 ##### 参数
-- ...args:
+- ...args:  
     要被判断的变量，可以传多个参数
 
 ##### 返回值
@@ -1219,7 +1219,7 @@ if (has_empty($a, $b, $c)) {
 boolean has_null(...$args)
     ```
 ##### 参数
-- ...args:
+- ...args:  
     要被判断的变量，可以传多个参数
 
 ##### 返回值
@@ -1248,10 +1248,10 @@ if (has_null($a, $b, $c)) {
 string datetime($expression = null, $format = 'Y-m-d H:i:s')
 ```
 ##### 参数
-- expression:
+- expression:  
     关于所需要时间的描述，可以为 null，也可以是时间戳，也可以是一个相对时间的描述语句
 
-- format:
+- format:  
     返回的时间的格式
 
 ##### 返回值
@@ -1284,13 +1284,13 @@ $next_friday_noon = datetime('next friday 12:00:00'); // 不含今天的下一�
 mix datetime_diff($datetime1, $datetime2, $format = '%ts')
 ```
 ##### 参数
-- datetime1:
+- datetime1:  
     时间1
 
-- datetime2:
+- datetime2:  
     时间2
 
-- format:
+- format:  
 格式字符串是对返回值格式的描述，其中的变量[参考这里](http://php.net/manual/en/dateinterval.format.php#refsect1-dateinterval.format-parameters)，在官方基础上又添加了`ts`总差异描述，`tm`总差异分钟数（秒差异舍去），`th`总差异小时数（分、秒差异舍去）`td`总差异天数（时、分、秒差异舍去）
 
 ##### 返回值
@@ -1318,25 +1318,25 @@ $interval_second = datetime_diff($datetime1, $datetime2);
 mix remote_post($url, $data = [], $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
 ```
 ##### 参数
-- url:
+- url:  
     请求的目标地址
 
-- data:
+- data:  
     要传的值，支持字符串和数组两个类型，为字符串时会直接通过 http body 传过去，为数组时会按照 form 格式传过去
 
-- timeout:
+- timeout:  
     多久放弃等待结果，单次重试的时间
 
-- retry:
+- retry:  
     [curl 错误码](https://curl.haxx.se/libcurl/c/libcurl-errors.html)不为 0 时的请求重试次数
 
-- headers:
+- headers:  
     header 数组，如
     ```php
     ['Content-type: text/plain', 'Content-length: 100']
     ```
 
-- cookies:
+- cookies:  
     键值对数组
 
 ##### 返回值
@@ -1363,25 +1363,25 @@ $html = remote_post($url);
 mix remote_post_json($url, $data = [], $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
 ```
 ##### 参数
-- url:
+- url:  
     请求的目标地址
 
-- data:
+- data:  
     要传的值，支持字符串和数组两个类型，为字符串时会直接通过 http body 传过去，为数组时会按照 form 格式传过去
 
-- timeout:
+- timeout:  
     多久放弃等待结果，单次重试的时间
 
-- retry:
+- retry:  
     [curl 错误码](https://curl.haxx.se/libcurl/c/libcurl-errors.html)不为 0 时的请求重试次数
 
-- headers:
+- headers:  
     header 数组，如
     ```php
     ['Content-type: text/plain', 'Content-length: 100']
     ```
 
-- cookies:
+- cookies:  
     键值对数组
 
 ##### 返回值
@@ -1408,25 +1408,25 @@ $res = remote_post_json($url)
 mix remote_post_xml($url, $data = [], $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
 ```
 ##### 参数
-- url:
+- url:  
     请求的目标地址
 
-- data:
+- data:  
     要传的值，支持字符串和数组两个类型，为字符串时会直接通过 http body 传过去，为数组时会按照 form 格式传过去
 
-- timeout:
+- timeout:  
     多久放弃等待结果，单次重试的时间
 
-- retry:
+- retry:  
     [curl 错误码](https://curl.haxx.se/libcurl/c/libcurl-errors.html)不为 0 时的请求重试次数
 
-- headers:
+- headers:  
     header 数组，如
     ```php
     ['Content-type: text/plain', 'Content-length: 100']
     ```
 
-- cookies:
+- cookies:  
     键值对数组
 
 ##### 返回值
@@ -1453,22 +1453,22 @@ $res = remote_post_xml($url)
 mix remote_get($url, $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
 ```
 ##### 参数
-- url:
+- url:  
     请求的目标地址
 
-- timeout:
+- timeout:  
     多久放弃等待结果，单次重试的时间
 
-- retry:
+- retry:  
     [curl 错误码](https://curl.haxx.se/libcurl/c/libcurl-errors.html)不为 0 时的请求重试次数
 
-- headers:
+- headers:  
     header 数组，如
     ```php
     ['Content-type: text/plain', 'Content-length: 100']
     ```
 
-- cookies:
+- cookies:  
     键值对数组
 
 ##### 返回值
@@ -1495,22 +1495,22 @@ $html = remote_get($url);
 mix remote_get_json($url, $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
 ```
 ##### 参数
-- url:
+- url:  
     请求的目标地址
 
-- timeout:
+- timeout:  
     多久放弃等待结果，单次重试的时间
 
-- retry:
+- retry:  
     [curl 错误码](https://curl.haxx.se/libcurl/c/libcurl-errors.html)不为 0 时的请求重试次数
 
-- headers:
+- headers:  
     header 数组，如
     ```php
     ['Content-type: text/plain', 'Content-length: 100']
     ```
 
-- cookies:
+- cookies:  
     键值对数组
 
 ##### 返回值
@@ -1537,22 +1537,22 @@ $res = remote_get_json($url);
 mix remote_get_xml($url, $timeout = 3, $retry = 3, array $headers = [], array $cookies = [])
 ```
 ##### 参数
-- url:
+- url:  
     请求的目标地址
 
-- timeout:
+- timeout:  
     多久放弃等待结果，单次重试的时间
 
-- retry:
+- retry:  
     [curl 错误码](https://curl.haxx.se/libcurl/c/libcurl-errors.html)不为 0 时的请求重试次数
 
-- headers:
+- headers:  
     header 数组，如
     ```php
     ['Content-type: text/plain', 'Content-length: 100']
     ```
 
-- cookies:
+- cookies:  
     键值对数组
 
 ##### 返回值
@@ -1579,7 +1579,7 @@ $res = remote_get_xml($url);
 object instance($class_name)
 ```
 ##### 参数
-- class_name:
+- class_name:  
     要获取单例的类名
 
 ##### 返回值
@@ -1606,7 +1606,7 @@ $obj = instance('stdClass');
 string json($data = [])
 ```
 ##### 参数
-- data:
+- data:  
     要被转换为 json 的数据
 
 ##### 返回值
@@ -1640,7 +1640,7 @@ $res = json($data);
 string english_word_pluralize($word)
 ```
 ##### 参数
-- word:
+- word:  
     单数词
 
 ##### 返回值
@@ -1672,7 +1672,7 @@ $res = english_word_pluralize('apple'); // apples
 string english_word_singularize($word)
 ```
 ##### 参数
-- word:
+- word:  
     复数词
 
 ##### 返回值
@@ -1704,10 +1704,10 @@ $res = english_word_singularize('apples'); // apple
 string english_word_titleize($word, $only_first = true)
 ```
 ##### 参数
-- word:
+- word:  
     英文词组
 
-- only_first:
+- only_first:  
     是否仅仅是首字母
 
 ##### 返回值
@@ -1740,7 +1740,7 @@ $res = english_word_titleize('hello world', false); // Hello World
 string english_word_camelize($word)
 ```
 ##### 参数
-- word:
+- word:  
     英文词组
 
 ##### 返回值
@@ -1773,7 +1773,7 @@ $res = english_word_camelize('hello_world'); // HelloWorld
 string english_word_underscore($word)
 ```
 ##### 参数
-- word:
+- word:  
     英文词组
 
 ##### 返回值
@@ -1806,10 +1806,10 @@ $res = english_word_underscore('HelloWorld'); // hello_world
 string english_word_humanize($word, $only_first = true)
 ```
 ##### 参数
-- word:
+- word:  
     英文词组
 
-- only_first:
+- only_first:  
     是否仅仅是首字母
 
 ##### 返回值
@@ -1842,7 +1842,7 @@ $res = english_word_humanize('HelloWorld'); // Hello world
 string english_word_variablize($word)
 ```
 ##### 参数
-- word:
+- word:  
     英文词组
 
 ##### 返回值
@@ -1875,7 +1875,7 @@ $res = english_word_variablize('HelloWorld'); // helloWorld
 string english_word_ordinalize($number)
 ```
 ##### 参数
-- number:
+- number:  
     数字
 
 ##### 返回值

@@ -20,16 +20,16 @@ include FRAME_DIR.'/otherwise.php';
 otherwise($assertion, $description = 'assertion is not true', $exception_class_name = 'Exception', $exception_code = 0)
 ```
 ##### 参数
-- assertion:
+- assertion:  
     断言逻辑，注意，这里描述的是应该怎样，即，为 `true` 时断言通过，否则拦截
 
-- description:
+- description:  
     当断言逻辑为 `false` 时，抛出的异常 `message`
 
-- exception_class_name:
+- exception_class_name:  
     抛出的异常的类型
 
-- exception_code:
+- exception_code:  
     抛出的异常的 `code` 值
 
 ##### 返回值
@@ -68,13 +68,13 @@ return [
 otherwise_error_code($error_code, $assertion, array $replace_contents = [])
 ```
 ##### 参数
-- error_code:
+- error_code:  
     当断言逻辑为 `false` 时，抛出的异常的 `code` 值，通过读取配置来生成异常的 `message`
 
-- assertion:
+- assertion:  
     断言逻辑，注意，这里描述的是应该怎样，即，为 `true` 时断言通过，否则拦截
 
-- replace_contents:
+- replace_contents:  
     当配置中的异常 `message` 内容中有可动态改变部分时，通过传入对应的替换数组来让 `message` 可以动态化
 
 ##### 返回值

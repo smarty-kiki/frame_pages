@@ -21,13 +21,13 @@ include FRAME_DIR.'/storage/mongodb.php';
 int storage_insert($table, array $data, $config_key = 'default')
 ```
 ##### 参数
-- table:
+- table:  
     写入的表名
 
-- data:
+- data:  
     单条数据
 
-- config_key:
+- config_key:  
     具体组件的配置
 
 ##### 返回值
@@ -57,13 +57,13 @@ $res = storage_insert('customer', [
 int storage_multi_insert($table, array $datas, $config_key = 'default')
 ```
 ##### 参数
-- table:
+- table:  
     写入的表名
 
-- datas:
+- datas:  
     数据数组
 
-- config_key:
+- config_key:  
     存储对应的配置 key
 
 ##### 返回值
@@ -97,25 +97,25 @@ $res = storage_multi_insert('customer', [
 array storage_query($table, array $selections = [], array $queries = [], array $sorts = [], $offset = 0, $limit = 1000, $config_key = 'default')
 ```
 ##### 参数
-- table:
+- table:  
     查询的表名
 
-- selections:
+- selections:  
     查询的字段，要查询的字段是多维数组中的值，可以用点符号来表达，如，data.name
 
-- queries:
+- queries:  
     筛选的条件，[参考这里](https://docs.mongodb.com/manual/tutorial/query-documents/)
 
-- sorts:
+- sorts:  
     排序的条件
 
-- offset:
+- offset:  
     查询偏移量
 
-- limit:
+- limit:  
     取多少数据
 
-- config_key:
+- config_key:  
     具体组件的配置
 
 ##### 返回值
@@ -142,13 +142,13 @@ $customers = storage_query('customer', ['_id', 'data.name'], ['data.name' => 'ki
 $data = storage_find($table, $id, $config_key = 'default')
 ```
 ##### 参数
-- table:
+- table:  
     写入的表名
 
-- id:
+- id:  
     数据的 id
 
-- config_key:
+- config_key:  
     具体组件的配置
 
 ##### 返回值
@@ -175,16 +175,16 @@ $customer = storage_find('customer', $id);
 int storage_update($table, array $queries = [], array $new_data, $config_key = 'default')
 ```
 ##### 参数
-- table:
+- table:  
     更新的表名
 
-- queries:
+- queries:  
     目标数据的查询条件
 
-- new_data:
+- new_data:  
     新数据
 
-- config_key:
+- config_key:  
     具体组件的配置
 
 ##### 返回值
@@ -211,13 +211,13 @@ storage_update('customer', ['data.name' => 'kiki'], ['data.name' => 'other']);
 int storage_delete($table, array $queries = [], $config_key = 'default')
 ```
 ##### 参数
-- table:
+- table:  
     删除的表名
 
-- queries:
+- queries:  
     目标数据的查询条件
 
-- config_key:
+- config_key:  
     具体组件的配置
 
 ##### 返回值
