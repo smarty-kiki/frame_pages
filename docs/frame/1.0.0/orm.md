@@ -191,13 +191,13 @@ protected function belongs_to($relationship_name, $entity_name = null, $foreign_
 protected function has_many($relationship_name, $entity_name = null, $foreign_key = null)
 ```
 ##### 参数
-- relationship_name:
+- relationship_name:  
     关联关系名
 
-- entity_name:
+- entity_name:  
     关联的实体类型，不传则以 `relationship_name` 作为关联的实体类型，例如，一对多关系时，关联关系名为复数，需要声明关联实体类型
 
-- foreign_key:
+- foreign_key:  
     外键名，不传则赋予默认值，`has_one/has_many` 默认值为当前实体的类型外加 `id`，如 `order_id`，`belongs_to` 默认值为关联实体的类型外加 `id`，
 
 ### 获取实体

@@ -53,10 +53,10 @@ return [
 mix cache_get($key, $config_key = 'default')
 ```
 ##### 参数
-- key:
+- key:  
     要获取的 `key`
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -78,10 +78,10 @@ $res = cache_get('key');
 array cache_multi_get(array $keys, $config_key = 'default')
 ```
 ##### 参数
-- keys:
+- keys:  
     要获取的多个 `key`
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -107,16 +107,16 @@ $res = cache_multi_get([
 boolean cache_set($key, $value, $expires = 0, $config_key = 'default')
 ```
 ##### 参数
-- key:
+- key:  
     要写入的 `key`
 
-- value:
+- value:  
     要写入的数据
 
-- expires:
+- expires:  
     保存的时间，单位秒，不传或传入 `0` 时为永久不过期
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -138,16 +138,16 @@ cache_set('key2', 'hello cache forever');
 boolean cache_add($key, $value, $expires = 0, $config_key = 'default')
 ```
 ##### 参数
-- key:
+- key:  
     要写入的 `key`
 
-- value:
+- value:  
     要写入的数据
 
-- expires:
+- expires:  
     保存的时间，单位秒，不传或传入 `0` 时为永久不过期
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -170,16 +170,16 @@ cache_add('key2', 'hello cache forever');
 boolean cache_replace($key, $value, $expires = 0, $config_key = 'default')
 ```
 ##### 参数
-- key:
+- key:  
     要写入的 `key`
 
-- value:
+- value:  
     要写入的数据
 
-- expires:
+- expires:  
     保存的时间，单位秒，不传或传入 `0` 时为永久不过期
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -203,10 +203,10 @@ cache_replace('key2', 'hello cache forever');
 boolean cache_delete($key, $config_key = 'default')
 ```
 ##### 参数
-- key:
+- key:  
     要删除的 `key`
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -230,10 +230,10 @@ cache_delete('key1');
 boolean cache_multi_delete(array $keys, $config_key = 'default')
 ```
 ##### 参数
-- keys:
+- keys:  
     要删除的 `keys`
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -256,16 +256,16 @@ cache_multi_delete([
 int cache_increment($key, $number = 1, $expires = 0, $config_key = 'default')
 ```
 ##### 参数
-- key:
+- key:  
     要计数增加的 `key`
 
-- number:
+- number:  
     要计数增加的值
 
-- expires:
+- expires:  
     保存的时间，单位秒，不传或传入 `0` 时为永久不过期，每次增加，保存时间会刷新为最后的过期时间
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -292,16 +292,16 @@ $number = cache_increment('counter1');
 int cache_decrement($key, $number = 1, $expires = 0, $config_key = 'default')
 ```
 ##### 参数
-- key:
+- key:  
     要计数增加的 `key`
 
-- number:
+- number:  
     要计数减少的值
 
-- expires:
+- expires:  
     保存的时间，单位秒，不传或传入 `0` 时为永久不过期，每次减少，保存时间会刷新为最后的过期时间
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -327,10 +327,10 @@ $number = cache_decrement('counter1');
 array cache_keys($pattern = '*', $config_key = 'default')
 ```
 ##### 参数
-- pattern:
+- pattern:  
     用以搜索 `key`，支持通配符，如 `customer_*`
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -354,16 +354,16 @@ $keys = cache_keys('counter*');
 boolean cache_hmset($key, array $array, $expires = 0, $config_key = 'default')
 ```
 ##### 参数
-- key:
+- key:  
     要写入的 `key`
 
-- array:
+- array:  
     要写入的数据，数组键值为需要存入的哈希表的 `field` 值，`value` 即为对应的 `value` 值
 
-- expires:
+- expires:  
     保存的时间，单位秒，不传或传入 `0` 时为永久不过期
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -387,13 +387,13 @@ cache_hmset('customer', [
 array cache_hmget($key, array $fields, $config_key = 'default')
 ```
 ##### 参数
-- key:
+- key:  
     要获取的 `key`
 
-- fields:
+- fields:  
     要获取的哈希表 `field`
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -418,16 +418,16 @@ $customer_info = cache_hmget('customer', [
 int cache_lpush($key, $values, $expires = 0, $config_key = 'default')
 ```
 ##### 参数
-- key:
+- key:  
     要写入的列表的 `key`
 
-- values:
+- values:  
     要写入列表的值，可以是一个值，也可以是一个包含值的数组
 
-- expires:
+- expires:  
     保存的时间，单位秒，不传或传入 `0` 时为永久不过期
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -457,13 +457,13 @@ cache_lpush('task_list', [
 mix cache_blpop($keys, $wait_time = 0, $config_key = 'default')
 ```
 ##### 参数
-- keys:
+- keys:  
     要获取的列表的 `keys`，可直接传值，也可以传一个包含列表 `key` 的数组
 
-- wait_time:
+- wait_time:  
     如若列表为空，等待获取下一个值的等待时间，单位秒，不传或传入 `0` 时为永久等待，要注意缓存配置中的连接超时时间
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -491,16 +491,16 @@ cache_blpop(['task_list', 'task_list2']);
 int cache_setbit($key, $offset, $value, $config_key = 'default')
 ```
 ##### 参数
-- key:
+- key:  
     位图的 `key`
 
-- offset:
+- offset:  
     要改写的位偏移量值
 
-- value:
+- value:  
     要改写的值，只能为 0 或 1
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -523,13 +523,13 @@ cache_setbit('test', 8, 1);
 int cache_getbit($key, $offset, $config_key = 'default')
 ```
 ##### 参数
-- key:
+- key:  
     位图的 `key`
 
-- offset:
+- offset:  
     要获取的位偏移量值
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -556,16 +556,16 @@ $value = cache_getbit('test', 1);
 int cache_bitcount($key, $start = 0, $end = -1, $config_key = 'default')
 ```
 ##### 参数
-- key:
+- key:  
     位图的 `key`
 
-- start:
+- start:  
     统计范围的起始字节偏移量，注意不是位偏移量，闭区间
 
-- end:
+- end:  
     统计范围的结束字节偏移量，注意不是位偏移量，闭区间
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -592,16 +592,16 @@ $count = cache_bitcount('test');
 int cache_bitop($destkey, $operation, $keys, $config_key = 'default')
 ```
 ##### 参数
-- destkey:
+- destkey:  
     计算结果放入的 `key`
 
-- operation:
+- operation:  
     逻辑运算符 `AND`、`OR`、`NOT`、`XOR` 中的一个，可以小写
 
-- keys:
+- keys:  
     计算的多个位图 `key` 数组
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -628,19 +628,19 @@ cache_bitop(‘result’, 'or', ['test1', 'test2']);
 int cache_bitpos($key, $bit, $start = 0, $end = -1, $config_key = 'default')
 ```
 ##### 参数
-- key:
+- key:  
     位图的 `key`
 
-- bit:
+- bit:  
     `1` 或者 `0`
 
-- start:
+- start:  
     查找范围的起始字节偏移量，注意不是位偏移量，闭区间
 
-- end:
+- end:  
     查找范围的结束字节偏移量，注意不是位偏移量，闭区间
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值
@@ -667,13 +667,13 @@ $byte_offset = cache_bitpos('test', 1);
 boolean cache_rename($old_key, $new_key, $config_key = 'default')
 ```
 ##### 参数
-- old_key:
+- old_key:  
     当前的缓存 `key`
 
-- new_key:
+- new_key:  
     要改为的新 `key`
 
-- config_key:
+- config_key:  
     缓存服务对应的配置 `key`
 
 ##### 返回值

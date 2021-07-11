@@ -20,7 +20,7 @@ return [
 void log_exception(throwable $ex)
 ```
 ##### 参数
-- ex:
+- ex:  
     具体要记录的异常对象
 
 ##### 返回值
@@ -47,7 +47,7 @@ log_exception($ex);
 void log_notice($message)
 ```
 ##### 参数
-- message:
+- message:  
     需要记录的日志文字
 
 ##### 返回值
@@ -82,10 +82,10 @@ log_notice($message);
 void log_module($module, $message)
 ```
 ##### 参数
-- module:
+- module:  
     模块名
 
-- message:
+- message:  
     需要记录的日志文字
 
 ##### 返回值

@@ -13,7 +13,7 @@
 string unit_of_work_db_config_key($config_key = null)
 ```
 ##### 参数
-- config_key:
+- config_key:  
     工作单元所属的数据库配置，可以不传
 
 ##### 返回值
@@ -40,7 +40,7 @@ unit_of_work_db_config_key('customer');
 mix unit_of_work(Closure $action)
 ```
 ##### 参数
-- action:
+- action:  
     在工作单元中执行的逻辑闭包
 
 ##### 返回值
@@ -68,7 +68,7 @@ $customer = unit_of_work(function () {
 closure if_unit_of_work_executed($action = null)
 ```
 ##### 参数
-- action:
+- action:  
     在工作单元成功执行完毕后执行的逻辑闭包，不传时直接返回当前生效的逻辑闭包
 
 
@@ -98,7 +98,7 @@ if_unit_of_work_executed(function () {
 closure if_unit_of_work_disturbed($action = null)
 ```
 ##### 参数
-- action:
+- action:  
     在工作单元执行被打断时执行的逻辑闭包，不传时直接返回当前生效的逻辑闭包
 
 ##### 返回值
