@@ -745,6 +745,35 @@ $image_info = input_file('image');
 
 
 
+### 获取输入的实体 `id` 查询出实体
+----
+```php
+entity input_entity($entity_name, $name = null, $require = false)
+```
+##### 参数
+- entity_name:
+    查询的实体 `class`
+
+- name:
+    获取的实体主键输入名，默认为实体 `class` 追加 `_id`，如 `customer_id`
+
+- require:
+    是否是必传参数
+    必传时，当没有获取到 `name` 对应的值或者查询不到对应的实体时，会抛出 `XX_NOT_FOUND` 的异常
+    非必传时，未获取到不会抛出异常，如果获取到主键，但查询不到对应的实体时，也会抛出 `XX_NOT_FOUND` 的异常
+
+##### 返回值
+对应的实体
+
+##### 示例
+```php
+$customer = input_entity('customer');
+```
+
+
+
+
+
 
 
 
