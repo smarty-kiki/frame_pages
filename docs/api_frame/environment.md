@@ -27,41 +27,41 @@ docker exec -ti api_frame /bin/bash
 #### `0:bash`
 环境启动后默认会聚焦在 `0:bash`，这个是容器中的 linux 命令行，当前目录已经是项目根目录
 
-![bash](/image/docker_snipaste_8.png "bash")
+![bash](../image/docker_snipaste_8.png "bash")
 
 #### `1:nginx-logs`
 这个 `tab` 中上半部分是 `nginx access log`，已经进入了 `tail -f` 状态，有新日志会滚动展示，高亮了状态码 `200` 为蓝色、`304` 为黄色、`500` `502` `503` 为红色，方便快速定位问题行，下半部分是 `nginx error log`，同样进入了 `tail -f` 状态，高亮了 `DEBUG` 关键词为蓝色、`INFO` 为黄色、`ERROR` `EXCEPTION` 为红色
 
-![nginx-log](/image/docker_snipaste_1.png "nginx-log")
+![nginx-log](../image/docker_snipaste_1.png "nginx-log")
 
 #### `2:php-fpm-logs`
 这个 `tab` 是 `php-fpm` 的日志，进入了 `tail -f` 状态，高亮了 `NOTICE` 关键词为蓝色、`STRICT` 为黄色、`ERROR` `EXCEPTION` 为红色
 
-![php-fpm-log](/image/docker_snipaste_2.png "php-fpm-log")
+![php-fpm-log](../image/docker_snipaste_2.png "php-fpm-log")
 
 #### `3:php-code-logs`
 这个 `tab` 下有三个部分，都是框架输出的日志，分别是框架 `log_notice`、`log_module`、`log_exception` 所输出的内容，都进入了 `tail -f` 状态，高亮了 `DEBUG` 关键词为蓝色、`INFO` 为黄色、`ERROR` `EXCEPTION` 为红色
 
-![php-code-log](/image/docker_snipaste_3.png "php-code-log")
+![php-code-log](../image/docker_snipaste_3.png "php-code-log")
 
 #### `4:mysql-logs`
 这个 `tab` 是 `mysql` 的服务日志，进入了 `tail -f` 状态，高亮了 `Note` 关键词为蓝色、`Warning` 为黄色、`Error` 为红色
 
-![mysql-log](/image/docker_snipaste_4.png "mysql-log")
+![mysql-log](../image/docker_snipaste_4.png "mysql-log")
 
 #### `5:mysql-sql-logs`
 这个 `tab` 是 `mysql` 的 `sql` 日志，分两部分，上半部分是慢查询（超过 `0.5` 秒）和未命中索引查询 `sql` 日志，高亮了 `explain` 关键词为蓝色、`Using where` 为黄色、`No` 为红色、`Yes` 为绿色。下半部分为环境中所有的 `sql` 执行记录，高亮了 `Close stmt` `Quit` `Connect` 关键词为蓝色、`Execute` 为黄色、`ROLLBACK` 为红色
 
-![mysql-sql-log](/image/docker_snipaste_5.png "mysql-sql-log")
+![mysql-sql-log](../image/docker_snipaste_5.png "mysql-sql-log")
 
 #### `6:redis-logs`
 这个 `tab` 是 `redis` 的日志，分两部分，上半部分是 `redis` 自身的日志，高亮了 `DEBUG` 关键词为蓝色、`INFO` `WARNING` 为黄色、`ERROR` `EXCEPTION` 为红色。下半部分为环境中所有的 `redis` 命令执行记录，高亮了 `GET` `SET` 关键词为蓝色、`KEYS` 为黄色、`HGET` `HSET` 为红色
 
-![redis-log](/image/docker_snipaste_6.png "redis-log")
+![redis-log](../image/docker_snipaste_6.png "redis-log")
 
 #### `7:mongodb-logs`
 这个 `tab` 是 `mongodb` 的服务日志，进入了 `tail -f` 状态，高亮了 `DEBUG` 关键词为蓝色、`INFO` 为黄色、`ERROR` `EXCEPTION` 为红色
 
-![mongodb-log](/image/docker_snipaste_7.png "mongodb-log")
+![mongodb-log](../image/docker_snipaste_7.png "mongodb-log")
 
 ### 框架中的开发辅助工具
