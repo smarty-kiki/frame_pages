@@ -304,6 +304,51 @@ class customer extends entity
 ```
 上述例子则会在实体 `customer` 转为的 `json` 中加入 `age` 和 `is_rich` 键值，`age` 为固定的 `18`，`is_rich` 为转换时基于 `get_is_rich` 方法计算出来的结果
 
-### 常见用法及封装方法
+### `getter` 和 `setter`
+当需要在获取一个值时加工后再返回，或者获取一个不存在的属性但却需要返回内容时，在实体中实现 `get_xxx()` 即可，如：
+```php
+public function get_display_name()
+{
+    return "[ID:{$this->id}]{$this->name}";
+}
+```
+这样便可以通过获取属性的方式来使用，如：
+```php
+$customer->display_name;
+```
+当需要在设置属性时先进行加工再赋值，或者一个赋值会同时设置多个属性时，在实体中实现 `set_xxx()` 即可，如：
+```php
+public function set_birthday($birthday)
+{
+    $birthday = datetime($birthday);
+    $this->age = datetime_diff(datetime(), $birthday, '%y');
+    
+    return $birthday;
+}
+```
+这样在设置属性的时候，就会被调用执行，如：
+```php
+$customer->birthday = '1999-01-01';
+```
 
-// 未完待续
+### 懒加载和预加载
+实体中关联的其他实体，只有在第一次使用时才会加载，这个即是懒加载策略，`has_many` 关系会在使用时全部加载。如果要获取多级的关联，可以一直通过 `->` 来获取，但如果中间有 `has_many` 关系，需要用到 `foreach` 时，就会产生与数据量相关的 `sql` 条数，会影响到执行性能，如：
+```php
+$school = dao('school')->find(1); // 此处 1 条 select 语句查询 school
+foreach ($school->grades as $grade) { // 此处 1 条 select 语句查询 grade，假设查出了 6 个 grade
+    foreach ($grade->teachers as $teacher) { // 此处会有 6 条 select 查询每个 grade 的 teacher
+        echo $teacher->name;
+    }
+}
+```
+上述逻辑会产生 `8` 条 `sql`，这会影响到执行性能，如果在遍历前使用预加载，则会合并部分 `sql`，提前准备好对象关系，如：
+```php
+$school = dao('school')->find(1); // 此处 1 条 select 语句查询 school
+relationship_batch_load($school, 'grades.teachers'); // 此处 2 条 select 语句，分别查询 grade 和 teacher
+foreach ($school->grades as $grade) { // 此处没有 sql 执行
+    foreach ($grade->teachers as $teacher) { // 此处没有 sql 执行
+        echo $teacher->name;
+    }
+}
+```
+上述逻辑会产生 `3` 条 `sql`，对于面向对象编程，预加载会在代码的可读性和执行性能中找到一个良好的平衡点。
