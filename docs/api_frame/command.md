@@ -34,10 +34,3 @@ queue:buried-dump                                 将 buried 状态的任务快�
 queue:dump-import                                 将导出的 dump 文件快速导入到队列并进入 ready 状态
 console                                           终端模式
 ```
-
-
-### `description`
-### `entity`
-### `crud`
-### `console`
-
