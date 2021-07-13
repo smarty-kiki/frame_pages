@@ -34,6 +34,10 @@
 
       - [数据库迁移](api_frame/command/migrate.md)
       - [消息队列](api_frame/command/queue.md)
+      - [框架交互式命令行](api_frame/command/console.md)
+      - [描述文件](api_frame/command/description.md)
+      - [实体](api_frame/command/entity.md)
+      - [增删改查](api_frame/command/crud.md)
     
     - [配置](api_frame/config.md)
     - [路由](api_frame/router.md)
