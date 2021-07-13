@@ -64,3 +64,7 @@ docker exec -ti api_frame /bin/bash
 
 ![mongodb-log](../image/docker_snipaste_7.png "mongodb-log")
 
+### 环境启动过程都处理了什么
+### 环境中提供的工具
+
+#### 性能分析平台
