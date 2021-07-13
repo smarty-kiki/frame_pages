@@ -63,3 +63,4 @@ docker exec -ti api_frame /bin/bash
 这个 `tab` 是 `mongodb` 的服务日志，进入了 `tail -f` 状态，高亮了 `DEBUG` 关键词为蓝色、`INFO` 为黄色、`ERROR` `EXCEPTION` 为红色
 
 ![mongodb-log](../image/docker_snipaste_7.png "mongodb-log")
+
