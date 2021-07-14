@@ -65,6 +65,29 @@ docker exec -ti api_frame /bin/bash
 ![mongodb-log](../image/docker_snipaste_7.png "mongodb-log")
 
 ### 环境启动过程都处理了什么
+环境启动过程，在 `project/tool/start_development_server.sh` 中有具体体现：
+1. 执行 `project/tool/dep_build.sh` 加载框架依赖
+2. 基于镜像 `kikiyao/debian_php_dev_env` 启动容器 `api_frame`，并映射了 `80`、`8080`、`3306` 端口
+3. 启动时执行了镜像中的 `/bin/start` 命令，命令中启动了环境中的服务，如 `php7.4-fpm` 等，执行 `project/tool/development/after_env_start.sh`，然后启动 `tmux` 界面 
+
 ### 环境中提供的工具
+环境中相关的配置和工具都在项目的 `project` 目录下，其中可给大家使用的工具有：
+```bash
+project/tool/classmap.sh                                           // 快速扫描指定目录下的类、抽象类、接口，并在指定目录下生成一个 `autoload.php` 文件
+project/tool/dep_build.sh                                          // 加载框架依赖的脚本，有 `file` 和 `link` 两种加载模式，`link` 适合开发环境，`file` 适合生产环境
+project/tool/development/after_env_start.sh                        // 这个脚本会在环境启动时执行，有需要在环境启动时做的初始化动作，都可以写在其中
+project/tool/development/fast_demo_watch.sh                        // 通过 `inotify` 监听 `domain/description` 目录中描述文件的变化，执行相关命令生成代码
+project/tool/development/fast_demo_watch_by_md5.sh                 // 通过 `md5` 监听 `domain/description` 目录中描述文件的变化，执行相关命令生成代码
+project/tool/development/fast_demo_watch_by_mtime.sh               // 通过 `mtime` 监听 `domain/description` 目录中描述文件的变化，执行相关命令生成代码
+project/tool/development/queue_job_watch_by_md5.sh                 // 通过 `md5` 监听 `command/queue_job` 目录中代码的变化，自动重启队列 `worker`
+project/tool/development/queue_job_watch_by_mtime.sh               // 通过 `mtime` 监听 `command/queue_job` 目录中代码的变化，自动重启队列 `worker`
+project/tool/development/unit_test.sh                              // 通过 `inotify` 监听单元测试文件的变化，自动执行单元测试
+project/tool/naming_project.sh                                     // 重命名项目，通常用于拉取框架项目后快速修改项目名称及配置
+project/tool/production/after_push.sh                              // 这个脚本会在生产环境代码更新后执行
+project/tool/production/check_update.sh                            // 执行时可以更新代码，若代码有更新会执行 `after_push.sh`
+project/tool/start_development_server.sh                           // 注意，这个并非是在开发环境中执行，是用来启动开发环境的脚本
+```
 
 #### 性能分析平台
+
+环境启动后，访问 [http://127.0.0.1:8080/](http://127.0.0.1:8080/) 即可看到环境中提供的性能分析平台
