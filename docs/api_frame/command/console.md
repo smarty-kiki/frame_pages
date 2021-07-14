@@ -4,7 +4,7 @@
 ```php
 php public/cli.php console
 ```
-会进入到如下的状态：
+会进入到如下的状态：  
 ![console](../../image/console_1.png "console")
 这里直接输入 `php` 代码即可，显示的逻辑也与浏览器控制台类似：
 1. 可以单句执行
