@@ -1,7 +1,7 @@
 # `console`
 
 交互式命令行功能，类似于在浏览器控制台调试 `javascript` 的能力，可帮助提升开发者排查问题的效率，当执行命令：
-```php
+```bash
 php public/cli.php console
 ```
 会进入到如下的状态：  
@@ -16,7 +16,7 @@ php public/cli.php console
 补全规则是遵循框架推荐的命名规则的，如：
 
 1. 变量名默认会提供已声明实体的单数复数命名补全
-```php
+```bash
 Terminal (Default: "hello world")
 > $
 cate   cates  good   goods
@@ -24,7 +24,7 @@ cate   cates  good   goods
 ```
 
 2. 当变量名称为实体单复数时，等于号后的补全选项中会有该实体对应的 `dao` 及查询方法，单数变量会补全 `find_` 前缀，复数变量会补全 `find_all` 前缀方法
-```php
+```bash
 Terminal (Default: "hello world")
 > $good = dao('good')->find
 find($id_or_ids)                           find_by_column($columns)                   find_by_foreign_key($foreign_key, $value)
@@ -32,7 +32,7 @@ find($id_or_ids)                           find_by_column($columns)             
 ```
 
 3. 当变量名为实体单数时，`->` 后可以补全实体相关的 `public function`、`structs`、以及关联关系，关联关系也可继续补全
-```php
+```bash
 Terminal (Default: "hello world")
 > $good->
 belongs_to_cate($cate)                                       is_null()
