@@ -33,7 +33,6 @@ pause-time-left: 0               // 此 tube 暂停剩余的秒数
 ```
 
 ### `queue:peek-buried`
-
 可以将 `buried` 状态的任务逐个获取出来，以交互式的操作形式让命令执行者决定这个任务是 `kick` 回到 `ready` 状态，还是 `delete`，参数 `--tube=xxx` 可以指定所查询的 `tube`，`--config_key=xxx` 指定了查询的队列的配置，如下：
 ```bash
 root@61b352725169:/var/www/api_frame# php public/cli.php queue:peek-buried
@@ -58,5 +57,10 @@ Action (Default: 0)
 ```
 
 ### `queue:ready-to-buried`
+可以将队列中当前 `ready` 状态的任务快速移动到 `buried` 状态，脚本处理完当前已有任务后会持续监听后续进来的任务将其转入 `buried` 状态，如果需要停止请按 `ctrl+c`，参数 `--tube=xxx` 可以指定所查询的 `tube`，`--config_key=xxx` 指定了查询的队列的配置
+
 ### `queue:buried-dump`
+可以将当前 `buried` 的任务导出到文件中，方便后续再导入，导出过程中会将任务在队列中标记 `delete` 状态，再次导入会生成新的 `job_id`，参数 `--tube=xxx` 可以指定所查询的 `tube`，`--config_key=xxx` 指定了查询的队列的配置
+
 ### `queue:dump-import`
+将 `buried-dump` 导出的文件导入到队列中成为 `ready` 状态的任务，注意，这个过程中是生成的新的 `job_id`，如果程序中有用到 `job_id` 来关联任务，需要注意
