@@ -151,9 +151,9 @@ repeat_check_structs:
     'relationships' => [
         'xxxx' => [
             'entity' => ‘’,
-            'entity_display_name' => => ‘’,
-            'attribute_name' => => ‘’,
-            'self_attribute_name' => => ‘’,
+            'entity_display_name' => ‘’,
+            'attribute_name' => ‘’,
+            'self_attribute_name' => ‘’,
             'self_display' => ‘’,
             'snaps' => ‘’,
             'relationship_type' => ‘’,
@@ -163,8 +163,8 @@ repeat_check_structs:
         ]
     ],
     'display_for_relationships' => [
-        'display_for_xxxx_oooxxxx' => 'here is code',
-        'display_for_xxxx_xxxoooo' => 'here is code',
+        'display_for_xxxx_oooxxxx' => '',
+        'display_for_xxxx_xxxoooo' => '',
     ],
 ]
 ```
