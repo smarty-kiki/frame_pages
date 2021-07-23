@@ -141,6 +141,31 @@ $path = uri_info('path');
 
 
 
+### 获取和设置当前请求命中的闭包 `rule`
+----
+```php
+string matched_rule($rule = null)
+```
+##### 参数
+- rule:  
+    路由匹配规则
+
+##### 返回值
+当前请求命中的闭包 `rule`，没有时为 `null`
+
+##### 示例
+```php
+$rule = matched_rule();
+```
+
+
+
+
+
+
+
+
+
 
 
 
