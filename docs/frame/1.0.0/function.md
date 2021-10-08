@@ -1335,26 +1335,33 @@ $res = http([
 ##### 请求信息数组的构成
 ```php
 $request_info = [
+
     'url' => 'http://127.0.0.1/',
-    //'method' => 'GET', // 非必需，不传时，没有 `data` 值，为 `GET`，有则为 `POST`，传值时，以传值为准，传 `GET` 但 `data` 中有值，会将 `data` 中的值拼接在 `url query` 上
-    'data' => [], // 非必需，传数组时，会以 `form` 表单格式提交，其他则保留格式，如 `json`
+
+    //'method' => 'GET',
+    // 非必需，不传时，没有 data 值，为 GET，有则为 POST，传值时，以传值为准，传 GET 但 data 中有值，会将 data 中的值拼接在 url query 上
+
+    'data' => [],
+    // 非必需，传数组时，会以 form 表单格式提交，其他则保留格式，如 json
+
     'header' => [], // 非必需
     'cookie' => [], // 非必需
-    'timeout' => 3, // 非必需，默认 `3` 秒
-    'retry' => 3, // 非必需，默认 `3` 次
+    'timeout' => 3, // 非必需，默认 3 秒
+    'retry' => 3, // 非必需，默认 3 次
     'option' => [ // 非必传，以下内容为默认值
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => 'gzip',
         CURLOPT_USERAGENT => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36',
     ],
 
-    'timeouted' => fn() => false, // 非必传，不传时，若重试次数用尽，会将最后一次报错以异常形式抛出，若声明了超时闭包，报错是超时错误，则不抛异常，执行闭包并返回结果
-    function ($res, $code, $errno) { // 非必传，无论请求成功失败，都会调用的闭包，闭包会接收到三个参数，请求返回结果、`http` 状态码、`curl` 错误码
+    'timeouted' => function () {},
+    // 非必传，不传时，若重试次数用尽，会将最后一次报错以异常形式抛出，若声明了超时闭包，报错是超时错误，则不抛异常，执行闭包并返回结果
 
-    },
-    '{http_code}' => function ($res, $code) { // 非必传，请求获得到对应的状态码时会调用的闭包，闭包会接收到两个参数，请求返回结果、`http` 状态码，有该闭包时不会调用上边的闭包
+    function ($res, $code, $errno) {},
+    // 非必传，无论请求成功失败，都会调用的闭包，闭包会接收到三个参数，请求返回结果、http 状态码、curl 错误码，注意，这里其实数组键值是为 0
 
-    },
+    '{http_code}' => function ($res, $code) {},
+    // 非必传，请求获得到对应的状态码时会调用的闭包，闭包会接收到两个参数，请求返回结果、http 状态码，有该闭包时不会调用上边的闭包
 ];
 ```
 
