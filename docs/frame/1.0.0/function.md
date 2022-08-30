@@ -24,7 +24,7 @@ mix array_get($array, $key, $default = null)
     目标数组
 
 - key:  
-    要获取的 array key，因 array 是多层、多维的，key 可以用点符号来表达多层、多维逻辑、如 data.name
+    要获取的 `array` `key`，因 `array` 是多层、多维的，`key` 可以用点符号来表达多层、多维逻辑、如 `data.name`
 
 - default:  
     如果没有对应的值返回的默认值，可以是闭包，会以闭包的返回值作为默认值，在没有对应的值时才会被执行
@@ -34,7 +34,13 @@ mix array_get($array, $key, $default = null)
 
 ##### 示例
 ```php
-$name = array_get($data, 'base_info.name', '无名');
+$array = [
+    'base_info' => [
+        'name' => 'kiki',
+    ],
+];
+$name = array_get($array, 'base_info.name', '无名');
+echo $name; // kiki
 ```
 
 
@@ -57,7 +63,7 @@ array array_set($array, $key, $value)
     被设置的数组
 
 - key:  
-    要设置的 array key，因 array 是多层、多维的，key 可以用点符号来表达多层、多维逻辑、如 data.name
+    要设置的 `array` `key`，因 `array` 是多层、多维的，`key` 可以用点符号来表达多层、多维逻辑、如 `data.name`
 
 - value:  
     要设置的值
@@ -67,7 +73,13 @@ array array_set($array, $key, $value)
 
 ##### 示例
 ```php
-$new_data = array_set($data, 'data.name', 'kiki');
+$array = [];
+$new_data = array_set($array, 'data.name', 'kiki');
+// [
+//     'data' => [
+//         'name' => 'kiki',
+//     ],
+// ]
 ```
 
 
@@ -90,14 +102,20 @@ boolean array_exists($array, $key)
     要检查的数组
 
 - key:  
-    要检查的 array key，因 array 是多层、多维的，key 可以用点符号来表达多层、多维逻辑、如 data.name
+    要检查的 `array` `key`，因 `array` 是多层、多维的，`key` 可以用点符号来表达多层、多维逻辑、如 `data.name`
 
 ##### 返回值
 boolean
 
 ##### 示例
 ```php
+$array = [
+    'data' => [
+        'name' => 'kiki',
+    ],
+];
 $has_name = array_exists($array, 'data.name');
+// true
 ```
 
 
@@ -120,16 +138,31 @@ void array_forget(&$array, $keys)
     目标数组
 
 - keys:  
-    要去掉的 array key，因 array 是多层、多维的，key 可以用点符号来表达多层、多维逻辑、如 data.name，key 可以是多个
+    要去掉的 `array` `key`，因 `array` 是多层、多维的，`key` 可以用点符号来表达多层、多维逻辑、如 `data.name`，`key` 可以是多个
 
 ##### 返回值
 无
 
 ##### 示例
 ```php
+$array = [
+    'data' => [
+        'name' => 'kiki',
+        'age'  => 18,
+    ]
+];
 array_forget($array, 'data.name');
+// [
+//     'data' => [
+//         'age' => 18,
+//     ]
+// ]
 // 或
 array_forget($array, ['data.name', 'data.age']);
+// [
+//     'data' => [
+//     ]
+// ]
 ```
 
 
@@ -179,7 +212,7 @@ array array_build($array, Closure $callback)
     来源数组
 
 - callback:  
-    构建逻辑的闭包，执行时会给闭包传入数组中的 key、value，闭包需要返回结果数组的 key、value
+    构建逻辑的闭包，执行时会给闭包传入数组中的 `key`、`value`，闭包需要返回结果数组的 `key`、`value`
 
 ##### 返回值
 数组
@@ -210,7 +243,7 @@ array array_indexed($array, Closure $callback)
     来源数组
 
 - callback:  
-    构建逻辑的闭包，执行时会给闭包传入数组中的 `key`、value，闭包需要返回结果数组的 `index`、`key`、`value`
+    构建逻辑的闭包，执行时会给闭包传入数组中的 `key`、`value`，闭包需要返回结果数组的 `index`、`key`、`value`
 
 ##### 返回值
 数组
@@ -270,7 +303,7 @@ array array_list(array $array, array $keys)
     来源数组
 
 - keys:  
-    要获取的 array key 数组，因 array 是多层、多维的，key 可以用点符号来表达多层、多维逻辑、如 data.name
+    要获取的 `array` `key` 数组，因 `array` 是多层、多维的，`key` 可以用点符号来表达多层、多维逻辑、如 `data.name`
 
 ##### 返回值
 获取到的值数组
@@ -300,24 +333,36 @@ array array_transfer(array $array, array $rules)
     来源数组
 
 - rules:  
-    rules 学问大，rules 是一个转换关系的描述数组，如：
+    `rules` 学问大，`rules` 是一个转换关系的描述数组，如：
     ```php
     $rules = [
         'data.name' => 'info.name',
         'data.age'  => 'info.age',
     ];
     ```
-    rules 的 key 为从来源数组哪里取值，对应的 value 为存在结果数组的哪个位置
+    `rules` 的 `key` 为从来源数组哪里取值，对应的 `value` 为存在结果数组的哪个位置
 
 ##### 返回值
 转换后的数组
 
 ##### 示例
 ```php
+$array = [
+    'data' => [
+        'name' => 'kiki',
+        'age'  => 18,
+    ],
+];
 $res_array = array_transfer($array, [
     'data.name' => 'info.name',
     'data.age'  => 'info.age',
 ]);
+// [
+//     'info' => [
+//         'name' => 'kiki',
+//         'age'  => 18,
+//     ],
+// ];
 ```
 
 
@@ -436,7 +481,7 @@ void dd(...$args)
 ```
 ##### 参数
 - ...args:  
-    可传多个参数，类型不限，会按照参数顺序 var_dump 出来
+    可传多个参数，类型不限，会按照参数顺序 `var_dump` 出来
 
 ##### 返回值
 无，但是会直接输出出来
@@ -547,10 +592,10 @@ boolean starts_with($haystack, $needles)
     判断该变量字符串是否以指定字符串开头
 
 - needles:  
-    作为判断依据的开头字符串，也可以传入数组，传入为数组时匹配任意一个返回值即为 true
+    作为判断依据的开头字符串，也可以传入数组，传入为数组时匹配任意一个返回值即为 `true`
 
 ##### 返回值
-是否以指定字符串开头的 boolean 值
+是否以指定字符串开头的 `boolean` 值
 
 ##### 示例
 ```php
@@ -579,10 +624,10 @@ boolean ends_with($haystack, $needles)
     判断该变量字符串是否以指定字符串结尾
 
 - needles:  
-    作为判断依据的结尾字符串，也可以传入数组，传入为数组时匹配任意一个返回值即为 true
+    作为判断依据的结尾字符串，也可以传入数组，传入为数组时匹配任意一个返回值即为 `true`
 
 ##### 返回值
-是否以指定字符串结尾的 boolean 值
+是否以指定字符串结尾的 `boolean` 值
 
 ##### 示例
 ```php
@@ -699,10 +744,10 @@ string unparse_url(array $parsed)
 ```
 ##### 参数
 - parsed:  
-    parse_url 得到的数组格式
+    `parse_url` 得到的数组格式
 
 ##### 返回值
-拼合后的 url
+拼合后的 `url`
 
 ##### 示例
 ```php
@@ -729,13 +774,13 @@ string url_transfer($url, closure $transfer_action)
 ```
 ##### 参数
 - url:  
-    要修改的 url
+    要修改的 `url`
 
 - transfer_action:  
-    用以修改 url 的闭包，闭包会接收到 parse_url 后的结果，结果中 query 部分也已经进一步被 parse_str 方便直接修改
+    用以修改 `url` 的闭包，闭包会接收到 `parse_url` 后的结果，结果中 `query` 部分也已经进一步被 `parse_str` 方便直接修改
 
 ##### 返回值
-修改后的 url
+修改后的 `url`
 
 ##### 示例
 ```php
@@ -811,7 +856,7 @@ $config = config('mysql');
 
 ### 获取指定中间件的配置
 ----
-当使用 config_midware 时，配置文件需要按照以下格式来配置：
+当使用 `config_midware` 时，配置文件需要按照以下格式来配置：
 ```php
 return [
     /**
@@ -867,7 +912,7 @@ $config = config_midware('mysql', 'entity');
 
 ### 预加载配置
 ----
-`config`、`config_midware` 等方法，在第一次使用时会将相关配置文件加载，执行`config_preload`时，会立刻将所有配置加载
+`config`、`config_midware` 等方法，在第一次使用时会将相关配置文件加载，执行 `config_preload` 时，会立刻将所有配置加载
 ```php
 void config_preload()
 ```
@@ -1249,7 +1294,7 @@ string datetime($expression = null, $format = 'Y-m-d H:i:s')
 ```
 ##### 参数
 - expression:  
-    关于所需要时间的描述，可以为 null，也可以是时间戳，也可以是一个相对时间的描述语句
+    关于所需要时间的描述，可以为 `null`，也可以是时间戳，也可以是一个相对时间的描述语句
 
 - format:  
     返回的时间的格式
@@ -1291,10 +1336,10 @@ mix datetime_diff($datetime1, $datetime2, $format = '%ts')
     时间2
 
 - format:  
-格式字符串是对返回值格式的描述，其中的变量[参考这里](http://php.net/manual/en/dateinterval.format.php#refsect1-dateinterval.format-parameters)，在官方基础上又添加了`ts`总差异描述，`tm`总差异分钟数（秒差异舍去），`th`总差异小时数（分、秒差异舍去）`td`总差异天数（时、分、秒差异舍去）
+    格式字符串是对返回值格式的描述，其中的变量[参考这里](http://php.net/manual/en/dateinterval.format.php#refsect1-dateinterval.format-parameters)，在官方基础上又添加了 `ts` 总差异描述，`tm` 总差异分钟数（秒差异舍去），`th` 总差异小时数（分、秒差异舍去）`td` 总差异天数（时、分、秒差异舍去）
 
 ##### 返回值
-按照`format`的格式计算出来的差异字符串
+按照 `format` 的格式计算出来的差异字符串
 
 ##### 示例
 ```php
@@ -1460,18 +1505,18 @@ $obj = instance('stdClass');
 ### `json` 构造方法
 ----
 ```php
-string json($data = [])
+string json($array = [])
 ```
 ##### 参数
 - data:  
-    要被转换为 json 的数据
+    要被转换为 `json` 的数据
 
 ##### 返回值
-json 字符串
+`json` 字符串
 
 ##### 示例
 ```php
-$res = json($data);
+$res = json($array);
 ```
 
 
