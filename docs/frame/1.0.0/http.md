@@ -1390,7 +1390,7 @@ set_exception_handler('http_ex_action');
 ### 框架提供的 `shutdown_handler`，将程序 `shutdown` 转入到全局异常响应逻辑中
 ----
 ```php
-void http_fatel_err_action()
+void http_fatal_err_action()
 ```
 ##### 参数
 无
@@ -1400,7 +1400,7 @@ void http_fatel_err_action()
 
 ##### 示例
 ```php
-register_shutdown_function('http_fatel_err_action');
+register_shutdown_function('http_fatal_err_action');
 ```
 
 
