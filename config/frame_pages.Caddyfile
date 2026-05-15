@@ -1,0 +1,4 @@
+php-frame.cn, www.php-frame.cn {
+    reverse_proxy localhost:3000
+    tls 378031327@qq.com
+}
