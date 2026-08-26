@@ -12,7 +12,7 @@
 
 多个库位时随机选取一个连接。所有函数末尾的 `$config_key` 指定使用哪个 midwares 键（默认 `'default'`）。
 
-**绑定参数约定**：SQL 中绑定参数支持 `:name` 命名占位符；**数组值的绑定会自动展开为 `IN` 子句**（见 `_mysql_sql_binds`），所以 `where id in :ids` + `[':ids' => ['1','2']]` 也能正确生成。
+**绑定参数约定**：SQL 中绑定参数支持 `:name` 命名占位符；**数组值的绑定会自动展开为 `IN` 子句**，所以 `where id in :ids` + `[':ids' => ['1','2']]` 也能正确生成。
 
 ## 查询
 
@@ -313,36 +313,4 @@ db_simple_query_value($table, $value, array $wheres, $option_sql = '', $config_k
 
 ```php
 $count = db_simple_query_value('user', 'count(*)', ['age' => 18]);
-```
-
-## 内部函数
-
-以下函数为框架内部使用，一般业务代码无需直接调用。
-
-### _mysql_connection
-
-```php
-_mysql_connection(array $config)
-```
-
-根据资源配置（DSN + 用户名 + 密码）建立 PDO 连接，连接池复用。支持 TCP 端口与 Unix Socket。
-
-### _mysql_database_closure
-
-```php
-_mysql_database_closure($config_key, $type, closure $closure)
-```
-
-在指定配置、指定库位（`read` / `write` / `schema`）的连接上执行闭包。事务期间自动强制走写库。
-
-### _mysql_sql_binds
-
-```php
-_mysql_sql_binds($sql_template, array $binds)
-```
-
-预处理绑定参数：**binds 中的数组值自动展开为 `IN` 子句占位符**，并返回展开后的 `[sql, binds]`。
-
-```php
-list($sql, $binds) = _mysql_sql_binds('select * from user where id in :ids', [':ids' => ['1','2']]);
 ```

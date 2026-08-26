@@ -104,14 +104,6 @@ unit_of_work_db_config_key(?string $config_key = null)
 unit_of_work_db_config_key('order_db');
 ```
 
-### _unit_of_work_write
-
-```php
-_unit_of_work_write($sql_template, array $binds = [], $config_key = 'default')
-```
-
-框架内部方法：执行一条写入 SQL 并**校验影响行数恰为 1**，否则抛乐观锁异常（`UNITOFWORK_DEFAULT_ERROR`）。`unit_of_work()` 提交时对每个实体调用它，乐观锁冲突由此暴露。
-
 ## 乐观锁
 
 实体写入 UPDATE 时，SQL 附带版本条件：

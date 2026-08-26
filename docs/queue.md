@@ -168,10 +168,6 @@ beanstalk_close()
 
 关闭 Beanstalkd 连接，释放资源。
 
-### `_beanstalk_*`
-
-内部纯 socket 协议函数：`_beanstalk_connection`、`_beanstalk_put`、`_beanstalk_reserve`、`_beanstalk_release`、`_beanstalk_bury` 等，框架内部使用，业务代码无需直接调用。
-
 ## CLI 命令
 
 ### queue:worker

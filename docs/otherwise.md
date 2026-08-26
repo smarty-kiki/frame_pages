@@ -95,14 +95,6 @@ otherwise_get_error_message(throwable $ex)
 $message = otherwise_get_error_message($ex);
 ```
 
-## OTHERWISE_MESSAGE_DELIMITER
-
-```php
-OTHERWISE_MESSAGE_DELIMITER = '---'
-```
-
-错误消息内部连接符常量。`otherwise_error_code` 抛出的异常消息中，文案与占位符替换内容用 `---` 拼接，`otherwise_get_error_message` 据此解析出替换后的最终文案。业务代码无需直接使用。
-
 ## 设计要点
 
 - 断言函数是**纯函数**，只负责「校验 + 抛异常」，不包含业务副作用

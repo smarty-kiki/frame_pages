@@ -240,23 +240,7 @@ protected function count_by_condition($condition, array $binds = [])
 
 按原生 WHERE SQL 片段统计记录数。
 
-## 写入辅助
-
-### get_dirty
-
-```php
-private function get_dirty($entity)
-```
-
-返回实体被 `__set` 修改过的字段集合。`unit_of_work` 据此生成 UPDATE 语句。
-
-### row_to_entity
-
-```php
-private function row_to_entity($rows)
-```
-
-把一行数据库记录（关联数组）转换为实体对象。框架内部查询后自动调用。
+## 数据库配置
 
 ### get_db_config_key
 

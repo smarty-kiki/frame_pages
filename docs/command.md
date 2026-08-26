@@ -148,21 +148,13 @@ if ($confirm) {
 command_read_completions(?closure $closure = null)
 ```
 
-注册 **Tab 补全回调**的 getter / setter。回调接收 `$buffer_info`（`readline_info()` 返回的数组），返回补全候选项字符串数组。注册后 `_command_readline` 输入时按下 Tab 会调用它并过滤候选项。
+注册 **Tab 补全回调**的 getter / setter。回调接收 `$buffer_info`（`readline_info()` 返回的数组），返回补全候选项字符串数组。注册后 `command_read` 交互输入时按下 Tab 会调用它并过滤候选项。
 
 ```php
 command_read_completions(function ($buffer_info) {
     return ['mail', 'sms', 'push'];
 });
 ```
-
-### _command_readline
-
-```php
-_command_readline($prompt)
-```
-
-带 Tab 补全的 readline 交互输入内部函数（`command_read` 底层使用）。
 
 ## CLI 补全
 

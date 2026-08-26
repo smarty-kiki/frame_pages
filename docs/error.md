@@ -93,14 +93,6 @@ otherwise_get_error_message(throwable $ex)
 $message = otherwise_get_error_message($ex);
 ```
 
-## OTHERWISE_MESSAGE_DELIMITER
-
-```php
-OTHERWISE_MESSAGE_DELIMITER = '---'
-```
-
-错误消息分隔符常量。`otherwise` 抛出的 `business_exception` 消息中，错误码文案与占位符替换内容用 `---` 分隔拼接，`otherwise_get_error_message` 会据此解析出最终文案。
-
 ## 系统错误处理
 
 ### if_has_exception
