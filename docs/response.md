@@ -4,9 +4,10 @@
 
 ## 返回约定
 
-- 页面入口（`public/index.php`）：路由闭包**返回字符串** → `Content-Type: text/html` 输出；返回非字符串判为编程错误抛 500
+- 页面入口（`public/index.php`）：路由闭包**返回字符串** → `Content-Type: text/html` 输出；返回非字符串会抛异常，落到 `view/error/500`
 - API 入口（`public/api.php`）：闭包返回**任意值**（数组 / Entity / 标量）→ 统一包装成 `{code: 0, msg: '', data: $data}` JSON 输出
 - 重定向：`return redirect(...)` → 响应阶段发送 `Location` 头跳转
+- 每个 HTTP 响应都带 `X-Request-Id` 头（全链路 trace 回写，见[链路追踪](trace.md)）
 
 ## JSON 输出（API 入口自动）
 
@@ -82,7 +83,7 @@ view_compiler(blade_view_compiler_generate());  // 注册 Blade 编译器
 cache_with_etag($etag)
 ```
 
-以 `ETag` 形式启用页面缓存：输出时附带 `ETag` 头；若请求头 `If-None-Match` 与 `$etag` 相同，返回 `304 Not Modified`，浏览器直接使用本地缓存。
+以 `ETag` 形式启用页面缓存：输出时附带 `ETag` 头；若请求头 `If-None-Match` 与 `$etag` 相同，输出 `304 Not Modified` 并直接 `exit`，浏览器使用本地缓存。
 
 ```php
 if_get('/index', function () {
@@ -101,16 +102,28 @@ if_get('/index', function () {
 if_has_exception(?closure $action = null): ?closure
 ```
 
-注册「请求过程中抛异常」时的统一处理闭包。`$action` 收到一个包含异常信息的数组参数。页面入口用它渲染 `error/500`，API 入口用它返回 `{code, msg}` JSON：
+注册「请求过程中抛异常」时的统一处理闭包，`$action` 收到的参数是抛出/包装后的**异常对象**（`throwable`）。入口用它渲染错误页 / 错误 JSON，并按异常类型分流日志：
 
 ```php
 // public/index.php
-if_has_exception(function (array $exception) {
-    return render('error/500', $exception);
+if_has_exception(function ($ex) {
+
+    $error_info = otherwise_get_error_info($ex);
+
+    if ($ex instanceof business_exception || str_contains($ex->getMessage(), OTHERWISE_MESSAGE_DELIMITER)) {
+        log_module('business_exception', $error_info['message']);   // 预期内的业务分支
+    } else {
+        log_exception($ex);   // 真异常：记堆栈
+    }
+
+    return render('error/500', [
+        'code'    => $error_info['code'],
+        'message' => $error_info['message'],
+    ]);
 });
 ```
 
-传入的 `$exception` 数组通常包含 `code`、`message` 等字段。
+`otherwise_get_error_info()` 会从异常里解析出 `code` 与 `message`（消息为 `{错误码}---{描述}` 结构时按结构拆分，否则取异常自身的 code 与完整消息），详见[错误](error.md)。
 
 ### http_err_action
 
@@ -130,7 +143,7 @@ set_error_handler('http_err_action', E_ALL);
 http_ex_action($ex)
 ```
 
-`set_exception_handler` 的处理器签名。把未捕获异常交给 `if_has_exception` 注册的闭包渲染，同时写入异常日志（`log_exception`）。
+`set_exception_handler` 的处理器签名。执行 `if_has_exception` 注册的闭包并 `exit`；未注册任何处理器时原样重新抛出。日志由注册的处理器自行写入（入口注册的处理器会按业务/系统分流）。
 
 ```php
 set_exception_handler('http_ex_action');

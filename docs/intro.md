@@ -49,8 +49,8 @@ sse  → nginx /sse/* → PHP-FPM → public/sse.php → bootstrap.php（加载 
 - **页面入口**（`controller/`）只出 HTML：闭包返回字符串 → HTML 响应；返回非字符串会被判为编程错误抛 500，提示迁移到 `controller_api/`
 - **API 入口**（`controller_api/`）只出 JSON：任意返回值（数组/Entity/标量）统一包装成 `{code, msg, data}` JSON 响应
 - **SSE 入口**（`controller_sse/`）流式输出：每个 `yield` 发一个 `data:` 事件，`yield true` 结束流
-- **所有控制器闭包默认包裹在 `unit_of_work()` 中**，实体变更自动提交并处理事务
-- **`$_SERVER['ENV']`** 控制环境（development/production），配置自动按环境合并覆盖
+- **页面与 API 入口的控制器闭包默认包裹在 `unit_of_work()` 中**，实体变更自动提交并处理事务；`cli` / `sse` 入口不自动包裹，需手动调用
+- **`$_SERVER['ENV']`** 控制环境（development / test / production），配置自动按环境合并覆盖
 
 ## 10 秒看到 Hello World
 
@@ -63,6 +63,8 @@ sh project/tool/start_development_server.sh   # 需要 Docker + 输入 sudo 密�
 
 > 映射了 80 和 3306 端口，若端口冲突可修改 `project/tool/start_development_server.sh`。
 
+需要一套独立的测试环境（自己的库、日志目录与队列 worker）：测试环境是**独立服务器**（与生产同构，域名 + TLS），应用侧配置在 `config/test/`，部署侧配置与脚本在 `project/config/test/`、`project/tool/test/`；发布完成后调用 `project/tool/test/after_push.sh`。详见[环境](environment.md)。
+
 ## 目录结构
 
 ```
@@ -73,13 +75,13 @@ sh project/tool/start_development_server.sh   # 需要 Docker + 输入 sudo 密�
 │   ├── api.php              # API 入口（JSON）
 │   ├── cli.php              # CLI 入口
 │   └── sse.php              # SSE 入口
-├── frame/                   # 框架核心库（ORM、DB、Cache、Queue、Blade、SSE、日志）
+├── frame/                   # 框架核心库（ORM、DB、Cache、锁、ClickHouse、Queue、Blade、SSE、日志、链路追踪）
 ├── controller/              # 页面路由定义（闭包，只返回 HTML）
 ├── controller_api/          # API 路由定义（闭包，路由以 /api/ 开头，只返回 JSON）
 ├── controller_sse/          # SSE 流式业务逻辑
 ├── domain/                  # 领域层（Entity + DAO + Knowledge）
 ├── config/                  # PHP 配置数组 + ENV 环境覆盖
-├── command/                 # CLI 命令（migrate、queue、entity）
+├── command/                 # CLI 命令（migrate、clickhouse 迁移、queue、entity）
 ├── view/                    # Blade 模板
 ├── interceptor/             # 拦截器（请求前置/后置逻辑）
 ├── util/                    # 工具类（外部能力封装：支付、短信、OSS）

@@ -1,6 +1,6 @@
 # 实体
 
-实体（Entity）采用 **Active Record** 模式：一个实体类对应一张数据表，实例的属性对应表的字段，实例自带增删改查能力。本框架的实体继承 `entity` 基类，**对象即行**。
+实体（Entity）采用 **Active Record** 模式：一个实体类对应一张数据表，实例的属性对应表的字段，**对象即行**——修改实例，由[工作单元](unitofwork.md)在请求结束时统一持久化；查询能力由 [DAO](dao.md) 提供。实体继承 `entity` 基类。
 
 ## 五个系统字段
 
@@ -8,11 +8,11 @@
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| `id` | bigint | 主键，由全局 ID 生成器产生（不依赖自增） |
+| `id` | bigint unsigned | 主键，由全局 ID 生成器产生（不依赖自增） |
 | `version` | int | 乐观锁版本号，`unit_of_work` 提交时校验 |
-| `create_time` | datetime | 创建时间 |
-| `update_time` | datetime | 更新时间 |
-| `delete_time` | datetime | 软删除时间，非 `null` 表示已删除 |
+| `create_time` | datetime(3) | 创建时间（毫秒精度） |
+| `update_time` | datetime(3) | 更新时间 |
+| `delete_time` | datetime(3) | 软删除时间，非 `null` 表示已删除 |
 
 ## 声明一个实体类
 
@@ -48,7 +48,7 @@ class user extends entity
 protected static function init()
 ```
 
-创建实体的静态入口：把 `$structs` 复制到 `attributes`、生成 `id`、`version` 置为初始值（0，使 `just_new()` 为真）、写入 `create_time` / `update_time`、`delete_time` 置 `null`，并注册到本地缓存。所有业务工厂方法在内部调用它。
+创建实体的静态入口：把 `$structs` 复制到 `attributes`、生成 `id`、`version` 置为初始值（0，使 `just_new()` 为真）、写入 `create_time` / `update_time`、`delete_time` 置 `null`，并注册到本地缓存（同时复位 `just_deleted` / `just_force_deleted` 标记）。所有业务工厂方法在内部调用它。
 
 ```php
 $user = user::init();
@@ -74,7 +74,7 @@ final public function just_new()
 final public function just_updated()
 ```
 
-查询实体的持久化状态：`just_new()` 返回 `version` 是否为初始值（未入库）；`just_updated()` 返回 `attributes` 是否与 `$structs` 默认值不一致（被修改过）。
+查询实体的持久化状态：`just_new()` 返回 `version` 是否仍为初始值 `0`（新建、尚未入库）；`just_updated()` 返回 `attributes`（内存当前值）与 `structs`（数据库快照，新实体为声明默认值）是否不一致——不一致说明有未提交变更，`unit_of_work` 据此生成 UPDATE。
 
 ```php
 if ($user->just_new()) {
@@ -111,7 +111,7 @@ final public function just_deleted()
 public function delete()
 ```
 
-**标记软删除**：置 `just_deleted` 为真并写入 `delete_time`。真正的落库由 `unit_of_work` 在提交时生成 `UPDATE SET delete_time`。
+**标记软删除**：置 `just_deleted` 为真并把 `delete_time` 写为当前时间。真正的落库由 `unit_of_work` 在提交时生成 UPDATE（写入 `delete_time`）。
 
 ```php
 $user->delete();   // 交给 unit_of_work 自动持久化
@@ -123,7 +123,7 @@ $user->delete();   // 交给 unit_of_work 自动持久化
 final public function restore()
 ```
 
-恢复软删除：清除 `just_deleted` 标记与 `delete_time`。
+撤销软删除：清除 `just_deleted` 标记并把 `delete_time` 重置为 `null`。注意它只动内存状态、不改业务字段——单独调用时 `just_updated()` / `just_deleted()` 都为假，**提交时不会生成 UPDATE**。典型用法是同一请求内 `delete()` 后再 `restore()` 取消本次删除；若要恢复一条已落库的软删除记录，需在同一工作单元内再修改一个业务字段（让 `just_updated()` 为真），`delete_time = null` 才会随那次 UPDATE 一并写回。
 
 ```php
 $user->restore();
@@ -231,6 +231,8 @@ echo $user->name;        // 业务字段
 $orders = $user->orders; // 懒加载关系
 ```
 
+读取未在 `$structs` 中声明的字段会触发 PHP 未定义索引警告（在入口的错误处理器下会被转成异常）。
+
 ### __set
 
 ```php
@@ -246,6 +248,8 @@ final public function __set($property, $value)
 $user->name = '李四';       // 业务字段
 $user->creator = $admin;    // 关系属性 → 自动维护外键
 ```
+
+业务字段必须先在 `$structs` 中声明——向未声明的属性赋值会被**静默忽略**。
 
 ### __unset
 
@@ -265,7 +269,7 @@ final public function __isset($property)
 
 ## 关系
 
-关系通过**实体类上的方法**定义（方法内调用 `has_one` / `belongs_to` / `has_many` 注册关系元数据），再通过**属性访问**触发懒加载，实现「对象导航」风格的关联查询。底层由 `relationship_ref` 抽象基类（`load` / `batch_load` / `update`）驱动。
+关系通过**实体类上的方法**定义（方法内调用 `has_one` / `belongs_to` / `has_many` 注册关系元数据），再通过**属性访问**触发懒加载，实现「对象导航」风格的关联查询。底层由 `relationship_ref` 抽象基类（`load` / `batch_load` / `update`）驱动。给关系属性赋值时由 `update()` 维护外键：`has_one` 先把旧子实体的外键置 `0` 再指向本实体，`belongs_to` 写入本实体的外键（赋空则置 `0`），`has_many` 给新旧集合里所有子实体写入本实体 id。
 
 **三个关系方法的签名一致**：第一个参数 `$relationship_name` 是关系名（即触发懒加载的属性名），后两个参数均可省略、按约定推导。
 
@@ -360,7 +364,7 @@ $users[0]->relationship_batch_load('orders', $users);   // 一次加载全部订
 null_entity
 ```
 
-查询不到记录时 DAO 返回的空对象，保证「无值」场景下调用方代码仍然安全，避免 NPE。
+查询不到记录时 DAO 返回的空对象（`id` 固定为 `0`），保证「无值」场景下调用方代码仍然安全，避免 NPE。
 
 ### null_entity::create
 

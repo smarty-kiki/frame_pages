@@ -4,6 +4,8 @@
 
 所有函数末尾的 `$config_key` 指定使用哪个 midwares 键（默认 `'default'`）。
 
+连接池复用（支持 TCP 与 Unix Socket）。取用连接时会把连接名设为 `trace:{trace_id 前 24 位}`（无 trace 时为 `app`），Redis 7+ 的 `CLIENT LIST` / SLOWLOG 据此把命令归属到请求——连接在常驻进程里跨任务复用，只有期望的连接名变化时才真正发 `CLIENT SETNAME`，命名失败不影响缓存读写。详见[链路追踪](trace.md)。
+
 ## 字符串 KV
 
 ### cache_get
@@ -49,7 +51,7 @@ cache_set('config:version', '20260826');
 cache_add($key, $value, $expires = 0, $config_key = 'default')
 ```
 
-仅当键**不存在**时写入（SETNX）。成功返回 `true`，键已存在返回 `false`。常用于防并发、幂等标记。
+仅当键**不存在**时写入（`SET NX`，带过期时 `SET NX EX`）。成功返回 `true`，键已存在返回 `false`。常用于防并发、幂等标记。
 
 ```php
 $locked = cache_add('pay:lock:1001', 1, 30);   // 加锁成功才返回 true
@@ -61,7 +63,7 @@ $locked = cache_add('pay:lock:1001', 1, 30);   // 加锁成功才返回 true
 cache_replace($key, $value, $expires = 0, $config_key = 'default')
 ```
 
-仅当键**已存在**时覆盖写入。键不存在返回 `false`。
+仅当键**已存在**时覆盖写入（`SET XX`）。键不存在返回 `false`。
 
 ```php
 cache_replace('user:1', $updated, 3600);
@@ -89,6 +91,30 @@ cache_multi_delete(array $keys, $config_key = 'default')
 
 ```php
 cache_multi_delete(['user:1', 'user:2']);
+```
+
+### cache_compare_delete
+
+```php
+cache_compare_delete($key, $value, $config_key = 'default')
+```
+
+**值相等才删除**（Lua 里比较与删除原子完成），返回删除条数：`1` 表示确实删掉了自己的值，`0` 表示值已被别人改写（未删除）。用于安全释放锁——避免误删别人的锁。
+
+```php
+cache_compare_delete('pay:lock:1001', $token);
+```
+
+### cache_compare_set
+
+```php
+cache_compare_set($key, $expect, $value, $expires = 0, $config_key = 'default')
+```
+
+**值等于 `$expect` 时才替换为 `$value`**（Lua 里比较与替换原子完成），返回是否替换成功；`$expires` 为 `0` 时不设过期。用于锁交接、状态机流转等 CAS 场景（见[锁](lock.md)）。
+
+```php
+cache_compare_set('pay:lock:1001', $old_token, $new_token, 30);
 ```
 
 ### cache_increment

@@ -36,12 +36,14 @@ $log   = config('log');                // ['exception_path' => '/tmp/php_excepti
 config_midware($file_name, $midware_name)
 ```
 
-`midwares → resources` 间接寻址：取 `midwares[$midware_name]` 作为资源键，再从 `resources[$resource_key]` 取实际连接参数。I/O 组件（mysql / redis / beanstalk）通过它拿到真实连接配置：
+`midwares → resources` 间接寻址：取 `midwares[$midware_name]` 作为资源键，再从 `resources[$resource_key]` 取实际连接参数。I/O 组件（mysql / redis / clickhouse / beanstalk / kafka）通过它拿到真实连接配置：
 
 ```php
 $local_mysql = config_midware('mysql', 'default');
 $lock_redis  = config_midware('redis', 'lock');
 ```
+
+配置缺 `midwares.{name}` 映射或映射指向的资源不存在时抛 `CONFIG_MIDWARE_NOT_FOUND` / `CONFIG_RESOURCE_NOT_FOUND`，直接报出缺失的那一层。
 
 ### config_preload
 
@@ -61,10 +63,10 @@ config_preload();
 env()
 ```
 
-返回当前环境名，默认 `production`。读取 `$_SERVER['ENV']`，由 nginx `fastcgi_param ENV development;` 等注入切换。
+返回当前环境名，读取 `$_SERVER['ENV']`，未设置时默认 `production`。由 web server / 进程环境注入切换：nginx 的 `fastcgi_param ENV test;`、Caddy 的 `env ENV test`、supervisor 的 `environment= ENV="test";`。
 
 ```php
-$env = env();   // 'development' | 'production'
+$env = env();   // 'development' | 'test' | 'production'
 ```
 
 ### is_env
@@ -281,6 +283,8 @@ http($args)
 
 发起 HTTP 请求（基于 curl）。`$args` 可以是 **URL 字符串**（GET）或**配置数组**。配置数组支持：`url`、`method`（不传时：有 `data` 为 POST，无 `data` 为 GET）、`data`、`header`、`cookie`、`timeout`（默认 3）、`retry`（默认 3）、`option`（curl 选项）、`timeouted`（超时回调），以及**按 HTTP 状态码命名的回调**（如 `200 => function($res, $code) {...}`、`0 => function($res, $code, $errno)` 兜底）。返回响应体字符串或回调结果。
 
+当前存在 trace 上下文、且 `header` 里没显式带同名头时，自动补上 `traceparent` 与 `X-Request-Id` 两个请求头——出站调用跨服务接上同一条链路（见[链路追踪](trace.md)）。连接失败（HTTP 状态码为 `0`）时抛 `http url {url} {错误}`；其中超时场景若传了 `timeouted` 回调则改返回回调结果。
+
 ```php
 $html = http('https://api.example.com/user?id=1');
 
@@ -322,15 +326,15 @@ $res = http_xml('https://api.example.com/status');
 ### datetime
 
 ```php
-datetime($expression = null, $format = 'Y-m-d H:i:s')
+datetime($expression = null, $format = 'Y-m-d H:i:s.v')
 ```
 
-格式化时间。`$expression` 缺省为当前时间；传数字视为时间戳；传字符串交给 `strtotime` 解析。`$format` 为输出格式。
+格式化时间。`$expression` 缺省为当前时间；传数字视为时间戳（支持小数，毫秒不丢）；传字符串交给 `DateTimeImmutable` 解析（带毫秒的时间串原样保留；解析不了按时间戳 0 处理）。`$format` 为输出格式，**默认精确到毫秒**（`Y-m-d H:i:s.v`），要秒级显式传 `'Y-m-d H:i:s'`。
 
 ```php
-datetime();                                     // '2026-08-26 10:30:00'
+datetime();                                     // '2026-08-26 10:30:00.123'
 datetime('+1 day', 'Y-m-d');
-datetime(1724628600, 'Y-m-d H:i');
+datetime(1724628600.123, 'Y-m-d H:i');
 ```
 
 ### datetime_diff

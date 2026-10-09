@@ -2,6 +2,17 @@
 
 本框架通过 `public/cli.php` 提供 CLI 命令支持，命令定义在 `command/` 目录，与 HTTP 路由类似——**命令即闭包**。配合命令行补全脚本，交互体验友好。
 
+## 入口与内置命令
+
+`public/cli.php` 的编排：`bootstrap.php`（加载 `frame/`）→ `cli_command.php` → `trace_init()`（CLI 本地起根 trace，见[链路追踪](trace.md)）→ 注册未匹配兜底 → `include` 各命令文件 → `command_not_found()` 触发兜底。框架自带的命令分组：
+
+| 命令组 | 说明 | 文档 |
+|------|------|------|
+| `migrate*` | 数据库迁移（install / make / migrate / dry-run / rollback / reset / uninstall / make-merge） | [数据迁移](migrate.md) |
+| `clickhouse:*` | ClickHouse 迁移（install / make / migrate / dry-run / rollback / reset / status / uninstall） | [ClickHouse](clickhouse.md) |
+| `entity:restep-last-id` | 刷新 ID 生成器的最新 id | [工作单元](unitofwork.md) |
+| `queue:*` | 队列 worker 与管理命令（beanstalk / kafka 两套） | [队列](queue.md) |
+
 ## 声明一个命令
 
 命令文件放在 `command/` 下，在 `public/cli.php` 中 `include` 引入：
@@ -35,7 +46,7 @@ php public/cli.php hello
 command($rule, $description, closure $action)
 ```
 
-注册一个命令。`$rule` 为命令名（可含空格分段，如 `queue:worker`）；`$description` 为命令描述；`$action` 为执行闭包，其返回值会被输出。
+注册一个命令。`$rule` 为命令名——**单个参数词**（以 argv 整体匹配，惯例用冒号分命名空间，如 `queue:worker`、`clickhouse:migrate`）；`$description` 为命令描述；`$action` 为执行闭包，其返回值会被输出。
 
 ```php
 command('migrate', '执行迁移', function () {
@@ -51,7 +62,7 @@ CLI 参数遵循两种格式：
 - `--key=value`：字符串参数，通过 `command_paramater('key')` 读取
 
 ```bash
-php public/cli.php queue:worker --tube=mail --config_key=queue --memory_limit=10485760
+php public/cli.php queue:worker --tube_key=mail --memory_limit=134217728
 php public/cli.php migrate:dry-run -v
 ```
 
@@ -61,13 +72,13 @@ php public/cli.php migrate:dry-run -v
 command_paramater($key, $default = null)
 ```
 
-读取命令行参数。`--key=value` → `value`；`-key` → `true`；未传返回 `$default`。
+读取命令行参数。`--key=value` → `value`；`-key` → `true`；未传时返回 `$default`；未传且 `$default` 为 `null` 时打印红色提示 `需要加 --key=xxx 或者 -key` 并以退出码 `1` 结束（必填参数防遗漏）。
 
 ```php
 command('queue:pause', '暂停队列', function () {
-    $tube  = command_paramater('tube');
-    $delay = command_paramater('delay', 3600);
-    queue_pause($tube, $delay);
+    $tube_key = command_paramater('tube_key', 'default');
+    $delay    = command_paramater('delay', 3600);
+    queue_pause($tube_key, $delay);
 });
 ```
 

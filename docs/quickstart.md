@@ -4,19 +4,25 @@
 
 ## 1. 新建一个路由
 
-在 `controller/` 下创建文件，例如 `controller/user.php`：
+接口路由放在 `controller_api/` 下，例如 `controller_api/user.php`：
 
 ```php
 <?php
 
-if_get('/user/*', function ($user_id) {
+if_get('/api/user/*', function ($user_id) {
     return dao('user')->find_by_id($user_id); // 返回实体 → JSON
 });
 
-if_post('/user', function () {
+if_post('/api/user', function () {
     $name = input('name');
     return user::create($name); // Entity 实现了 JsonSerializable → JSON
 });
+```
+
+页面路由放在 `controller/` 下，例如 `controller/user.php`：
+
+```php
+<?php
 
 if_get('/user/list', function () {
     $users = dao('user')->find_all();
@@ -24,15 +30,20 @@ if_get('/user/list', function () {
 });
 ```
 
-然后在 `public/index.php` 中加入一行 `include`：
+然后在对应入口文件中各加一行 `include`：
 
 ```php
+// public/index.php
 include CONTROLLER_DIR.'/base.php';
 include CONTROLLER_DIR.'/user.php';  // 新增
+
+// public/api.php
+include API_DIR.'/base.php';
+include API_DIR.'/user.php';  // 新增
 ```
 
-> 页面路由放在 `controller/` 下由 `public/index.php` 加载，只返回 HTML 字符串。
-> 接口路由放在 `controller_api/` 下由 `public/api.php` 加载，路由以 `/api/` 开头，任意返回值统一包装成 `{code, msg, data}` JSON。详见[控制器](controller.md)。
+> 页面路由放在 `controller/` 下由 `public/index.php` 加载，只返回 HTML 字符串；接口路由放在 `controller_api/` 下由 `public/api.php` 加载，路由以 `/api/` 开头，任意返回值统一包装成 `{code, msg, data}` JSON。详见[控制器](controller.md)。
+> 规则**命中即执行**：本例中 `/api/user/*` 只匹配单段路径（`/api/user/123`），不会挡住 `/api/user`；同类资源有通配与精确规则时，精确规则要写在通配规则之前（详见[路由](router.md)）。
 
 ## 2. 新建一个 Entity + DAO
 
@@ -64,9 +75,11 @@ class user extends entity
 class user_dao extends dao
 {
     protected $table_name = 'user';
-    protected $db_config_key = 'default';
+    protected $db_config_key = 'entity';
 }
 ```
+
+> `$db_config_key` 是 DAO 连接的库位，默认 `entity`：`entity` 实体读写（与工作单元同一连接）、`migrate` 迁移、`default` 自由用途，对应 `config/mysql.php` 的 `midwares` 映射。
 
 **注册类映射**——运行一条命令即可：
 
@@ -87,11 +100,11 @@ php public/cli.php migrate:make --name=create_user_table
 ```sql
 # up
 create table `user` (
-    `id` bigint(20) not null,
-    `version` int(11) not null default 0,
-    `create_time` datetime not null,
-    `update_time` datetime not null,
-    `delete_time` datetime default null,
+    `id` bigint unsigned not null,
+    `version` int not null default 0,
+    `create_time` datetime(3) not null,
+    `update_time` datetime(3) not null,
+    `delete_time` datetime(3) default null,
     `name` varchar(255) not null default '',
     primary key (`id`)
 ) engine=InnoDB default charset=utf8mb4;

@@ -1,14 +1,17 @@
 # 路由
 
-本框架的路由即闭包：**路由规则与控制器动作在同一条声明中绑定**，规则用字符串匹配当前请求 `uri` 与 `request method`，命中则执行闭包。
+本框架的路由即闭包：**路由规则与控制器动作在同一条声明中绑定**，规则字符串匹配当前请求路径（`uri_info('path')`，不含域名与查询串），命中则执行闭包、随后 `exit`——**同一请求只会命中第一条匹配的规则**。
 
 ## 路由规则
 
-- 规则字符串与当前 `uri` 完全相等即命中，例如 `/user`
-- 规则中含 `*` 为通配符，匹配任意个任意字符，例如 `/api/order/*` 命中 `/api/order/123`
-- `*` 位置捕获的参数按顺序传给闭包，例如规则 `/user/*` 命中 `/user/123` 时闭包收到 `$user_id = '123'`
+- 规则字符串与当前请求路径**完全相等**即命中，例如 `/user` 只命中 `/user`，不命中 `/user/123`
+- 规则中的 `*` 是通配符，匹配**一个路径段**（至少 1 个、不含 `/` 的字符）：`/api/order/*` 命中 `/api/order/123`，**不命中** `/api/order/123/items`（多段）或 `/api/order/`（空段）
+- 每个 `*` 捕获一段，按出现顺序作为参数传给闭包，值为字符串：规则 `/user/*` 命中 `/user/123` 时，闭包收到 `$user_id = '123'`
+- **命中即执行并终止**：通配规则要写在更具体的规则之后。例如 `/user/list` 必须声明在 `/user/*` 之前，否则请求 `/user/list` 会先被 `/user/*` 捕获（`$user_id = 'list'`），后面的 `/user/list` 永远轮不到
 
 ## 方法路由
+
+方法路由（`if_get` 等）命中后：执行 `$action(...$args)`，返回值交给入口注册的 `if_verify`（页面/API 入口即 `unit_of_work()` + 响应格式）处理后输出，再做一次重定向检查和 `exit`。方法不匹配时直接跳过（`return`），继续检查后续声明。
 
 ### if_any
 
@@ -16,7 +19,7 @@
 if_any(string $rule, closure $action)
 ```
 
-当 `uri` 与 `$rule` 匹配时执行 `$action` 闭包，**不限制请求方法**。返回值直接传给框架统一处理（页面入口返回字符串、API 入口包装成 JSON）。
+当路径与 `$rule` 匹配时执行 `$action` 闭包，**不限制请求方法**。
 
 ```php
 if_any('/any', function () {
@@ -30,7 +33,7 @@ if_any('/any', function () {
 if_get(string $rule, closure $action)
 ```
 
-仅当请求方法为 `GET` 且 `uri` 与 `$rule` 匹配时执行 `$action`。这是最常用的页面/查询路由。
+仅当请求方法为 `GET` 且路径与 `$rule` 匹配时执行 `$action`。最常用的页面/查询路由。
 
 ```php
 if_get('/', function () {
@@ -48,12 +51,12 @@ if_get('/user/*', function ($user_id) {
 if_post(string $rule, closure $action)
 ```
 
-仅当请求方法为 `POST` 且 `uri` 与 `$rule` 匹配时执行 `$action`。通常用于新增/提交。
+仅当请求方法为 `POST` 且路径与 `$rule` 匹配时执行 `$action`。通常用于新增/提交。
 
 ```php
-if_post('/user', function () {
+if_post('/api/user', function () {
     $user = user::create(input('name'));
-    return json(['id' => $user->id]);
+    return $user;  // Entity 实现了 JsonSerializable → 包装成 JSON（API 入口）
 });
 ```
 
@@ -63,10 +66,10 @@ if_post('/user', function () {
 if_put(string $rule, closure $action)
 ```
 
-仅当请求方法为 `PUT` 且 `uri` 与 `$rule` 匹配时执行 `$action`。通常用于更新。
+仅当请求方法为 `PUT` 且路径与 `$rule` 匹配时执行 `$action`。通常用于更新。
 
 ```php
-if_put('/user/*', function ($user_id) {
+if_put('/api/user/*', function ($user_id) {
     $user = dao('user')->find_by_id($user_id);
     $user->name = input('name');
     return $user;  // unit_of_work 自动持久化
@@ -79,13 +82,13 @@ if_put('/user/*', function ($user_id) {
 if_delete(string $rule, closure $action)
 ```
 
-仅当请求方法为 `DELETE` 且 `uri` 与 `$rule` 匹配时执行 `$action`。通常用于删除。
+仅当请求方法为 `DELETE` 且路径与 `$rule` 匹配时执行 `$action`。通常用于删除。
 
 ```php
-if_delete('/user/*', function ($user_id) {
+if_delete('/api/user/*', function ($user_id) {
     $user = dao('user')->find_by_id($user_id);
     $user->delete();
-    return json(['deleted' => $user->id]);
+    return ['deleted' => $user->id];
 });
 ```
 
@@ -97,21 +100,32 @@ if_delete('/user/*', function ($user_id) {
 if_verify(?closure $action = null): ?closure
 ```
 
-注册一个**通用动作**，在所有具体路由声明**之前**调用。`$action` 闭包接收 `unit_of_work` 包装后的「执行后续路由动作」的闭包作为参数：
+注册/获取**全局验证闭包**（路由守卫）。命中路由后、执行 action 前调用，闭包签名为 `($action, $args)`：`$action` 是命中路由的闭包，`$args` 是 `*` 捕获到的参数数组。
+
+**闭包的返回值即本次请求的响应输出**：非 null 会被直接输出（页面/API 入口 `echo` + `flush`，SSE 入口按返回类型分发），null 则不输出。因此：
+
+- **放行** = 执行 action 并把结果透传回来：`return call_user_func_array($action, $args);`
+- **拦截** = 不调用 `$action`，返回自己的响应（如鉴权失败时 `redirect('/login'); return null;`，跳转交给 `trigger_redirect()`）
+- ⚠ 不要把闭包本身当返回值（如 `return $action;`）：闭包对象会被当作响应输出，触发 `Object of class Closure could not be converted to string` 致命错误
+
+`if_verify` 是**单槽注册、后注册整体替换先注册**。页面与 API 入口已注册默认实现（`unit_of_work()` 包裹 + 入口对应的响应格式），在 `interceptor/` 中追加拦截器时要**包裹**当前实现而不是直接替换：
 
 ```php
-if_verify(function (closure $run) {
-    // 全局逻辑：登录校验、参数过滤、统计等
-    if (!is_login()) {
+$next = if_verify();   // 取出入口注册的默认实现
+
+if_verify(function ($action, $args) use ($next) {
+    // 前置逻辑：登录校验、参数过滤、统计等
+    if (! is_login()) {
         redirect('/login');
-        return null;
+        return null;                 // 不输出内容，交给 if_any 的 trigger_redirect() 跳转
     }
-    return $run();   // 继续执行后续匹配到的路由
+    return $next($action, $args);    // 放行：透传内层（unit_of_work 包装）的结果
 });
 ```
 
-- 在 `unit_of_work()` 包裹下执行后续动作，整个请求内的 Entity 修改统一持久化
-- 可用于实现全局拦截器，详见[拦截器](interceptor.md)
+多个拦截器各自包裹上一个，**最后注册的最先执行**（洋葱模型，后置逻辑反序收尾）。完整说明与三类入口的示例见[拦截器](interceptor.md)。
+
+> SSE 入口（`public/sse.php`）默认**不注册** `if_verify`，拦截逻辑按需注册；`frame/sse.php` 中的 `if_verify` 与 `frame/php_fpm.php` 的同名但各自独立实现，两个模块不会同时加载。
 
 ### if_not_found
 
@@ -119,16 +133,13 @@ if_verify(function (closure $run) {
 if_not_found(?closure $action = null): ?closure
 ```
 
-注册未命中任何路由时的兜底动作。`$action` 闭包可接收一个「404 动作」参数，调用后返回 404 响应：
+注册未命中任何路由时的兜底动作。三个入口都已注册默认实现：页面入口渲染 `error/404`、API 入口返回 `{code: 404, msg: 'Not Found', data: []}` JSON、SSE 入口返回纯文本 `Not Found`。注册的闭包在兜底触发时通常无参调用：
 
 ```php
-// public/index.php
-if_not_found(function (closure $action) {
-    return render('error/404', ['title' => '页面不存在']);
+if_not_found(function () {
+    return render('error/404');
 });
 ```
-
-若未传入 `$action`，则采用框架默认 404 行为。
 
 ### not_found
 
@@ -136,14 +147,14 @@ if_not_found(function (closure $action) {
 not_found(?closure $action = null)
 ```
 
-主动触发 404 动作。在所有路由声明完之后调用，让「未匹配」最终落到 404：
+主动触发 404：先发 404 响应头，再执行兜底动作。入口在所有路由文件加载完后调用 `not_found()`，让「未匹配任何路由」最终落到 404：
 
 ```php
 // public/index.php 末尾
 not_found();
 ```
 
-若传入了 `$action`，则自定义该次 404 的处理。
+传入 `$action` 时，本次 404 直接执行该闭包（不再走注册的兜底）。
 
 ## 匹配信息
 
@@ -153,14 +164,17 @@ not_found();
 route(string $rule): array
 ```
 
-解析当前 `uri` 是否匹配规则 `$rule`，返回捕获信息。匹配成功返回包含捕获参数与原始规则信息的数组；失败返回空数组。
+用规则 `$rule` 匹配当前请求路径，返回 `[$matched, $args]` 二元组，配合 `list()` 使用：
 
 ```php
-$match = route('/user/*');
-if ($match) {
-    print_r($match);  // ['rule' => '/user/*', 'captures' => ['123'], ...]
+list($matched, $args) = route('/user/*');
+
+if ($matched) {
+    // $args 例如 ['123']
 }
 ```
+
+`$matched` 为 bool，`$args` 是各 `*` 依次捕获到的字符串数组（未命中为空数组）。`if_any` 的第一行就是它。
 
 ### matched_rule
 
@@ -168,10 +182,10 @@ if ($match) {
 matched_rule(?string $rule = null): ?string
 ```
 
-获取/设置当前请求匹配到的规则字符串。无参调用返回上一次命中的路由规则；传入 `$rule` 则显式设置。
+获取/设置当前请求命中的**规则字符串**。`if_any` 命中时自动登记，无参调用读取：
 
 ```php
-$current = matched_rule();   // 例如 '/user/123'
+$current = matched_rule();   // 例如 '/user/*'（登记的是命中的规则，不是请求路径）
 ```
 
 ## flush_action
@@ -180,7 +194,7 @@ $current = matched_rule();   // 例如 '/user/123'
 flush_action(closure $action, array $args = [], ?closure $verify = null)
 ```
 
-立即执行一个动作闭包，可选带参和带 verify。框架内部用它在校验通过后执行匹配到的路由动作：
+立即执行动作闭包，参数与 verify 都可选。`if_any` 通过它执行命中路由：
 
 ```php
 flush_action(function ($id) {
@@ -188,9 +202,11 @@ flush_action(function ($id) {
 }, ['123']);
 ```
 
+`$verify` 不为 null 时以 `$verify($action, $args)` 调用：**verify 的返回值才是输出**——非 null 时 `echo` 并 `flush()`，null 则什么都不输出。`if_any` 传入的就是 `if_verify()` 注册的全局验证闭包。
+
 ## 重定向
 
-重定向采用**两段式**设计：`redirect()` 只记录重定向目标，真正的跳转由 `trigger_redirect()` 在响应阶段执行。
+重定向采用**两段式**设计：`redirect()` 只在闭包内记录目标（不发 header），等动作执行完、工作单元提交事务之后，由 `if_any` 调用 `trigger_redirect()` 真正跳转——先提交、后跳转，事务不会因为跳转而丢。
 
 ### redirect
 
@@ -198,7 +214,7 @@ flush_action(function ($id) {
 redirect(?string $uri = null, bool $forever = false): array
 ```
 
-记录一次重定向。`$uri` 为跳转地址；`$forever = true` 时返回 301（永久重定向），否则 302（临时）。返回一个数组，通常直接 `return` 给框架：
+记录一次重定向。`$uri` 为跳转地址；`$forever = true` 时返回 301（永久重定向），否则 302（临时）。返回记录数组，控制器里直接 `return` 即可：
 
 ```php
 if_get('/logout', function () {
@@ -206,24 +222,22 @@ if_get('/logout', function () {
 });
 ```
 
-无参调用 `redirect()` 可读取当前是否处于重定向状态。
+入口注册的 verify 检测到 `has_redirect()` 后不再输出该数组，交给 `if_any` 的 `trigger_redirect()` 跳转。无参调用 `redirect()` 返回当前记录（未记录时为空数组）。
 
 ### has_redirect
 
 ```php
-has_redirect()
+has_redirect(): bool
 ```
 
-判断当前请求是否已经记录过重定向。常配合 `if_verify` 或控制器收尾逻辑判断是否需要跳转。
+判断当前请求是否已记录重定向。入口 verify 在工作单元结束后用它决定是否跳过响应输出：
 
 ```php
-if_verify(function (closure $run) {
-    $result = $run();
-    if (has_redirect()) {
-        return $result;  // 已记录重定向，交回框架触发跳转
-    }
-    return $result;
-});
+$data = call_user_func_array($action, $args);
+
+if (has_redirect()) {
+    return null;   // 已记录跳转：不输出内容，等 trigger_redirect()
+}
 ```
 
 ### trigger_redirect
@@ -232,8 +246,12 @@ if_verify(function (closure $run) {
 trigger_redirect($uri = null, $forever = false)
 ```
 
-真正执行重定向：发送 `Location` 头（`forever` 为 `true` 时附带 301 状态码）并 `exit`。框架在 `unit_of_work()` 提交后检测到 `has_redirect()` 时自动调用。
+发送 `Location` 响应头执行跳转（`$forever = true` 时附带 301 状态码）。无参调用使用 `redirect()` 记录的目标；目标为空则什么都不做。
+
+**只发 header、不 `exit`**：`if_any` 调用它之后自己 `exit`；在 `if_any` 执行链之外手动调用时，记得自己补 `exit`：
 
 ```php
-trigger_redirect('/login', true);  // 立即 301 跳转
+redirect('/login');
+trigger_redirect();
+exit;
 ```

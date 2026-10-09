@@ -11,11 +11,11 @@ DAO（数据访问对象）封装实体的所有数据库操作：查询、写�
 class user_dao extends dao
 {
     protected $table_name = 'user';       // 对应数据表名
-    protected $db_config_key = 'default'; // 对应 config/mysql.php 的 midwares 键
+    protected $db_config_key = 'entity';  // 默认 'entity'（与工作单元同一连接）；跨库 DAO 覆盖它
 }
 ```
 
-**DAO 类名约定**：`{entity 名}_dao`，如实体 `user` → `user_dao`。
+**DAO 类名约定**：`{entity 名}_dao`，如实体 `user` → `user_dao`。`$db_config_key` 默认 `entity`，与工作单元默认配置键（`unit_of_work_db_config_key()`）一致，保证实体被工作单元自动收集提交；对应 `config/mysql.php` 的 midwares 键。
 
 ## dao()
 
@@ -23,7 +23,7 @@ class user_dao extends dao
 dao($class_name, $with_deleted = false)
 ```
 
-获取 DAO 实例的工厂函数。`$class_name` 为实体类名（如 `'user'` 自动映射到 `user_dao`，也可直接传 `'user_dao'`）；`$with_deleted = true` 时查询包含软删除记录。实例单例化，同一次请求内重复获取复用同一实例。
+获取 DAO 实例的工厂函数。`$class_name` 为实体类名（内部映射到 `{实体名}_dao`，如 `'user'` → `user_dao`）；`$with_deleted = true` 时查询包含软删除记录。DAO 实例按类名单例化（`instance()` 容器），同一次请求内重复获取复用同一实例——`$with_deleted` / `set_with_deleted()` 都作用在这个共享实例上。
 
 ```php
 $user_dao = dao('user');
@@ -80,7 +80,7 @@ $user = dao('user')->find_by_column(['name' => '张三']);
 protected function find_by_condition($condition, array $binds = [])
 ```
 
-按**原生 WHERE SQL 片段**查询单条（`$condition` 为条件字符串，不含 `where` 关键字），`$binds` 为绑定参数。子类可继承使用。
+按**原生 WHERE SQL 片段**查询单条（`$condition` 为条件字符串，不含 `where` 关键字），`$binds` 为绑定参数。自动注入软删除过滤（未开启 `with_deleted` 时在条件前拼 `delete_time is null and`），无需手写。子类可继承使用。
 
 ```php
 class user_dao extends dao
@@ -159,7 +159,7 @@ $users = dao('user')->find_all_by_column(['age' => 18]);
 protected function find_all_by_condition($condition, array $binds = [])
 ```
 
-按原生 WHERE SQL 片段查询多条。
+按原生 WHERE SQL 片段查询多条，自动注入软删除过滤（同上）。
 
 ### find_all_by_sql
 
@@ -199,12 +199,17 @@ class order_dao extends dao
 find_all_paginated_by_current_page_and_column($current_page, $page_size, array $columns)
 ```
 
-按条件数组分页查询。返回结构包含 `items`、`total`、`current_page`、`page_size` 等分页信息。
+按条件数组分页查询，返回 `list` + `pagination` 结构：
 
 ```php
 $page = dao('user')->find_all_paginated_by_current_page_and_column(2, 20, ['age' => 18]);
-// ['items' => [...], 'total' => 99, 'current_page' => 2, 'page_size' => 20, 'total_page' => 5]
+
+$page['list'];        // [id => user, ...]（key 为实体 id）
+$page['pagination'];  // ['page_size' => 20, 'current_page' => 2, 'count' => 99, 'pages' => 5]
 ```
+
+- `count` 为总记录数（软删除已剔除），`pages` 为总页数（`ceil(count / page_size)`）；`count` 为 0 时直接返回空 `list` 与计数全 0 的结构
+- 偏移量为 `page_size * (current_page - 1)`；`list` 侧与 count 侧一致地注入软删除过滤，保证页数与数据对得上
 
 ### find_all_paginated_by_current_page_and_condition
 
@@ -212,7 +217,7 @@ $page = dao('user')->find_all_paginated_by_current_page_and_column(2, 20, ['age'
 find_all_paginated_by_current_page_and_condition($current_page, $page_size, $condition, array $binds = [])
 ```
 
-按原生 WHERE SQL 片段分页查询，返回结构同上。
+按原生 WHERE SQL 片段分页查询，返回结构同上。条件片段会被括号包裹后拼接（防止 `or` 条件破坏软删除过滤的边界）。
 
 ```php
 $page = dao('user')->find_all_paginated_by_current_page_and_condition(1, 10, 'age > :age', [':age' => 0]);
@@ -238,7 +243,7 @@ $total = dao('user')->count();
 protected function count_by_condition($condition, array $binds = [])
 ```
 
-按原生 WHERE SQL 片段统计记录数。
+按原生 WHERE SQL 片段统计记录数，自动注入软删除过滤（同上）。
 
 ## 数据库配置
 
@@ -252,7 +257,7 @@ final public function get_db_config_key()
 
 ## SQL 转储
 
-以下三个方法把实体的写入操作生成对应的 SQL 字符串，**不执行**。用于调试、日志、审计：
+以下三个方法生成实体写入的 SQL 模板与绑定参数（返回 `['sql_template' => ..., 'binds' => ...]`），**不执行**，由 `unit_of_work` 在提交阶段统一执行：
 
 ### dump_insert_sql
 
@@ -260,7 +265,7 @@ final public function get_db_config_key()
 final public function dump_insert_sql($entity)
 ```
 
-生成 INSERT SQL。
+生成 INSERT SQL：业务字段 + 五个系统字段（`version` 入库为初始值 `+1`，即新建实体落库 `version = 1`）。
 
 ```php
 $sql = dao('user')->dump_insert_sql($user);
@@ -272,7 +277,7 @@ $sql = dao('user')->dump_insert_sql($user);
 final public function dump_update_sql($entity)
 ```
 
-生成 UPDATE SQL（带 `version` 乐观锁条件）。
+生成 UPDATE SQL：set 全部脏字段 + `version`（当前值 `+1`）+ 刷新 `update_time`、`delete_time`，WHERE 带乐观锁条件 `id = :id and version = :old_version`。
 
 ### dump_delete_sql
 
@@ -280,7 +285,7 @@ final public function dump_update_sql($entity)
 final public function dump_delete_sql($entity)
 ```
 
-生成软删除 UPDATE SQL（设置 `delete_time`）。
+生成**物理删除** `DELETE FROM ... WHERE id = :id`，对应 `force_delete()`（软删除走 `dump_update_sql` 写 `delete_time`）。
 
 ## 软删除拼接
 
@@ -308,7 +313,7 @@ final protected function with_deleted_where_sql(?string $alias = null)
 final protected function with_deleted_where_sql_and(?string $alias = null)
 ```
 
-返回以 AND 连接的软删除条件片段（不含 `where` 关键字）。
+返回以 ` where` 开头的片段：未开启 `with_deleted` 时为 ` where delete_time is null and`，开启时为 ` where`——用于「`select ... from 表` 之后直接接 `where` + 自定义条件」的场景。
 
 ## 本地缓存（Identity Map）
 
@@ -321,10 +326,10 @@ local_cache_has($entity_type, $id)                   // 判断是否命中
 local_cache_get_all()                                // 取全部缓存
 local_cache_delete($entity_type, $id)                // 删除缓存
 local_cache_delete_all()                             // 清空全部
-local_cache_flush_all()                              // 刷新全部（保留容器）
+local_cache_flush_all()                              // 取出全部缓存并清空
 ```
 
-`unit_of_work` 提交后会自动刷新相关缓存，保证同一请求内数据一致。
+缓存键为 `{实体类名}_{id}`，本质是一个请求级的 Identity Map：同一请求内相同实体只从数据库加载一次。工作单元在动作执行前后都会清空本地缓存——缓存只在工作单元的闭包内生效（闭包内重复查询直接复用），闭包结束后统一释放。
 
 ## input_entity
 
@@ -332,7 +337,7 @@ local_cache_flush_all()                              // 刷新全部（保留容
 input_entity($entity_name, $name = null, $require = false)
 ```
 
-**从请求参数加载实体**：读取参数 `$name`（默认 `{entity_name}_id`）作为主键，`dao($entity_name)->find_by_id()` 加载并返回实体；找不到则抛 `{ENTITY}_NOT_FOUND` 业务异常（错误码需在 `config/error_code.php` 定义）。`$require = true` 时参数缺失同样抛异常；否则返回 `null_entity`。
+**从请求参数加载实体**：读取参数 `$name`（默认 `{entity_name}_id`）作为主键，`dao($entity_name)->find_by_id()` 加载并返回实体；找不到则抛 `{实体名大写}_NOT_FOUND` 业务异常（如 `user` → `USER_NOT_FOUND`，错误码需在 `config/error_code.php` 定义）。`$require = true` 时参数缺失同样抛异常；否则返回 `null_entity`。
 
 ```php
 $user = input_entity('user', 'user_id', true);   // 必须传 user_id 且存在
@@ -344,7 +349,7 @@ $user = input_entity('user', 'user_id', true);   // 必须传 user_id 且存在
 relationship_batch_load($entities, $relationship_chain)
 ```
 
-**链式批量加载关系**：一次性把 `$entities` 数组中所有实体的关系加载出来，避免 N+1。`$relationship_chain` 用点号分隔，按顺序逐层加载。
+**链式批量加载关系**：一次性把 `$entities` 中所有实体的关系加载出来，避免 N+1。`$entities` 可以是单个实体，也可以是以实体 id 为键的实体数组（如 `find_all()` 的返回）；`$relationship_chain` 用点号分隔，从上一层的加载结果继续逐层加载。
 
 ```php
 relationship_batch_load($orders, 'creator.orders');   // 先加载每个订单的 creator，再加载每个 creator 的 orders

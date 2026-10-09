@@ -10,9 +10,9 @@
 - 写入类（`db_insert`、`db_update`、`db_delete`、`db_write`、`db_simple_*` 写入）→ `write` 库
 - 结构类（`db_structure`，DDL，迁移使用）→ `schema` 库，不走读写分离
 
-多个库位时随机选取一个连接。所有函数末尾的 `$config_key` 指定使用哪个 midwares 键（默认 `'default'`）。
+多个库位时随机选取一个连接（`array_rand`）。所有函数末尾的 `$config_key` 指定使用哪个 midwares 键（默认 `'default'`；DAO / 实体层用 `'entity'`，迁移用 `'migrate'`，见[配置](config.md)）。
 
-**绑定参数约定**：SQL 中绑定参数支持 `:name` 命名占位符；**数组值的绑定会自动展开为 `IN` 子句**，所以 `where id in :ids` + `[':ids' => ['1','2']]` 也能正确生成。
+**绑定参数约定**：SQL 中绑定参数支持 `:name` 命名占位符；**数组值的绑定会自动展开为 `IN` 子句**，所以 `where id in :ids` + `[':ids' => ['1','2']]` 也能正确生成。另外，每条 SQL 执行前会自动加一段链路追踪注释前缀（`trace_sql_comment()`，见[链路追踪](trace.md)），便于在 MySQL 的 general_log / slow log 里把语句关联回具体请求。
 
 ## 查询
 
@@ -142,7 +142,7 @@ db_force_type_write(true);   // 强制后续查询走 write
 db_transaction(closure $action, $config_key = 'default')
 ```
 
-在事务中执行闭包：闭包内所有写操作同进同退，事务期间自动强制走写库。闭包正常结束自动 `commit`；抛出异常自动 `rollback` 并重新抛出；`finally` 恢复原状态。
+在事务中执行闭包：闭包内所有写操作同进同退，事务期间自动强制走写库。闭包正常结束自动 `commit`；抛出异常自动 `rollback` 并重新抛出；`finally` 把强制写库开关复位为 `false`。
 
 ```php
 db_transaction(function () use ($order) {
@@ -179,18 +179,18 @@ db_simple_where_sql(array $wheres)
 
 | `$wheres` 值 | 生成的逻辑 |
 |------|------|
-| 数组 `['paid', 'refund']` | `IN (...)` |
-| `null` | `IS NULL` |
+| 数组 `['paid', 'refund']` | `in (...)` |
+| `null` | `is null` |
 | 字符串 / 数字 `'张三'` | `=` |
 
-条件键（列名）后加空格与 `not` 可反转：`'age not' => [1,2]` → `NOT IN`，`'delete_time not' => null` → `IS NOT NULL`。
+**标量值**的键后缀会作为运算符透传：`'age >=' => 18` → `` `age` >= :w0age ``。反转（`not in` / `is not null`）仅适用于数组与 `null`：`'age not' => [1,2]` → `not in`，`'delete_time not' => null` → `is not null`——对标量值写 `not` 会生成非法 SQL。条件为空时返回 `['1 = 1', []]`。
 
 ```php
 list($where, $binds) = db_simple_where_sql([
     'age'          => 18,
     'status'       => ['paid', 'refund'],
     'delete_time'  => null,          // 默认过滤软删除
-    'name not'     => 'admin',
+    'name not'     => ['admin'],
 ]);
 // $where = '`age` = :w0age and `status` in :w1status and `delete_time` is null and `name` not in :w3name'
 ```
@@ -240,7 +240,7 @@ db_simple_update('user', ['id' => '1'], ['name' => '王五']);
 db_simple_multi_update($table, array $datas, $where_column = 'id', $config_key = 'default')
 ```
 
-批量更新多行：使用 `CASE WHEN` 在**一条 SQL** 中更新不同行的不同值，`$where_column` 指定行定位列。
+批量更新多行：使用 `CASE WHEN` 在**一条 SQL** 中更新不同行的不同值，`$where_column` 指定行定位列（`$datas` 每行都要包含该列，且各行列集合一致）。
 
 ```php
 db_simple_multi_update('user', [

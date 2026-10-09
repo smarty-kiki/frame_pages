@@ -14,7 +14,7 @@ return [
 ];
 ```
 
-文案支持 `{param}` 占位符，由 `otherwise_error_code` 的第三个参数按顺序替换。
+文案可带 `{param}` 占位符，由 `otherwise_error_code` 的第三个参数（键值对）替换。
 
 ## otherwise
 
@@ -22,15 +22,14 @@ return [
 otherwise($assertion, $description = 'assertion is not true', $exception_class_name = 'exception', $exception_code = 'OTHERWISE_DEFAULT')
 ```
 
-**断言函数**：当 `$assertion` 为假时抛出一个携带 `$exception_code` 的 `business_exception`，`$description` 作为错误消息。这是本框架最常用的业务校验写法，等价于「断言不成立则抛业务异常」。
+**断言函数**：`$assertion` 为真则放行，为假则抛出 `{错误码}---{描述}` 结构的异常。这是本框架最常用的业务校验写法，等价于「断言不成立则抛异常」。
 
 ```php
 otherwise(is_login(), '请先登录', 'business_exception', 'NOT_LOGIN');
 ```
 
-- `$assertion` 为真则放行；为假则抛出异常
-- `$exception_class_name` 传入 `'business_exception'` 时抛出业务异常，页面/API 入口会把它渲染成带错误码的响应
-- 错误码建议在 `config/error_code.php` 中定义，文案里可带 `{param}` 占位符
+- `$exception_class_name` 默认 `'exception'`（普通异常），传 `'business_exception'` 抛业务异常；两种情况入口都会按 `{错误码}---{描述}` 结构识别为预期内的业务分支
+- 错误码建议在 `config/error_code.php` 中维护，文案里可带 `{param}` 占位符（配合 `otherwise_error_code`）
 
 ## otherwise_error_code
 
@@ -38,17 +37,17 @@ otherwise(is_login(), '请先登录', 'business_exception', 'NOT_LOGIN');
 otherwise_error_code($error_code, $assertion, array $replace_contents = [])
 ```
 
-**基于错误码字典的断言**：`$assertion` 为假时抛 `business_exception`，错误码为 `$error_code`，错误消息从 `config/error_code.php` 中读取该错误码对应的文案；`$replace_contents` 按顺序替换文案中的 `{param}` 占位符。
+**基于错误码字典的断言**：`$assertion` 为假时抛 `business_exception`，错误码为 `$error_code`，错误消息从 `config/error_code.php` 中读取该错误码对应的文案；`$replace_contents` 是**键值对**（键 = 要替换的占位符，值 = 替换内容）：
 
 ```php
 // config/error_code.php
 // 'USER_NOT_FOUND' => '用户 {id} 不存在'
 
-otherwise_error_code('USER_NOT_FOUND', $user !== null, [$user_id]);
-// 用户不存在时抛出：'用户 123 不存在'
+otherwise_error_code('USER_NOT_FOUND', $user !== null, ['{id}' => $user_id]);
+// 用户不存在时抛出：USER_NOT_FOUND---用户 123 不存在
 ```
 
-文案中没有 `{param}` 时也可以只传前两个参数：
+文案中没有 `{param}` 时省略第三个参数：
 
 ```php
 otherwise_error_code('ORDER_ALREADY_PAID', $order->paid_at === null);
@@ -60,13 +59,13 @@ otherwise_error_code('ORDER_ALREADY_PAID', $order->paid_at === null);
 business_exception
 ```
 
-框架内置的业务异常类（`otherwise.php` 中定义）。带有 `error_code` 属性，可通过以下函数读取：
+框架内置的业务异常类（`otherwise.php` 中定义），`{错误码}---{描述}` 结构的消息可由 `otherwise_get_error_info()` 解析出错误码与文案。日常校验直接使用 `otherwise()` / `otherwise_error_code()` 即可，需要手动抛出时按同样结构组织消息：
 
 ```php
-throw new business_exception('订单已支付', 'ORDER_ALREADY_PAID');
+throw new business_exception('ORDER_ALREADY_PAID---订单已支付');
 ```
 
-页面/API 入口在 `if_has_exception` 中识别 `business_exception`：**不写系统异常日志**（或单独记 business_exception 日志），只把 `error_code` 与消息作为响应的 `code` / `msg` 返回，浏览器/调用方据此判断业务失败原因。
+页面/API 入口在 `if_has_exception` 中按消息结构分流：带 `---` 结构的（`otherwise()` / `otherwise_error_code()` 抛出的都算）视为**预期内的业务分支**，记模块日志（module 名 `business_exception`）；不带结构的才是真异常，记异常日志。响应里把错误码与描述作为 `code` / `msg` 返回，浏览器/调用方据此判断业务失败原因。
 
 ## otherwise_get_error_info
 
@@ -74,7 +73,7 @@ throw new business_exception('订单已支付', 'ORDER_ALREADY_PAID');
 otherwise_get_error_info(throwable $ex)
 ```
 
-从异常对象中提取错误信息数组。返回的数组包含错误码与消息，供统一渲染使用：
+从异常对象中提取错误信息数组，供统一渲染使用。消息为 `{错误码}---{描述}` 结构时按结构拆分；没有该结构时取异常自身的 code 与完整消息：
 
 ```php
 $info = otherwise_get_error_info($ex);
@@ -101,10 +100,12 @@ $message = otherwise_get_error_message($ex);
 if_has_exception(?closure $action = null): ?closure
 ```
 
-注册请求过程中抛异常的统一处理。入口文件中已注册：
+注册请求过程中抛异常的统一处理，闭包收到的参数是异常对象。入口文件中已注册：
 
 - 页面入口：渲染 `view/error/500`，传入 `code`、`message`
-- API 入口：返回 `{code, msg, data: []}` JSON，`business_exception` 记 business_exception 日志，其余 `log_exception`
+- API 入口：返回 `{code, msg, data: []}` JSON
+- 日志按上文规则分流：`business_exception` 与 `{错误码}---{描述}` 结构的断言失败记模块日志（module 名 `business_exception`），其余 `log_exception`
+- SSE 入口：记日志后以 `sse_send(['error' => ...])` 回传错误事件并关流
 
 ### http_err_action / http_ex_action / http_fatal_err_action
 
@@ -130,6 +131,6 @@ API 入口的错误响应与成功响应同构：
 }
 ```
 
-- `code`：错误码（`business_exception` 为具体错误码，系统异常为 500）
+- `code`：业务异常 / 断言失败为 `{错误码}` 部分；系统异常为异常自身的 code（框架包装的 PHP 错误为 0）
 - `msg`：错误消息
 - `data`：空数组

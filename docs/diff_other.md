@@ -11,7 +11,7 @@
 | DI | 无，依赖显式 `include` | 服务容器自动注入 |
 | ORM | 自定义 ActiveRecord + UoW | Eloquent |
 | 配置 | PHP 数组 + 环境覆盖 | `.env` + `config/*.php` |
-| 模板 | 自实现 Blade（10 个指令） | 完整 Blade + 组件系统 |
+| 模板 | 自实现 Blade（输出 / 控制流 / 包含） | 完整 Blade + 组件系统 |
 | 类加载 | class map（`spl_autoload_register`） | Composer PSR-4 |
 | 启动方式 | Docker 一键启动 | `php artisan serve` / Sail |
 | 适用场景 | 中小型项目、快速原型、API 服务 | 大型项目、全功能 Web 应用 |
@@ -38,10 +38,18 @@ Laravel 的概念在本框架中的对应实现：
 | Composer autoload | `classmap.sh` 生成的 `autoload.php` |
 | `php artisan` | `php public/cli.php` |
 | Blade 布局继承（`@extends` / `@section` / `@yield`） | `@include('layout/header')` 组合 |
+| `Cache` / `Redis` facade | `cache_*()` 函数族（见[缓存](cache.md)） |
+| `Queue::push()` | `queue_push()` 投递 + `queue:worker` 消费（Beanstalkd / Kafka 两套，见[队列](queue.md)） |
+| `php artisan migrate` | `migrate:*` 命令 + `command/migration/sql` 下的 SQL 文件（见[数据迁移](migrate.md)） |
+| `Log::info()` | `log_notice()` / `log_module()`（JSON Lines，见[日志](log.md)） |
+| `Cache::lock()` | `singly_run()` / `serially_run()`（见[锁](lock.md)） |
+| 无直接对应（靠 Telescope / 第三方包） | 内置链路追踪 `trace_*`（W3C Trace Context，日志 / SQL / 队列 / 出站请求全链路，见[链路追踪](trace.md)） |
+| 无直接对应 | 内置 SSE 流式推送（`sse_route()` + Generator，见[SSE](sse.md)） |
+| 需第三方扩展 | 内置 ClickHouse 查询（`ch_*()`）与迁移（`clickhouse:*`，见[ClickHouse](clickhouse.md)） |
 
 ## 设计取舍
 
-- **不要的组件**：ServiceProvider、Facade、事件系统、任务调度器、队列消息系统（自带基于 Beanstalkd 的轻量队列）、验证器（用 `otherwise` 断言代替）、迁移生成器（用 SQL 文件代替）
+- **不要的组件**：ServiceProvider、Facade、事件系统、任务调度器、重量级消息系统（自带 Beanstalkd / Kafka 两套轻量队列）、验证器（用 `otherwise` 断言代替）、迁移生成器（用 SQL 文件代替）
 - **换来什么**：一个请求只需 `include` 约 10 个核心文件，内存与延迟开销极低，代码路径全部可静态追踪
 - **代价**：生态与第三方包很少，复杂场景（如权限、多租户、队列调度）需要自己封装，这正是**纯函数 + 静态方法**的用武之地
 
