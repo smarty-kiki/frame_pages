@@ -33,7 +33,7 @@ Laravel 的概念在本框架中的对应实现：
 | `Response` 对象 | 入口约定的返回值（字符串 → HTML、数组 → JSON） |
 | Eloquent Model | `entity` 基类 + `dao` 基类 |
 | 事务（DB::transaction） | `unit_of_work()` |
-| 中间件 | `if_verify()` 注册的拦截器闭包 |
+| 中间件 | `interceptor/` 校验函数 + 入口唯一的 `if_verify` 闭包（见[拦截器](interceptor.md)） |
 | `.env` | `config/{env()}/{file}.php` 覆盖 |
 | Composer autoload | `classmap.sh` 生成的 `autoload.php` |
 | `php artisan` | `php public/cli.php` |

@@ -68,7 +68,7 @@ php-vibe-coding-frame/
 │       ├── queue.php        # 队列命令（beanstalk 版，7 个）
 │       ├── queue_kafka.php  # 队列命令（kafka 版，4 个）
 │       └── queue_job/       # 队列任务定义（load.php + demo.php + demo_kafka.php）
-├── interceptor/             # 拦截器（if_verify 全局、局部显式调用）
+├── interceptor/             # 拦截器校验函数（入口 if_verify、局部显式调用）
 ├── view/                    # Blade 模板
 │   ├── index/               # 首页
 │   ├── error/               # 404.php / 500.php

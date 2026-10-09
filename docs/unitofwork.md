@@ -40,7 +40,7 @@ unit_of_work(Closure $action)
 
 1. 开始时清空本地缓存、清理钩子
 2. 执行闭包并收集期间产生的全部实体变更（闭包抛异常时清空缓存后原样重抛）
-3. 闭包正常结束 → 逐个实体判定变更类型：新建 → INSERT、修改 / 软删除 → UPDATE、物理删除 → DELETE；SQL 顺序即缓存条目顺序
+3. 闭包正常结束 → 逐个实体判定变更类型：新建 → INSERT、修改 / 软删除 / 恢复软删除 → UPDATE、物理删除 → DELETE；SQL 顺序即缓存条目顺序
 4. 多条写入包在一个 `db_transaction` 中执行（单条则直接执行）；每条写入要求受影响行数为 1，否则抛 `UNITOFWORK_DEFAULT_ERROR`（消息 `data in unit of work is expired`）并整批回滚
 5. 成功 → 调用 `if_unit_of_work_executed` 钩子；异常 → 调用 `if_unit_of_work_disturbed` 钩子后重抛
 
@@ -162,5 +162,5 @@ php public/cli.php entity:restep-last-id
 
 - **不调用 save()**：实体修改只是标记，持久化统一由工作单元完成
 - **多条写入包在一个 `db_transaction`**：提交阶段产生的多条 SQL 同进同退，单条则直接执行
-- **`delete()` 只是标记**：软删除不立即执行 SQL，提交时由工作单元生成 UPDATE 写入 `delete_time`
+- **`delete()` / `restore()` 只是标记**：软删除与恢复都不立即执行 SQL，提交时由工作单元生成 UPDATE（写入 / 清空 `delete_time`）
 - **不要嵌套**：内层 `unit_of_work` 会清空本地缓存，外层已收集的变更会丢失——一个请求只在入口包一层

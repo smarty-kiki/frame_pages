@@ -48,7 +48,7 @@ class user extends entity
 protected static function init()
 ```
 
-创建实体的静态入口：把 `$structs` 复制到 `attributes`、生成 `id`、`version` 置为初始值（0，使 `just_new()` 为真）、写入 `create_time` / `update_time`、`delete_time` 置 `null`，并注册到本地缓存（同时复位 `just_deleted` / `just_force_deleted` 标记）。所有业务工厂方法在内部调用它。
+创建实体的静态入口：把 `$structs` 复制到 `attributes`、生成 `id`、`version` 置为初始值（0，使 `just_new()` 为真）、写入 `create_time` / `update_time`、`delete_time` 置 `null`，并注册到本地缓存（同时复位 `just_deleted` / `just_restored` / `just_force_deleted` 标记）。所有业务工厂方法在内部调用它。
 
 ```php
 $user = user::init();
@@ -105,13 +105,21 @@ final public function just_deleted()
 
 返回该实体是否刚刚执行了软删除（本次请求内标记）。
 
+### just_restored
+
+```php
+final public function just_restored()
+```
+
+返回该实体是否刚刚标记了「恢复软删除」（本次请求内标记），`unit_of_work` 据此生成 UPDATE 清空 `delete_time`。
+
 ### delete
 
 ```php
 public function delete()
 ```
 
-**标记软删除**：置 `just_deleted` 为真并把 `delete_time` 写为当前时间。真正的落库由 `unit_of_work` 在提交时生成 UPDATE（写入 `delete_time`）。
+**标记软删除**：置 `just_deleted` 为真（并复位 `just_restored`）、把 `delete_time` 写为当前时间。真正的落库由 `unit_of_work` 在提交时生成 UPDATE（写入 `delete_time`）。
 
 ```php
 $user->delete();   // 交给 unit_of_work 自动持久化
@@ -123,10 +131,17 @@ $user->delete();   // 交给 unit_of_work 自动持久化
 final public function restore()
 ```
 
-撤销软删除：清除 `just_deleted` 标记并把 `delete_time` 重置为 `null`。注意它只动内存状态、不改业务字段——单独调用时 `just_updated()` / `just_deleted()` 都为假，**提交时不会生成 UPDATE**。典型用法是同一请求内 `delete()` 后再 `restore()` 取消本次删除；若要恢复一条已落库的软删除记录，需在同一工作单元内再修改一个业务字段（让 `just_updated()` 为真），`delete_time = null` 才会随那次 UPDATE 一并写回。
+**恢复软删除**（内存中 `delete_time` 一律置回 `null`），按当前状态分三种情形：
+
+- 撤销本次请求内刚 `delete()`、尚未提交的删除 → 清除 `just_deleted` 标记，提交时**不产生 SQL**（删除本就没落库）
+- 恢复一条已落库的软删除记录 → 标记 `just_restored`，`unit_of_work` 提交时生成 UPDATE 清空 `delete_time`
+- 记录本就未被软删除（且没有待提交的删除）→ 无操作
+
+已软删除的记录默认查不到，需用 `dao('user', true)`（`$with_deleted = true`，见 [DAO](dao.md)）带出来后恢复：
 
 ```php
-$user->restore();
+$user = dao('user', true)->find_by_id($user_id);   // 含软删除记录
+$user->restore();                                   // 提交时 UPDATE 清空 delete_time
 ```
 
 ### just_force_deleted

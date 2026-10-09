@@ -108,22 +108,28 @@ if_verify(?closure $action = null): ?closure
 - **拦截** = 不调用 `$action`，返回自己的响应（如鉴权失败时 `redirect('/login'); return null;`，跳转交给 `trigger_redirect()`）
 - ⚠ 不要把闭包本身当返回值（如 `return $action;`）：闭包对象会被当作响应输出，触发 `Object of class Closure could not be converted to string` 致命错误
 
-`if_verify` 是**单槽注册、后注册整体替换先注册**。页面与 API 入口已注册默认实现（`unit_of_work()` 包裹 + 入口对应的响应格式），在 `interceptor/` 中追加拦截器时要**包裹**当前实现而不是直接替换：
+`if_verify` **只允许注册一次**：页面与 API 入口已注册默认实现（`unit_of_work()` 包裹 + 入口对应的响应格式），重复注册会抛 `IF_VERIFY_ALREADY_REGISTERED` 直接报错（不会静默顶掉入口的注册）。全局拦截不另行注册，而是写成 `interceptor/` 里的校验函数（返回 `true` 放行 / `false` 拦截），由入口唯一的 `if_verify` 闭包调用：
 
 ```php
-$next = if_verify();   // 取出入口注册的默认实现
-
-if_verify(function ($action, $args) use ($next) {
-    // 前置逻辑：登录校验、参数过滤、统计等
-    if (! is_login()) {
+// interceptor/base.php —— 校验函数：不通过时登记 redirect 并返回 false
+function verify_global()
+{
+    if (get_current_user()->is_null()) {
         redirect('/login');
-        return null;                 // 不输出内容，交给 if_any 的 trigger_redirect() 跳转
+        return false;
     }
-    return $next($action, $args);    // 放行：透传内层（unit_of_work 包装）的结果
-});
+    return true;
+}
 ```
 
-多个拦截器各自包裹上一个，**最后注册的最先执行**（洋葱模型，后置逻辑反序收尾）。完整说明与三类入口的示例见[拦截器](interceptor.md)。
+```php
+// public/index.php 的 if_verify 闭包（唯一注册）——拦截调用加在这里
+if (! verify_global()) {
+    return null;   // 已登记 redirect：不输出响应体，随后自动 302
+}
+```
+
+完整说明与三类入口的示例见[拦截器](interceptor.md)。
 
 > SSE 入口（`public/sse.php`）默认**不注册** `if_verify`，拦截逻辑按需注册；`frame/sse.php` 中的 `if_verify` 与 `frame/php_fpm.php` 的同名但各自独立实现，两个模块不会同时加载。
 
